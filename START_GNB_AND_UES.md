@@ -12,6 +12,66 @@ It uses these files:
 
 The gNB image build in this workflow includes required runtime dependencies for UHD/ZMQ and DPDK-linked binaries.
 
+## Image build configuration in this repo
+
+This repo builds two runtime images for this flow:
+
+1. gNB image
+- Source Dockerfile: `srsRAN_Project/docker/Dockerfile`
+- Compose service: `gnb` in `srsRAN_Project/docker/docker-compose.yml`
+- Override/build profile: `srsRAN_Project/docker/docker-compose.external-ue-zmq.yml`
+
+Current build intent for external UE + bridge flow:
+- `ENABLE_ZEROMQ=On`
+- `ENABLE_UHD=On`
+- `ENABLE_EXPORT=On`
+- `ENABLE_MKL=False`
+- `ENABLE_DPDK=Off` (override build arg)
+
+Runtime notes:
+- Dockerfile installs runtime libraries needed by this branch (including ZMQ + DPDK-linked dependencies required by the built binary).
+- gNB runs with config `configs/gnb_zmq_external_ue.yml` and uses ZMQ endpoints:
+  - `tx_port=tcp://10.10.3.231:2000`
+  - `rx_port=tcp://10.10.3.236:2001`
+
+2. Open5GS 5GC image
+- Source Dockerfile context: `srsRAN_Project/docker/open5gs`
+- Compose service: `5gc` in `srsRAN_Project/docker/docker-compose.yml`
+
+Published image tags from this repo state:
+- `rptestbed/srsran-gnb:2026.04.13-zmq-uhd-extue`
+- `rptestbed/open5gs-5gc:2026.04.13-open5gs-v2.7.0`
+
+## How to use these images
+
+### Option A: Build locally from repo (default)
+
+```bash
+cd /home/radr/tuilm/srsran-build/srsRAN_Project/docker
+docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml build gnb
+docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml up -d 5gc gnb
+```
+
+### Option B: Use pushed `rptestbed/*` images directly
+
+Pull images:
+
+```bash
+docker pull rptestbed/srsran-gnb:2026.04.13-zmq-uhd-extue
+docker pull rptestbed/open5gs-5gc:2026.04.13-open5gs-v2.7.0
+```
+
+Then set images in compose before `up` (example with env vars):
+
+```bash
+export GNB_IMAGE=rptestbed/srsran-gnb:2026.04.13-zmq-uhd-extue
+export OPEN5GS_IMAGE=rptestbed/open5gs-5gc:2026.04.13-open5gs-v2.7.0
+```
+
+If you want compose to consume these variables directly, add image substitutions in your compose files (recommended for reproducibility):
+- gNB service image: `${GNB_IMAGE:-srsran/gnb}`
+- 5gc service image: `${OPEN5GS_IMAGE:-docker-5gc}`
+
 ## Prerequisites
 
 - Docker and Docker Compose plugin installed.
