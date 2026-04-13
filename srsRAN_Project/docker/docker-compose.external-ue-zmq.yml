@@ -1,9 +1,6 @@
 services:
   gnb:
-    build:
-      args:
-        ENABLE_DPDK: "Off"
-        EXTRA_CMAKE_ARGS: "-DENABLE_ZEROMQ=On -DENABLE_UHD=On -DENABLE_EXPORT=On -DENABLE_MKL=False -DENABLE_DPDK=Off"
+    image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260413
     networks:
       ran:
         ipv4_address: ${GNB_IP_RAN:-10.53.1.3}

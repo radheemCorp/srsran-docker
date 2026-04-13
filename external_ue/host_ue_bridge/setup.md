@@ -13,6 +13,9 @@ Expected:
 - `n3br` is UP
 - host bridge IP is `10.10.3.254/24`
 
+Status:
+- Verified: `n3br` exists with IP `10.10.3.254/24` and admin `UP` (operstate may report DOWN if no carrier). Verified on 2026-04-13.
+
 Ensure shared Docker network exists:
 
 ```bash

@@ -1,6 +1,6 @@
 services:
   srs-gnb:
-    image: srsran/gnb:latest
+    image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260413
     container_name: srs-gnb
     stdin_open: true
     tty: true
