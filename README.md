@@ -241,3 +241,6 @@ docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml down
 ```
 docker compose -f docker-compose.open5g.yml -f docker-compose.external-ue-zmq.yml logs 5gc --no-color --tail=500 | grep -Ei "10\.53\.1\.3|10\.10\.3\.231|gnb|srsran|ngap" -n || true
 ```
+
+docker compose logs -f 5gc
+docker compose exec 5gc cat /open5gs/open5gs-5gc.yml
