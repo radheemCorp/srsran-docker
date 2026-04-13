@@ -1,0 +1,22 @@
+services:
+  gnb:
+    build:
+      args:
+        ENABLE_DPDK: "Off"
+        EXTRA_CMAKE_ARGS: "-DENABLE_ZEROMQ=On -DENABLE_UHD=On -DENABLE_EXPORT=On -DENABLE_MKL=False -DENABLE_DPDK=Off"
+    networks:
+      ran:
+        ipv4_address: ${GNB_IP_RAN:-10.53.1.3}
+      metrics:
+        ipv4_address: ${GNB_IP_METRICS:-172.19.1.3}
+      ue_n3:
+        ipv4_address: ${GNB_IP_N3:-10.10.3.231}
+
+configs:
+  gnb_config.yml:
+    file: ${GNB_CONFIG_PATH:-../configs/gnb_zmq_external_ue.yml}
+
+networks:
+  ue_n3:
+    external: true
+    name: ue_n3

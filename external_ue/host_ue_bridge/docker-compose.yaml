@@ -1,0 +1,27 @@
+services:
+  srsran_zmq_bridge:
+    image: ghcr.io/sulaimanalmani/srsranzmq/srsue:v1.1
+    container_name: srsran_zmq_bridge
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+      - IPC_LOCK
+    environment:
+      - GNB_IP=10.10.3.231
+      - BRIDGE_IP=10.10.3.236
+      - UE_IP_BASE=233
+    networks:
+      external_n3:
+        ipv4_address: 10.10.3.236
+    volumes:
+      - ./config:/srsran/config
+    command: >
+      /bin/bash -c "
+      chmod +x /srsran/config/*.sh &&
+      /srsran/config/start_bridge.sh ${NUM_UES:-10} ${UE_IDS:-1,2}"
+
+networks:
+  external_n3:
+    external: true
+    name: ue_n3

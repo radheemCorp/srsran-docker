@@ -1,0 +1,21 @@
+services:
+  srs-gnb:
+    image: srsran/gnb:latest
+    container_name: srs-gnb
+    stdin_open: true
+    tty: true
+    # 'network_mode: host' is highly recommended for SCTP/NGAP 
+    # and to allow ZMQ to communicate with a UE on the same host.
+    network_mode: host
+    privileged: true 
+    volumes:
+      - ./config/gnb_zmq.yaml:/etc/srsran/gnb.yaml
+    # Command to run the gNB with the mounted config
+    command: gnb -c /etc/srsran/gnb.yaml
+    resources:
+      limits:
+        memory: 10g
+        cpus: "12.0"
+      reservations:
+        memory: 4g
+        cpus: "10.0"
