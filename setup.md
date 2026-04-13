@@ -7,11 +7,11 @@ This document is a concise, runnable onboarding guide for bringing up the core (
 ---
 
 **Files used and where to look**
-- `docker-compose.yml` — concise project-root compose that launches the `5gc` and `gnb` services (uses `project-config/` mounts).
-- `project-config/open5gs.env` — environment file used by the `5gc` service (contains `SUBSCRIBER_DB`, `OPEN5GS_IP`, ...).
-- `project-config/subscriber_db.csv` — CSV file containing custom subscriber definitions mounted into the `5gc` container.
-- `project-config/open5gs-5gc.yml.in` — the Open5GS configuration template (rendered inside the container at startup).
-- `project-config/gnb/gnb_zmq_external_ue.yml` — gNB runtime config; RU / AMF / ZMQ / cell parameters we use to attach the B210.
+- `srsRAN_Project/docker/docker-compose.yml` — primary compose to build and run `5gc` and `gnb` (run from `srsRAN_Project/docker`).
+- `srsRAN_Project/docker/open5gs/open5gs.env` — environment file used by the `5gc` service (contains `SUBSCRIBER_DB`, `OPEN5GS_IP`, ...).
+- `srsRAN_Project/docker/open5gs/subscriber_db.csv` — CSV file containing custom subscriber definitions used by `5gc`.
+- `srsRAN_Project/docker/open5gs/open5gs-5gc.yml` / `open5gs-5gc.yml.in` — Open5GS config template used by the entrypoint.
+- `srsRAN_Project/configs/gnb_zmq_external_ue.yml` — gNB runtime config; RU / AMF / ZMQ / cell parameters we use to attach the B210.
 - `srsRAN_Project/configs/gnb_rf_b210_fdd_srsUE.yml` — example RU config for B210 (reference).
 - `external_ue/host_ue_bridge/docker-compose.yaml` — ZMQ bridge service (used later for external UEs).
 - `external_ue/host_ue1/docker-compose.yaml`, `external_ue/host_ue2/docker-compose.yaml` — example external UE containers.
@@ -51,30 +51,24 @@ docker network create -d macvlan \
 
 If `ue_n3` already exists, Docker will report that — that is fine.
 
-Prepare project-config (required)
-1. Create the `project-config/` directory and copy the files that are bind-mounted
-   by the top-level `docker-compose.yml`. This is required so the container
-   entrypoint can generate the runtime `open5gs-5gc.yml` from the template.
+Prepare Open5GS & gNB configs (required)
+1. Use the compose located at `srsRAN_Project/docker/docker-compose.yml`. Files referenced by that compose are expected relative to `srsRAN_Project/docker`.
 
 ```bash
-mkdir -p project-config/gnb
-cp srsRAN_Project/docker/open5gs/open5gs.env project-config/open5gs.env
-cp srsRAN_Project/docker/open5gs/subscriber_db.csv project-config/subscriber_db.csv
-# Copy the template (note the .in suffix) so the container can envsubst it
-cp srsRAN_Project/docker/open5gs/open5gs-5gc.yml project-config/open5gs-5gc.yml.in
-# gNB config (example)
-cp srsRAN_Project/configs/gnb_zmq_external_ue.yml project-config/gnb/gnb_zmq_external_ue.yml
+# from repository root (one-time prep)
+mkdir -p srsRAN_Project/docker/open5gs
+cp srsRAN_Project/docker/open5gs/open5gs.env srsRAN_Project/docker/open5gs/open5gs.env
+cp srsRAN_Project/docker/open5gs/subscriber_db.csv srsRAN_Project/docker/open5gs/subscriber_db.csv
+# the entrypoint expects the template; ensure the .in file is present
+cp srsRAN_Project/docker/open5gs/open5gs-5gc.yml srsRAN_Project/docker/open5gs/open5gs-5gc.yml.in
+# place or verify gNB config referenced by the compose
+mkdir -p srsRAN_Project/configs
+cp srsRAN_Project/configs/gnb_zmq_external_ue.yml srsRAN_Project/configs/gnb_zmq_external_ue.yml
 ```
 
 Notes:
-- Edit `project-config/open5gs.env` if you need to change IPs (e.g. `OPEN5GS_IP`,
-  `MONGODB_IP`, `UE_IP_BASE`).
-- Do NOT bind-mount a rendered `/open5gs/open5gs-5gc.yml` into the container.
-  The image entrypoint performs `envsubst < open5gs-5gc.yml.in > open5gs-5gc.yml`.
-  If you mount the final path read-only the container will fail with
-  "open5gs-5gc.yml: Read-only file system". Instead mount the template as
-  `project-config/open5gs-5gc.yml.in` (the provided `docker-compose.yml` has
-  been adjusted to do this).
+- Edit `srsRAN_Project/docker/open5gs/open5gs.env` if you need to change IPs (e.g. `OPEN5GS_IP`, `MONGODB_IP`, `UE_IP_BASE`).
+- Do NOT mount a rendered `/open5gs/open5gs-5gc.yml` into the container; the image entrypoint performs `envsubst < open5gs-5gc.yml.in > open5gs-5gc.yml` so the `.in` template must be present and writable inside the image or build context.
 
 Troubleshooting Open5GS startup
 - If `open5gs` exits immediately with a message about `open5gs-5gc.yml` being
@@ -95,10 +89,11 @@ docker compose exec 5gc cat /open5gs/open5gs-5gc.yml
 
 
 Building images
-- Use the project-root `docker-compose.yml` to build images from the repository root.
+- Use the compose under `srsRAN_Project/docker` (this keeps Dockerfile contexts intact).
 
 ```bash
 # from repository root
+cd srsRAN_Project/docker
 docker compose build 5gc gnb
 ```
 
@@ -151,28 +146,38 @@ ru_sdr:
 - Ensure `cu_cp.amf.addr` in the same file points to the Open5GS container IP on the `ran` network (default `10.53.1.2`).
 
 Starting services (order matters)
-1) Ensure `ue_n3` network exists (see Host network above).
-2) Start Open5GS first so the AMF is ready:
+1) Ensure `ue_n3` network exists (see Host network above). Example (run as root or sudo):
 
 ```bash
-# from repository root
-docker compose up -d 5gc
+# create bridge + macvlan if needed (run once)
+sudo ip link add n3br type bridge || true
+sudo ip link set dev n3br up
+sudo ip addr add 10.10.3.254/24 dev n3br || true
+docker network create -d macvlan --subnet=10.10.3.0/24 --gateway=10.10.3.254 -o parent=n3br ue_n3 || true
 ```
 
-3) Start gNB:
+2) Start both Open5GS and gNB in one command (from the compose directory):
 
 ```bash
-# from repository root
+cd srsRAN_Project/docker
+docker compose up -d
+```
+
+If you prefer to start only the core first, then the gNB:
+
+```bash
+cd srsRAN_Project/docker
+docker compose up -d 5gc
 docker compose up -d gnb
 ```
 
 If `open5gs` reports missing `subscriber_db.csv` on startup, rebuild `5gc` (see "Building images") so the file is copied into the image.
 
 Verification & common checks
-- Watch Open5GS logs to confirm subscribers were imported:
+- Watch Open5GS logs to confirm subscribers were imported (run from `srsRAN_Project/docker`):
 
 ```bash
-# from repository root
+cd srsRAN_Project/docker
 docker compose logs -f 5gc
 # expect lines like: "Added subscriber with Inserted ID : <id>"
 ```
@@ -180,7 +185,7 @@ docker compose logs -f 5gc
 - Watch gNB logs to confirm UHD device open and AMF/NGAP connection:
 
 ```bash
-# from repository root
+cd srsRAN_Project/docker
 docker compose logs -f gnb
 # expect B210 detection and later: "N2: Connection to AMF on 10.53.1.2:38412 was established" and NGSetupRequest/Response
 ```
@@ -188,6 +193,7 @@ docker compose logs -f gnb
 - Confirm gNB config inside container:
 
 ```bash
+cd srsRAN_Project/docker
 docker compose exec gnb cat /gnb_config.yml
 ```
 
@@ -228,27 +234,31 @@ If you want, I can now either:
 ---
 
 File locations (quick links)
-- `project-config/gnb/gnb_zmq_external_ue.yml`
-- `docker-compose.yml` (project root)
-- `project-config/open5gs.env`
-- `project-config/subscriber_db.csv`
+- `srsRAN_Project/docker/docker-compose.yml` (compose to build & run core + gNB)
+- `srsRAN_Project/docker/open5gs/open5gs.env`
+- `srsRAN_Project/docker/open5gs/subscriber_db.csv`
+- `srsRAN_Project/configs/gnb_zmq_external_ue.yml`
 
-Project-root compose & editable configs
-- Project compose: `docker-compose.yml` (project root) — launches `open5gs_5gc` and `srsran_gnb` using the `rptestbed` images.
-- Editable config directory: `project-config/` at repository root. Files in this directory are mounted into the containers so you can edit and then restart the containers to apply changes without rebuilding images.
-  - `project-config/subscriber_db.csv` → mounted into `/open5gs/subscriber_db.csv` inside the `5gc` container (edit and restart `5gc` to reload subscribers).
-  - `project-config/open5gs-5gc.yml` → mounted into `/open5gs/open5gs-5gc.yml` (edit and restart `5gc`).
-  - `project-config/open5gs.env` → used by compose to set environment variables for the `5gc` container.
-  - `project-config/gnb/gnb_zmq_external_ue.yml` → mounted into `/gnb_config.yml` inside the `gnb` container.
-  - `project-config/gnb/gnb_compose_config.yml` → mounted into `/gnb_compose_config.yml` inside the `gnb` container.
+Compose location & editable configs
+- Compose used for this setup: `srsRAN_Project/docker/docker-compose.yml` — run commands from `srsRAN_Project/docker` to build and start `5gc` and `gnb`.
+- Editable config locations used by that compose:
+  - `srsRAN_Project/docker/open5gs/subscriber_db.csv` → used by `5gc` for subscriber provisioning.
+    - `srsRAN_Project/docker/open5gs/subscriber_db.csv` → used by `5gc` for subscriber provisioning. This file is bind-mounted into the container so you can edit it on the host and then restart the `5gc` service to pick up changes without rebuilding.
+  - `srsRAN_Project/docker/open5gs/open5gs.env` → environment variables for `5gc`.
+  - `srsRAN_Project/docker/open5gs/open5gs-5gc.yml.in` → template rendered by the container entrypoint.
+  - `srsRAN_Project/configs/gnb_zmq_external_ue.yml` → gNB runtime config mounted into the gNB container.
 
 Apply config changes (example):
 ```bash
-# edit subscriber_db.csv or any file under project-config/
-vi project-config/subscriber_db.csv
+# edit the subscriber DB in the compose directory
+cd srsRAN_Project/docker
+vi open5gs/subscriber_db.csv
 
-# restart only the 5gc service to pick up subscriber_db.csv changes
-docker compose up -d --no-deps --build open5gs_5gc || docker compose up -d --no-deps 5gc
+# restart only the 5gc service to pick up subscriber_db.csv changes (no rebuild required)
+docker compose up -d --no-deps 5gc
+
+# or just restart the service
+docker compose restart 5gc
 
 # restart gnb after updating gnb configs
 docker compose up -d --no-deps gnb

@@ -242,5 +242,22 @@ docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml down
 docker compose -f docker-compose.open5g.yml -f docker-compose.external-ue-zmq.yml logs 5gc --no-color --tail=500 | grep -Ei "10\.53\.1\.3|10\.10\.3\.231|gnb|srsran|ngap" -n || true
 ```
 
+
+```bash
 docker compose logs -f 5gc
 docker compose exec 5gc cat /open5gs/open5gs-5gc.yml
+```
+
+# check if ue is connected 
+```bash
+# Show subscriber file on host and inside container
+cat project-config/subscriber_db.csv
+docker compose exec -T 5gc cat /open5gs/subscriber_db.csv
+
+# Follow core logs and grep for IMSI/registration/attach events
+docker compose logs -f 5gc | grep --line-buffered -i -E '001010000000101|001010000000102|imsi|registration|attach'
+
+# Follow gNB logs
+docker compose logs -f gnb
+
+```
