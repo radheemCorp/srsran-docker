@@ -2,28 +2,28 @@
 
 ## Goal
 Run 2 UEs simultaneously in 2 separate Docker containers:
-- UE1 from `host_ue1`
-- UE2 from `host_ue2`
+- UE1 from `ue1`
+- UE2 from `ue2`
 Both attach to the same gNB/Open5GS deployment and pass user-plane traffic.
 
 ## Current status
-- Multi-UE workspace is now under `host_ue/`:
-  - `host_ue/host_ue1`
-  - `host_ue/host_ue2`
-  - `host_ue/host_ue_bridge`
-- `host_ue2/docker-compose.yaml` updated to avoid collision with UE1:
+- Multi-UE workspace is now under `external_ue/`:
+  - `external_ue/ue1`
+  - `external_ue/ue2`
+  - `external_ue/zmq_bridge`
+- `ue2/docker-compose.yaml` updated to avoid collision with UE1:
   - `container_name: srsran_ue_external_2`
   - `ipv4_address: 10.10.3.235`
-- `host_ue1` remains on `10.10.3.234`.
-- Added dedicated bridge stack: `host_ue/host_ue_bridge/` with bridge IP `10.10.3.236`.
-- UE config generators in both `host_ue/host_ue1` and `host_ue/host_ue2` support dynamic modes:
+- `ue1` remains on `10.10.3.234`.
+- Added dedicated bridge stack: `external_ue/zmq_bridge/` with bridge IP `10.10.3.236`.
+- UE config generators in both `external_ue/ue1` and `external_ue/ue2` support dynamic modes:
   - `direct` (single UE)
   - `bridge` (multi-UE, dynamic up to N UEs)
 - All three compose stacks now use a shared external Docker network `ue_n3` to avoid overlapping macvlan subnet errors.
 - Added `.env` files to all three directories for reproducible defaults:
-  - `host_ue/host_ue1/.env`
-  - `host_ue/host_ue2/.env`
-  - `host_ue/host_ue_bridge/.env`
+  - `external_ue/ue1/.env`
+  - `external_ue/ue2/.env`
+  - `external_ue/zmq_bridge/.env`
 
 Observed runtime behavior:
 - UE console can remain on `Attaching UE...` even when core logs show success.
@@ -97,17 +97,17 @@ Dynamic scaling model:
 - Bridge should map:
   - gNB downlink stream -> UE1/UE2 downlink sockets
   - UE1/UE2 uplink sockets -> summed/forwarded uplink stream to gNB
-- Implemented as `host_ue_bridge/config/zmq_bridge.py` with runtime `--num-ues`.
-- Containerized in `host_ue_bridge/docker-compose.yaml`.
+- Implemented as `zmq_bridge/config/zmq_bridge.py` with runtime `--num-ues`.
+- Containerized in `zmq_bridge/docker-compose.yaml`.
 
-### C) UE1 (`host_ue/host_ue1`)
+### C) UE1 (`external_ue/ue1`)
 - Start UE with UE number `1`.
 - Set mode: `UE_ZMQ_MODE=bridge`
 - ZMQ ports are UE1-specific:
   - UE1 tx bind: `*:2101`
   - UE1 rx connect: `10.10.3.236:2201`
 
-### D) UE2 (`host_ue/host_ue2`)
+### D) UE2 (`external_ue/ue2`)
 - Start UE with UE number `2`.
 - ZMQ ports should be UE2-specific:
   - UE2 tx bind: `*:2102`
@@ -128,11 +128,11 @@ Dynamic scaling model:
 2. Start gNB with bridge-facing ZMQ config.
 3. Create shared Docker macvlan network once on host (if missing):
    - `docker network create -d macvlan --subnet=10.10.3.0/24 --gateway=10.10.3.254 -o parent=n3br ue_n3`
-4. Start bridge container from `host_ue/host_ue_bridge`:
+4. Start bridge container from `external_ue/zmq_bridge`:
    - `docker compose up -d`
-5. Start UE1 container (`host_ue/host_ue1`) and run:
+5. Start UE1 container (`external_ue/ue1`) and run:
    - `UE_ZMQ_MODE=bridge ZMQ_BRIDGE_IP=10.10.3.236 /srsran/config/start_ue.sh 1`
-6. Start UE2 container (`host_ue/host_ue2`) and run:
+6. Start UE2 container (`external_ue/ue2`) and run:
    - `UE_ZMQ_MODE=bridge ZMQ_BRIDGE_IP=10.10.3.236 /srsran/config/start_ue.sh 2`
 7. Validate both UEs have:
    - successful attach
@@ -184,6 +184,47 @@ Bridge checks:
   - UE2 -> bridge `:2202`
 - No persistent `SYN-SENT` sessions to unused UE IDs when `UE_IDS` is set.
 
+## Missing steps discovered during implementation
+
+1. Subscriber provisioning must match generated UE identities before attach
+- Current UE scripts generate:
+  - UE1 IMSI `001010000000001`
+  - UE2 IMSI `001010000000002`
+  - `k = 465B5CE8B199B49FAA5F0A2EE238A6BC`
+  - `opc = E8ED289DEBA952E4283B54E88E6183CA`
+- If `project-config/subscriber_db.csv` does not match these values, AMF will reject registration.
+- After editing subscriber CSV, recreate 5GC so subscribers are reloaded:
+  - `cd /home/radr/tuilm/srsran-build && docker compose up -d --force-recreate 5gc`
+
+2. `docker compose up` for UE containers does not start srsUE attach automatically
+- UE containers start `wrapper.sh` and remain idle.
+- You must start UE processes manually in each container:
+  - `docker exec srsran_ue_host  sh -lc 'UE_ZMQ_MODE=bridge ZMQ_BRIDGE_IP=10.10.3.236 /srsran/config/start_ue.sh 1'`
+  - `docker exec srsran_ue_host2 sh -lc 'UE_ZMQ_MODE=bridge ZMQ_BRIDGE_IP=10.10.3.236 /srsran/config/start_ue.sh 2'`
+
+3. UE container restarts can leave stale netns references
+- Symptom:
+  - `Error: Peer netns reference is invalid`
+- Recovery before re-running `start_ue.sh`:
+  - `docker exec srsran_ue_host  sh -lc 'pkill -f srsue || true; ip netns del ue1 >/dev/null 2>&1 || true; rm -f /run/netns/ue1'`
+  - `docker exec srsran_ue_host2 sh -lc 'pkill -f srsue || true; ip netns del ue2 >/dev/null 2>&1 || true; rm -f /run/netns/ue2'`
+
+4. gNB logs are file-based in this setup
+- `docker compose logs gnb` can be empty while gNB is healthy.
+- Use:
+  - `docker exec srsran_gnb sh -lc 'tail -f /tmp/gnb.log'`
+- Check for:
+  - `InitialUEMessage`
+  - `DownlinkNASTransport`
+  - absence of immediate `UEContextReleaseCommand`
+
+5. Deterministic restart order (after failures)
+- Use this order to avoid stale ZMQ or partial control-plane state:
+  1. Ensure 5GC healthy
+  2. Start/restart gNB once
+  3. Start/restart bridge
+  4. Start UE1 process, then UE2 process
+
 Network captures during test:
 - gNB N3: `udp port 2152`
 - UPF N3: `udp port 2152`
@@ -203,21 +244,21 @@ Network captures during test:
 
 ## Environment files
 
-`host_ue/host_ue1/.env`
+`external_ue/ue1/.env`
 - `GNB_IP=10.10.3.231`
 - `ZMQ_BRIDGE_IP=10.10.3.236`
 - `UE_ZMQ_MODE=bridge`
 - `UE_DNS1=1.1.1.1`
 - `UE_DNS2=8.8.8.8`
 
-`host_ue/host_ue2/.env`
+`external_ue/ue2/.env`
 - `GNB_IP=10.10.3.231`
 - `ZMQ_BRIDGE_IP=10.10.3.236`
 - `UE_ZMQ_MODE=bridge`
 - `UE_DNS1=1.1.1.1`
 - `UE_DNS2=8.8.8.8`
 
-`host_ue/host_ue_bridge/.env`
+`external_ue/zmq_bridge/.env`
 - `NUM_UES=10`
 - `UE_IDS=1,2`
 - `GNB_IP=10.10.3.231`

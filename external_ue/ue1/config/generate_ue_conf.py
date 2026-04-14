@@ -1,7 +1,7 @@
 import argparse
 import os
 
-def generate_ue_config(ue_number, output_directory, mode, gnb_ip, ue_bind_ip, bridge_ip):
+def generate_ue_config(ue_number, output_directory, mode, gnb_ip, ue_bind_ip, bridge_ip, use_netns):
     # Template for the configuration
     config_template = """
 [rf]
@@ -48,7 +48,7 @@ apn = internet
 apn_protocol = ipv4
 
 [gw]
-netns = {netns}
+{netns_line}
 ip_devname = tun_srsue
 ip_netmask = 255.255.255.0
 
@@ -73,7 +73,7 @@ enable = false
         rx_port=rx_port,
         log_file=os.path.join(output_directory, f"ue{ue_number}.log"),
         imsi=f"0010100000000{ue_number:02d}",
-        netns=f"ue{ue_number}"
+        netns_line=(f"netns = ue{ue_number}" if use_netns else "# netns omitted: use container namespace")
     )
 
     # Write the configuration file
@@ -110,6 +110,12 @@ if __name__ == '__main__':
         default=os.environ.get('UE_BIND_IP', '*'),
         help='Local UE IP to bind ZMQ tx socket (default: env UE_BIND_IP or *)'
     )
+    parser.add_argument(
+        '--use-netns',
+        action='store_true',
+        default=os.environ.get('UE_USE_NETNS', 'false').lower() in ('1', 'true', 'yes', 'on'),
+        help='Use inner Linux netns (disabled by default for container-per-UE deployment)'
+    )
     args = parser.parse_args()
 
     generate_ue_config(
@@ -119,4 +125,5 @@ if __name__ == '__main__':
         args.gnb_ip,
         args.ue_bind_ip,
         args.bridge_ip,
+        args.use_netns,
     )
