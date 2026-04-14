@@ -1,4 +1,6 @@
 # ZMQ gNB configuration for external UE bridge deployment.
+# This file is the ZMQ-RF variant; keep `gnb_zmq_external_ue.yml` for UHD-RF.
+#
 # Matches external_ue bridge defaults:
 #   gNB N3 IP     : 10.10.3.231
 #   bridge IP     : 10.10.3.236
@@ -17,13 +19,13 @@ cu_cp:
               - sst: 1
 
 ru_sdr:
-  # Use UHD with the connected B210 SDR. Set device serial to your device's serial.
-  device_driver: uhd
-  # Correct UHD device args: use serial= without extra 'addr=' wrapper
-  device_args: type=b200,serial=310C56E
+  # Use ZMQ RF frontend.
+  device_driver: zmq
+  # gNB TX -> external_ue bridge RX, and gNB RX <- bridge TX.
+  device_args: tx_port=tcp://10.10.3.231:2000,rx_port=tcp://10.10.3.236:2001,base_srate=23.04e6
   srate: 23.04
-  tx_gain: 80
-  rx_gain: 40
+  tx_gain: 75
+  rx_gain: 75
 
 cell_cfg:
   dl_arfcn: 368500
@@ -55,3 +57,14 @@ pcap:
   mac_filename: /tmp/gnb_mac.pcap
   ngap_enable: enable
   ngap_filename: /tmp/gnb_ngap.pcap
+
+e2:
+  enable_du_e2: true
+  enable_cu_cp_e2: false
+  enable_cu_up_e2: false
+  e2sm_kpm_enabled: true
+  e2sm_rc_enabled: true
+  e2sm_ccc_enabled: true
+  addr: 10.0.2.10
+  bind_addr: 10.0.2.30
+  port: 36421

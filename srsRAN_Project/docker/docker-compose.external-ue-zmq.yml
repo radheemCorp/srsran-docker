@@ -1,6 +1,16 @@
 services:
   gnb:
-    image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260413
+    image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260414
+    container_name: gnb
+    restart: unless-stopped
+    privileged: true
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        OS_VERSION: "24.04"
+        ENABLE_DPDK: "Off"
+        EXTRA_CMAKE_ARGS: "-DENABLE_ZEROMQ=On -DENABLE_UHD=On -DENABLE_EXPORT=On -DENABLE_MKL=False -DENABLE_DPDK=Off"
     networks:
       ran:
         ipv4_address: ${GNB_IP_RAN:-10.53.1.3}
