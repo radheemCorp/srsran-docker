@@ -44,7 +44,6 @@ cell_cfg:
       coreset0_index: 12
   prach:
     prach_config_index: 1
-    total_nof_ra_preambles: 64
   pdsch:
     mcs_table: qam64
   pusch:

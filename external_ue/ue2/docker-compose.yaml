@@ -9,6 +9,7 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_NICE
+      - SYS_ADMIN
       - IPC_LOCK
     volumes:
       - ./config:/srsran/config
@@ -18,6 +19,7 @@ services:
       - GNB_IP=10.10.3.231
       - ZMQ_BRIDGE_IP=10.10.3.236
       - UE_ZMQ_MODE=bridge
+      - UE_BIND_IP=10.10.3.235
       - UE_DNS1=1.1.1.1
       - UE_DNS2=8.8.8.8
     command: >

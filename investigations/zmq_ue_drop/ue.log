@@ -1,0 +1,28 @@
+testbed@testbed:~/testbed/srsran-docker/external_ue/ue1$ docker compose exec -it  srsran_ue_host bash
+root@75fedf0193f5:/# /srsran/config/start_ue.sh 1
+Waiting for tun_srsue to appear...
+Configuration for UE1 written to /tmp/ue_1.conf
+Active RF plugins: libsrsran_rf_zmq.so
+Inactive RF plugins: 
+Reading configuration file /tmp/ue_1.conf...
+
+Built in Release mode using commit ec29b0c1f on branch master.
+
+Opening 1 channels in RF device=zmq with args=tx_port=tcp://*:2101,rx_port=tcp://10.10.3.236:2201,base_srate=23.04e6
+Supported RF device list: zmq file
+CHx base_srate=23.04e6
+Current sample rate is 1.92 MHz with a base rate of 23.04 MHz (x12 decimation)
+CH0 rx_port=tcp://10.10.3.236:2201
+CH0 tx_port=tcp://*:2101
+Current sample rate is 23.04 MHz with a base rate of 23.04 MHz (x1 decimation)
+Current sample rate is 23.04 MHz with a base rate of 23.04 MHz (x1 decimation)
+Waiting PHY to initialize ... done!
+Attaching UE...
+Random Access Transmission: prach_occasion=0, preamble_index=0, ra-rnti=0x39, tti=174
+Random Access Transmission: prach_occasion=0, preamble_index=0, ra-rnti=0x39, tti=334
+Random Access Transmission: prach_occasion=0, preamble_index=0, ra-rnti=0x39, tti=494
+Random Access Transmission: prach_occasion=0, preamble_index=0, ra-rnti=0x39, tti=654
+Random Access Complete.     c-rnti=0x4604, ta=0
+RRC Connected
+Received RRC Release
+Warning: tun_srsue did not appear within 120s

@@ -51,25 +51,28 @@ fi
 
 # Background helper: once tun_srsue appears, install default route via tunnel
 (
+  echo "Waiting for tun_srsue to appear..."
   for _ in $(seq 1 "${ROUTE_WAIT_SECONDS}"); do
-    if [[ "${UE_USE_NETNS,,}" == "true" ]]; then
-      if ip netns exec "${NS}" ip link show tun_srsue >/dev/null 2>&1; then
-        ip netns exec "${NS}" ip route replace default dev tun_srsue scope link || true
-        exit 0
-      fi
-    else
-      if ip link show tun_srsue >/dev/null 2>&1; then
-        ip route replace default dev tun_srsue scope link || true
-        exit 0
-      fi
+    # Determine the execution prefix based on netns usage
+    EXEC_PREFIX=""
+    [[ "${UE_USE_NETNS,,}" == "true" ]] && EXEC_PREFIX="ip netns exec ${NS}"
+
+    if $EXEC_PREFIX ip link show tun_srsue >/dev/null 2>&1; then
+      echo "tun_srsue detected. Configuring routes and triggering PDU session..."
+      
+      # 1. Install the default route
+      $EXEC_PREFIX ip route replace default dev tun_srsue scope link || true
+      
+      # 2. THE NUDGE: Send a single ping to force PDU Session Establishment
+      # This prevents the "UE did not request a PDU session" timeout
+      echo "Sending PDU session trigger (ping)..."
+      $EXEC_PREFIX ping -c 1 -W 2 8.8.8.8 >/dev/null 2>&1 || echo "Initial nudge ping failed (normal if core routing isn't up yet)"
+      
+      exit 0
     fi
     sleep 1
   done
-  if [[ "${UE_USE_NETNS,,}" == "true" ]]; then
-    echo "Warning: tun_srsue did not appear in ${NS} within ${ROUTE_WAIT_SECONDS}s" >&2
-  else
-    echo "Warning: tun_srsue did not appear in container namespace within ${ROUTE_WAIT_SECONDS}s" >&2
-  fi
+  echo "Warning: tun_srsue did not appear within ${ROUTE_WAIT_SECONDS}s" >&2
 ) &
 ROUTE_HELPER_PID=$!
 trap 'kill "${ROUTE_HELPER_PID}" 2>/dev/null || true' EXIT

@@ -7,6 +7,7 @@ docker network rm ran metrics n3br oran-sc-ric_ric_network n2network n3network n
 # 2. OVS & MACVLAN NETWORKS (Physical/Infrastructure Layer)
 # Format: "BridgeName|Subnet|Gateway|MTU"
 OVS_NETS=(
+    "ran|10.53.1.0/24|10.53.1.254|1450"
     "n3br|10.10.3.0/24|10.10.3.254|1450"
     "n4br|10.54.1.0/24|10.54.1.254|1450"
     "n6br|10.55.1.0/24|10.55.1.254|1500"
@@ -22,7 +23,8 @@ for NET in "${OVS_NETS[@]}"; do
     sudo ip addr add "$GW/24" dev "$BR" 2>/dev/null
     sudo ip link set "$BR" up
 
-    # Create Macvlan (Matches your 'ran' and 'n3br' logic)
+    # Create Macvlan network riding on the OVS bridge
+    docker network inspect "$BR" >/dev/null 2>&1 || \
     docker network create -d macvlan --subnet="$SUBNET" --gateway="$GW" -o parent="$BR" "$BR"
 done
 
@@ -32,13 +34,10 @@ BRIDGE_NETS=(
     "metrics|172.19.1.0/24|172.19.1.254"
     "oran-sc-ric_ric_network|10.0.2.0/24|10.0.2.254"
     "n2network|10.53.2.0/24|10.53.2.254"
-    "ran|10.53.1.0/24|10.53.1.254" 
-    "n3br|10.10.3.0/24|10.10.3.254"
 )
 echo "Setting up Docker Internal Bridges..."
 for NET in "${BRIDGE_NETS[@]}"; do
     IFS='|' read -r NAME SUBNET GW <<< "$NET"
-    # Skip if already created via Macvlan (e.g. if NAME matches a BR)
     docker network inspect "$NAME" >/dev/null 2>&1 || \
     docker network create -d bridge --subnet="$SUBNET" --gateway="$GW" "$NAME"
 done

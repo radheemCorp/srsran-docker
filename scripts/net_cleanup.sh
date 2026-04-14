@@ -3,7 +3,7 @@
 # --- Configuration ---
 # Names of Docker networks and OVS bridges to remove
 DOCKER_NETS=("ran" "metrics" "n3br" "oran-sc-ric_ric_network" "n2network" "n3network")
-OVS_BRS=("n3br" "n4br" "n6br")
+OVS_BRS=("ran" "n3br" "n4br" "n6br")
 
 echo "Starting Unified Network Cleanup..."
 

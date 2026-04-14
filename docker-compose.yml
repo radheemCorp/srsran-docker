@@ -87,7 +87,3 @@ networks:
   n2network:
     external: true
     name: n2network
-
-  n3network:
-    external: true
-    name: n3network
