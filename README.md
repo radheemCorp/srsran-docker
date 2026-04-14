@@ -100,16 +100,16 @@ docker network create -d macvlan \
   --subnet=10.10.3.0/24 \
   --gateway=10.10.3.254 \
   -o parent=n3br \
-  ue_n3
+  n3br
 ```
 
-If `ue_n3` already exists, Docker will report it. That is fine.
+If `n3br` already exists, Docker will report it. That is fine.
 
 Note:
 - `host_ue1` and `host_ue2` are configured to use static IPs on this external network:
   - UE1 container: `10.10.3.234`
   - UE2 container: `10.10.3.235`
-- Bridge uses `10.10.3.236` on `ue_n3`.
+- Bridge uses `10.10.3.236` on `n3br`.
 
 ## 2) Build and start Core + gNB
 

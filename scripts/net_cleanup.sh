@@ -1,58 +1,38 @@
 #!/bin/bash
 
 # --- Configuration ---
-# Must match the BridgeNames used in the setup script
-BR_NAMES=("n2br" "n3br" "n4br" "n6br")
+# Names of Docker networks and OVS bridges to remove
+DOCKER_NETS=("ran" "metrics" "n3br" "oran-sc-ric_ric_network" "n2network" "n3network")
+OVS_BRS=("n3br" "n4br" "n6br")
 
-# Docker networks created for services in net_setup.sh
-# Format: same as in net_setup: "NetName"
-DOCKER_NETWORKS=(
-    "ran"
-    "metrics"
-    "ue_n3"
-    "oran-sc-ric_ric_network"
-    "n2network"
-    "n3network"
-)
+echo "Starting Unified Network Cleanup..."
 
-echo "Starting OVS and Docker Network Cleanup..."
+# 1. Remove Docker Networks first (releases interfaces)
+for NET in "${DOCKER_NETS[@]}"; do
+    if docker network inspect "$NET" >/dev/null 2>&1; then
+        echo "[..] Removing Docker network: $NET"
+        docker network rm "$NET" >/dev/null
+    fi
+done
 
-for BR in "${BR_NAMES[@]}"; do
-    echo "------------------------------------------------"
-    echo "Cleaning up: $BR"
-
-    # 1. Remove Docker Network
+# 2. Remove OVS Bridges and their Docker Macvlan counterparts
+for BR in "${OVS_BRS[@]}"; do
+    # Remove the docker macvlan network tied to the bridge
     if docker network inspect "$BR" >/dev/null 2>&1; then
-        echo "[..] Removing Docker network: $BR"
-        docker network rm "$BR"
-        echo "[OK] Docker network $BR removed."
-    else
-        echo "[!] Docker network $BR not found."
+        docker network rm "$BR" >/dev/null
     fi
 
-    # 2. Remove OVS Bridge
+    # Delete the OVS Bridge from the host
     if sudo ovs-vsctl br-exists "$BR"; then
         echo "[..] Deleting OVS Bridge: $BR"
         sudo ovs-vsctl del-br "$BR"
-        echo "[OK] OVS Bridge $BR deleted."
-    else
-        echo "[!] OVS Bridge $BR not found on host."
     fi
 done
 
-echo "------------------------------------------------"
-echo "Removing service Docker networks..."
-for N in "${DOCKER_NETWORKS[@]}"; do
-    if docker network inspect "$N" >/dev/null 2>&1; then
-        echo "[..] Removing Docker network: $N"
-        docker network rm "$N"
-        echo "[OK] Docker network $N removed."
-    else
-        echo "[!] Docker network $N not found."
-    fi
-done
+# 3. Clean up NAT rules
+echo "[..] Cleaning up IPtables rules..."
+sudo iptables -t nat -D POSTROUTING -s 10.55.1.0/24 ! -o n6br -j MASQUERADE 2>/dev/null
 
 echo "------------------------------------------------"
-echo "Cleanup Complete."
-# Optional: Show remaining bridges to ensure it's clean
-sudo ovs-vsctl list-br
+echo "Cleanup Complete. Remaining Docker Networks:"
+docker network ls --format '{{.Name}}' | grep -E "br|ran|metrics|ric" || echo "None found."

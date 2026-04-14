@@ -35,4 +35,4 @@ compose_down "$UE1_DIR"
 compose_down "$BRIDGE_DIR"
 
 echo "[2/2] Cleanup complete"
-echo "Note: Docker network 'ue_n3' and host bridge 'virbr0' were preserved."
+echo "Note: Docker network 'n3br' and host bridge 'virbr0' were preserved."

@@ -19,7 +19,7 @@ Both attach to the same gNB/Open5GS deployment and pass user-plane traffic.
 - UE config generators in both `external_ue/ue1` and `external_ue/ue2` support dynamic modes:
   - `direct` (single UE)
   - `bridge` (multi-UE, dynamic up to N UEs)
-- All three compose stacks now use a shared external Docker network `ue_n3` to avoid overlapping macvlan subnet errors.
+- All three compose stacks now use a shared external Docker network `n3br` to avoid overlapping macvlan subnet errors.
 - Added `.env` files to all three directories for reproducible defaults:
   - `external_ue/ue1/.env`
   - `external_ue/ue2/.env`
@@ -127,7 +127,7 @@ Dynamic scaling model:
 1. Start Open5GS (single SMF/UPF) and verify healthy.
 2. Start gNB with bridge-facing ZMQ config.
 3. Create shared Docker macvlan network once on host (if missing):
-   - `docker network create -d macvlan --subnet=10.10.3.0/24 --gateway=10.10.3.254 -o parent=n3br ue_n3`
+   - `docker network create -d macvlan --subnet=10.10.3.0/24 --gateway=10.10.3.254 -o parent=n3br n3br`
 4. Start bridge container from `external_ue/zmq_bridge`:
    - `docker compose up -d`
 5. Start UE1 container (`external_ue/ue1`) and run:

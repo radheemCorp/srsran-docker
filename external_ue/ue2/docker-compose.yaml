@@ -31,4 +31,4 @@ services:
 networks:
   external_n3:
     external: true
-    name: ue_n3
+    name: n3br

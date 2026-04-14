@@ -16,7 +16,7 @@ Expected:
 Also ensure shared Docker network exists:
 
 ```bash
-docker network create -d macvlan --subnet=10.10.3.0/24 --gateway=10.10.3.254 -o parent=n3br ue_n3
+docker network create -d macvlan --subnet=10.10.3.0/24 --gateway=10.10.3.254 -o parent=n3br n3br
 ```
 
 If it already exists, Docker returns an "already exists" message.

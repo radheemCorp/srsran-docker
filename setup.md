@@ -24,7 +24,7 @@ Prerequisites (host)
 - Linux host with Docker and Docker Compose plugin installed.
 - `uhd` drivers & tools installed (verify with `uhd_find_devices`). See `FIND_UHD_DEVICE.md` for install notes.
 - Host user in `docker` group or run `docker` commands with `sudo`.
-- A host interface to act as macvlan parent (the repository uses a bridge named `n3br` by default). If you prefer, use an existing physical NIC (e.g. `eth0`) as parent for the `ue_n3` macvlan.
+- A host interface to act as macvlan parent (the repository uses a bridge named `n3br` by default). If you prefer, use an existing physical NIC (e.g. `eth0`) as parent for the `n3br` macvlan.
 
 Quick checks before starting
 ```bash
@@ -34,7 +34,7 @@ groups                  # ensure you are in the docker group or use sudo
 ```
 
 Host network (create once)
-1. Create/prepare the `n3br` bridge and the external `ue_n3` macvlan network. Replace `n3br` with an existing NIC if you prefer.
+1. Create/prepare the `n3br` bridge and the external `n3br` macvlan network. Replace `n3br` with an existing NIC if you prefer.
 
 ```bash
 sudo ip link add n3br type bridge || true
@@ -46,10 +46,10 @@ docker network create -d macvlan \
   --subnet=10.10.3.0/24 \
   --gateway=10.10.3.254 \
   -o parent=n3br \
-  ue_n3
+  n3br
 ```
 
-If `ue_n3` already exists, Docker will report that — that is fine.
+If `n3br` already exists, Docker will report that — that is fine.
 
 Prepare Open5GS & gNB configs (required)
 1. Use the compose located at `srsRAN_Project/docker/docker-compose.yml`. Files referenced by that compose are expected relative to `srsRAN_Project/docker`.
@@ -146,14 +146,14 @@ ru_sdr:
 - Ensure `cu_cp.amf.addr` in the same file points to the Open5GS container IP on the `ran` network (default `10.53.1.2`).
 
 Starting services (order matters)
-1) Ensure `ue_n3` network exists (see Host network above). Example (run as root or sudo):
+1) Ensure `n3br` network exists (see Host network above). Example (run as root or sudo):
 
 ```bash
 # create bridge + macvlan if needed (run once)
 sudo ip link add n3br type bridge || true
 sudo ip link set dev n3br up
 sudo ip addr add 10.10.3.254/24 dev n3br || true
-docker network create -d macvlan --subnet=10.10.3.0/24 --gateway=10.10.3.254 -o parent=n3br ue_n3 || true
+docker network create -d macvlan --subnet=10.10.3.0/24 --gateway=10.10.3.254 -o parent=n3br n3br || true
 ```
 
 2) Start both Open5GS and gNB in one command (from the compose directory):
@@ -217,7 +217,7 @@ Troubleshooting (quick)
 - AMF/NGAP issues: check gNB logs for NGSetupRequest/Response and `open5gs` logs for gNB registration lines.
 
 Journal (progress in this workspace)
-- 2026-04-13: Created and verified host bridge `n3br` with IP `10.10.3.254/24` and created Docker macvlan `ue_n3`.
+- 2026-04-13: Created and verified host bridge `n3br` with IP `10.10.3.254/24` and created Docker macvlan `n3br`.
 - 2026-04-13: Added `srsRAN_Project/docker/open5gs/subscriber_db.csv` with two custom subscribers (IMSI 001010000000101 and 001010000000102) and updated `open5gs.env` to `SUBSCRIBER_DB=subscriber_db.csv`.
 - 2026-04-13: Rebuilt the `docker-5gc` image so the subscribers file was included and started `open5gs_5gc`; Open5GS imported the subscribers successfully.
 - 2026-04-13: Updated `srsRAN_Project/configs/gnb_zmq_external_ue.yml` to use UHD (`device_args: type=b200,serial=310C56E`).

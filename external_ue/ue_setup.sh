@@ -27,13 +27,13 @@ if ! ip link show virbr0 >/dev/null 2>&1; then
   exit 1
 fi
 
-echo "[2/3] Ensuring Docker network ue_n3"
-if ! docker network inspect ue_n3 >/dev/null 2>&1; then
+echo "[2/3] Ensuring Docker network n3br"
+if ! docker network inspect n3br >/dev/null 2>&1; then
   docker network create -d macvlan \
   --subnet=10.10.3.0/24 \
   --gateway=10.10.3.254 \
   -o parent=virbr0 \
-  ue_n3
+  n3br
 fi
 
 echo "[3/3] Starting bridge + UE containers"
