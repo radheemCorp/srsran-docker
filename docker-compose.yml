@@ -72,18 +72,22 @@ volumes:
 
 networks:
   ran:
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.53.1.0/24
+    external: true
+    name: ran
   metrics:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.19.1.0/24
+    external: true
+    name: metrics
   ue_n3:
     external: true
     name: ue_n3
   ric_network:
     external: true
     name: oran-sc-ric_ric_network
+
+  n2network:
+    external: true
+    name: n2network
+
+  n3network:
+    external: true
+    name: n3network
