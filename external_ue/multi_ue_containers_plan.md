@@ -9,7 +9,7 @@ Both attach to the same gNB/Open5GS deployment and pass user-plane traffic.
 The UEs will use:
 - static IPs on `n3br`
 - separate Linux network namespaces inside the UE containers
-- APN `srsapn`
+- APN `internet`
 
 ## Current status
 - Multi-UE workspace is now under `external_ue/`:
@@ -124,7 +124,7 @@ Dynamic scaling model:
 - Ensure both subscribers exist and match UE configs:
   - `001010000000001`
   - `001010000000002`
-  - APN `srsapn`, slice `sst=1/sd=000001`.
+  - APN `internet`, slice `sst=1/sd=000001`.
 
 ---
 

@@ -51,7 +51,7 @@ Usage:
   $0 exited         # remove all exited containers
   $0 ue             # remove UE-related containers
   $0 gnb            # remove gNB container(s)
-  $0 open5gs        # remove Open5GS container(s)
+  $0 o5g            # remove Open5GS container(s)
   $0 oran           # remove ORAN-related containers
   $0 all            # remove UE, gNB, Open5GS, and ORAN containers
   $0 name...        # remove specific container names
@@ -106,7 +106,7 @@ case "$1" in
     gnb)
         remove_list "${GNB_CONTAINERS[@]}"
         ;;
-    open5gs)
+    o5g)
         remove_list "${OPEN5G_CONTAINERS[@]}"
         ;;
     oran)

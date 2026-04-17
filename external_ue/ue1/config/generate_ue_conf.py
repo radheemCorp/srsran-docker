@@ -44,7 +44,7 @@ release = 15
 ue_category = 4
 
 [nas]
-apn = srsapn
+apn = internet
 apn_protocol = ipv4
 
 [gw]

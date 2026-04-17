@@ -235,7 +235,7 @@ Enable the APN:
 
 ```ini
 [nas]
-apn = srsapn
+apn = internet
 apn_protocol = ipv4
 ```
 

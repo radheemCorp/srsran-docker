@@ -41,7 +41,7 @@ The most important configuration values to match between gNB, UE, bridge, and co
 
 - Core subscriber settings must match the UE IMSI/APN/slice.
   - UE IMSIs: `001010000000001`, `001010000000002`
-  - APN: `srsapn`
+  - APN: `internet`
   - slice SST: `1`
   - PLMN: `00101`
   - subscribers are defined in `project-config/subscriber_db.csv`
