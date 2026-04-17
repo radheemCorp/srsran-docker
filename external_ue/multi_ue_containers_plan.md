@@ -6,6 +6,11 @@ Run 2 UEs simultaneously in 2 separate Docker containers:
 - UE2 from `ue2`
 Both attach to the same gNB/Open5GS deployment and pass user-plane traffic.
 
+The UEs will use:
+- static IPs on `n3br`
+- separate Linux network namespaces inside the UE containers
+- APN `srsapn`
+
 ## Current status
 - Multi-UE workspace is now under `external_ue/`:
   - `external_ue/ue1`
@@ -30,6 +35,7 @@ Observed runtime behavior:
 - AMF/SMF logs confirmed simultaneous success for both UEs:
   - `imsi-001010000000001` -> `10.41.0.3`
   - `imsi-001010000000002` -> `10.41.0.2`
+- Both UEs now use static IP assignments on `n3br` and are launched with `UE_USE_NETNS=true`.
 - Frequent gNB restarts cause `connection refused` events in AMF and can interrupt active UE sessions.
 
 Latest finding:
@@ -118,7 +124,7 @@ Dynamic scaling model:
 - Ensure both subscribers exist and match UE configs:
   - `001010000000001`
   - `001010000000002`
-  - DNN `internet`, slice `sst=1/sd=000001`.
+  - APN `srsapn`, slice `sst=1/sd=000001`.
 
 ---
 
