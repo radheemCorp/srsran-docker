@@ -1,6 +1,6 @@
 services:
   5gc:
-    image: rptestbed/open5gs:v2.7.0-ubuntu22.04-20260414
+    image: rptestbed/open5gs:v2.7.0-ubuntu22.04-20260417
     build:
       context: ./srsRAN_Project/docker/open5gs
       target: open5gs

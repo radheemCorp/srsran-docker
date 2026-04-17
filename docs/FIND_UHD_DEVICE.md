@@ -1,4 +1,4 @@
-# isntallation 
+# installation 
 
 ```bash 
 sudo apt update
