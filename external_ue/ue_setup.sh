@@ -33,5 +33,3 @@ echo "  docker compose --project-directory \"$UE2_DIR\" -f \"$UE2_DIR/docker-com
 echo ""
 echo "Bridge socket check:"
 echo "  docker exec srsran_zmq_bridge ss -tnp"
-
-docker compose --project-directory "/home/radr/tuilm/srsran-docker/external_ue/ue1" -f "/home/radr/tuilm/srsran-docker/external_ue/ue2/docker-compose.yaml" exec -it srsran_ue_host bash -lc '/srsran/config/start_ue.sh 2'

@@ -51,7 +51,7 @@ cell_cfg:
     mcs_table: qam64
 
 log:
-  filename: /tmp/gnb.log
+  filename: /dev/stdout
   all_level: info
 
 pcap:

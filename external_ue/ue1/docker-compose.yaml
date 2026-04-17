@@ -22,6 +22,7 @@ services:
       - UE_BIND_IP=10.10.3.234
       - UE_DNS1=1.1.1.1
       - UE_DNS2=8.8.8.8
+      - UE_USE_NETNS=true
     command: >
       /bin/bash -c "
       chmod +x /srsran/config/*.sh &&
