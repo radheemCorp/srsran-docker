@@ -30,7 +30,6 @@
 ARG OS_VERSION=24.04
 ARG UHD_VERSION=4.7.0.0
 ARG DPDK_VERSION=24.11.2
-ARG ENABLE_DPDK=On
 ARG MARCH=native
 ARG NUM_JOBS=""
 
@@ -46,10 +45,8 @@ ADD . /src
 # RUN apt update && apt-get install -y --no-install-recommends git git-lfs ca-certificates
 # RUN git clone https://github.com/srsran/srsRAN_Project.git /src
 
-# Install srsRAN build dependencies.
-# ZMQ deps are provided by the "extra" mode and are required for ENABLE_ZEROMQ builds.
+# Install srsRAN build dependencies
 RUN /src/docker/scripts/install_dependencies.sh build && \
-    /src/docker/scripts/install_dependencies.sh extra && \
     /src/docker/scripts/install_uhd_dependencies.sh build && \
     /src/docker/scripts/install_dpdk_dependencies.sh build && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git clang
@@ -72,7 +69,6 @@ FROM builder-base AS builder
 
 ARG UHD_VERSION
 ARG DPDK_VERSION
-ARG ENABLE_DPDK
 ARG MARCH
 ARG NUM_JOBS
 
@@ -92,7 +88,7 @@ ENV DPDK_DIR=/opt/dpdk/${DPDK_VERSION}
 RUN if [ -z "$NUM_JOBS" ]; then NUM_JOBS=$(nproc); fi \
     && \
     /src/docker/scripts/builder.sh -c ${COMPILER} -m "-j${NUM_JOBS} srscu srsdu srsdu_split_8 srsdu_split_7_2 gnb gnb_split_8 gnb_split_7_2 ru_emulator" \
-    -DBUILD_TESTING=False -DENABLE_UHD=On -DENABLE_DPDK=${ENABLE_DPDK} -DMARCH=${MARCH} -DCMAKE_INSTALL_PREFIX=/opt/srs \
+    -DBUILD_TESTING=False -DENABLE_UHD=On -DENABLE_DPDK=On -DMARCH=${MARCH} -DCMAKE_INSTALL_PREFIX=/opt/srs \
     ${EXTRA_CMAKE_ARGS} /src
 RUN cp /src/build/apps/cu/srscu             /tmp/srscu                     && \
     cp /src/build/apps/du/srsdu             /tmp/srsdu                     && \
@@ -141,7 +137,7 @@ RUN /usr/local/etc/install_srsran_dependencies.sh run && \
     /usr/local/etc/install_rohc_dependencies.sh run && \
     /usr/local/etc/install_uhd_dependencies.sh run && \
     /usr/local/etc/install_dpdk_dependencies.sh run && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ntpdate libzmq5 libdw1 libdwarf1 libelf1 libdpdk-dev && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ntpdate && \
     apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 #########################################################
