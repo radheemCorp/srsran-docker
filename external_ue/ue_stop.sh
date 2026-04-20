@@ -3,9 +3,9 @@ set -euo pipefail
 
 # Determine directories relative to script location
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BRIDGE_DIR="${ROOT_DIR}/host_ue_bridge"
-UE1_DIR="${ROOT_DIR}/host_ue1"
-UE2_DIR="${ROOT_DIR}/host_ue2"
+BRIDGE_DIR="${ROOT_DIR}/zmq_bridge"
+UE1_DIR="${ROOT_DIR}/ue1"
+UE2_DIR="${ROOT_DIR}/ue2"
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || {

@@ -21,8 +21,9 @@ nof_carriers = 0
 [rat.nr]
 bands = 3
 nof_carriers = 1
-max_nof_prb = 106
+max_nof_prb = 106 
 nof_prb = 106
+
 
 [log]
 all_level = warning
