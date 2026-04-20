@@ -14,7 +14,7 @@ fi
 echo "Using external interface: $OUT_IF"
 
 echo "Cleaning old networks (non-fatal)..."
-docker network rm ran metrics n3br oran-sc-ric_ric_network n2network n3network n2br n3br n4br n6br >/dev/null 2>&1 || true
+docker network rm ran metrics ue-net n3br oran-sc-ric_ric_network n2network n3network n2br n3br n4br n6br >/dev/null 2>&1 || true
 
 # # 2. OVS & MACVLAN NETWORKS (Physical/Infrastructure Layer)
 # # Format: "BridgeName|Subnet|Gateway|MTU"
@@ -47,6 +47,7 @@ docker network rm ran metrics n3br oran-sc-ric_ric_network n2network n3network n
 BRIDGE_NETS=(
     "metrics|172.19.1.0/24|172.19.1.254"
     "ran|10.53.1.0/24|10.53.1.254"
+    "ue-net|10.54.1.0/24|10.54.1.254"
 )
 echo "Setting up Docker Internal Bridges..."
 for NET in "${BRIDGE_NETS[@]}"; do

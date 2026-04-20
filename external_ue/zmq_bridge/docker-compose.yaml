@@ -11,6 +11,7 @@ services:
       - GNB_IP=10.53.1.3
       - BRIDGE_IP=10.53.1.6
       - UE_IP_BASE=233
+      - UE_IP_PREFIX=10.54.1.
       - BIND_ALL=1
     networks:
       external_n3:
@@ -21,6 +22,8 @@ services:
         ipv4_address: 172.19.1.6
         aliases:
           - srsran_zmq_bridge
+      ue_net:
+        ipv4_address: 10.54.1.6
     volumes:
       - ./config:/srsran/config
     command: >
@@ -35,3 +38,6 @@ networks:
   metrics:
     external: true
     name: metrics
+  ue_net:
+    name: ue-net
+    external: true

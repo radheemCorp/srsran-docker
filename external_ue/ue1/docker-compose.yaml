@@ -4,8 +4,8 @@ services:
     container_name: srsran_ue_host
     privileged: true
     networks:
-      external_n3:
-        ipv4_address: 10.53.1.7
+      ue_net:
+        ipv4_address: 10.54.1.234
     cap_add:
       - NET_ADMIN
       - SYS_NICE
@@ -13,16 +13,8 @@ services:
       - IPC_LOCK
     volumes:
       - ./config:/srsran/config
-    environment:
-      - DEBUG_MODE=false
-      # These IPs are now reachable via the route we added to the host
-      - GNB_IP=10.53.1.3
-      - ZMQ_BRIDGE_IP=10.53.1.6
-      - UE_ZMQ_MODE=bridge
-      - UE_BIND_IP=10.53.1.7
-      - UE_DNS1=1.1.1.1
-      - UE_DNS2=8.8.8.8
-      - UE_USE_NETNS=false
+    env_file:
+      - .env
     command: >
       /bin/bash -c "
       chmod +x /srsran/config/*.sh &&
@@ -32,6 +24,6 @@ services:
     image: prom/node-exporter:latest
 
 networks:
-  external_n3:
+  ue_net:
+    name: ue-net
     external: true
-    name: ran

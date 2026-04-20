@@ -10,7 +10,7 @@ from gnuradio import zeromq
 
 
 class ZmqUeBridge(gr.top_block):
-    def __init__(self, ue_ids, gnb_ip: str, bridge_ip: str, ue_ip_base: int):
+    def __init__(self, ue_ids, gnb_ip: str, bridge_ip: str, ue_ip_base: int, ue_ip_list=None):
         super().__init__("srsRAN_ZMQ_UE_Bridge")
 
         zmq_timeout = 100
@@ -57,7 +57,12 @@ class ZmqUeBridge(gr.top_block):
         for input_idx, i in enumerate(ue_ids):
             ul_port = 2100 + i
             dl_port = 2200 + i
-            ue_ip = f"10.10.3.{ue_ip_base + i}"
+            # derive UE IP from provided ue_ip_list (preferred) or fall back to
+            # prefix/base calculation using the provided bridge configuration
+            if ue_ip_list and input_idx < len(ue_ip_list):
+                ue_ip = ue_ip_list[input_idx]
+            else:
+                ue_ip = f"10.53.1.{ue_ip_base + i}"
 
             ue_ul = zeromq.req_source(
                 gr.sizeof_gr_complex,
@@ -127,7 +132,7 @@ def main():
     else:
         ue_ip_list = [f"{args.ue_ip_prefix}{args.ue_ip_base + i}" for i in range(1, args.num_ues + 1)]
 
-    tb = ZmqUeBridge(ue_ids, args.gnb_ip, args.bridge_ip, args.ue_ip_base)
+    tb = ZmqUeBridge(ue_ids, args.gnb_ip, args.bridge_ip, args.ue_ip_base, ue_ip_list)
     # attach computed UE ips list to the top block for internal use
     setattr(tb, 'ue_ip_list', ue_ip_list)
     # If requested, instruct top block to bind reply sinks on all interfaces.

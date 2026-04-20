@@ -276,5 +276,9 @@ Usage:
 Notes:
 - The script invokes `docker compose build <service>` for any missing image — ensure you have sufficient resources and time to build large images locally.
 - If you prefer manual control, you can run `docker compose pull` and `docker compose build` yourself before `docker compose up -d`.
-
+- Why the UE cannot be on the ran network
+  10.53.1.0/24 is the RAN/ZMQ control network used for gNB, bridge, and core signaling.
+  The UE data-plane address from tun_srsue must be on the core UE subnet (e.g. 10.41.0.0/24) so it can route through Open5GS/UPF.
+  If the UE gets 10.53.1.x, it collides with the RAN network and the UE’s tunnel traffic is no longer distinguishable from gNB/bridge control traffic.
+  That breaks the expected path: UE → tun_srsue → UPF gateway → core/internet.
 
