@@ -95,14 +95,14 @@ if __name__ == '__main__':
     parser.add_argument(
         '--gnb-ip',
         type=str,
-        default=os.environ.get('GNB_IP', '10.10.3.231'),
-        help='gNB N3 IP address used by ZMQ endpoints (default: env GNB_IP or 10.10.3.231)'
+        default=os.environ.get('GNB_IP', '10.53.1.3'),
+        help='gNB N3 IP address used by ZMQ endpoints (default: env GNB_IP or 10.53.1.3)'
     )
     parser.add_argument(
         '--bridge-ip',
         type=str,
-        default=os.environ.get('ZMQ_BRIDGE_IP', '10.10.3.236'),
-        help='Bridge IP for bridge mode (default: env ZMQ_BRIDGE_IP or 10.10.3.236)'
+        default=os.environ.get('ZMQ_BRIDGE_IP', '10.53.1.6'),
+        help='Bridge IP for bridge mode (default: env ZMQ_BRIDGE_IP or 10.53.1.6)'
     )
     parser.add_argument(
         '--ue-bind-ip',

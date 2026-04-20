@@ -2,7 +2,7 @@ services:
   5gc:
     image: rptestbed/open5gs:v2.7.0-ubuntu22.04-20260417
     build:
-      context: ./srsRAN_Project/docker/open5gs
+      context: ../docker/open5gs
       target: open5gs
       args:
         OS_VERSION: "22.04"
@@ -31,11 +31,11 @@ services:
     networks:
       ran:
         ipv4_address: 10.53.1.2
-
+      
   gnb:
     image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260414
     build:
-      context: ./srsRAN_Project
+      context: ..
       dockerfile: docker/Dockerfile
       args:
         OS_VERSION: "24.04"
@@ -49,10 +49,9 @@ services:
     volumes:
       - /dev/bus/usb/:/dev/bus/usb/
       - /usr/share/uhd/images:/usr/share/uhd/images
-      # Select one gNB RF config below:
-      # - ./project-config/gnb/gnb_uhd.yml:/gnb_config.yml:ro # UHD RF
       - ./project-config/gnb/gnb_zmq.yml:/gnb_config.yml:ro # ZMQ RF
       - ./project-config/gnb/gnb_compose_config.yml:/gnb_compose_config.yml:ro
+      - ./gnb-storage:/tmp
     command: gnb -c /gnb_config.yml -c /gnb_compose_config.yml
     depends_on:
       5gc:
@@ -62,10 +61,7 @@ services:
         ipv4_address: 10.53.1.3
       metrics:
         ipv4_address: 172.19.1.3
-      n3br:
-        ipv4_address: 10.10.3.231
-      ric_network:
-        ipv4_address: 10.0.2.30
+      
 
 volumes:
   gnb-storage: {}
@@ -77,13 +73,5 @@ networks:
   metrics:
     external: true
     name: metrics
-  n3br:
-    external: true
-    name: n3br
-  ric_network:
-    external: true
-    name: oran-sc-ric_ric_network
 
-  n2network:
-    external: true
-    name: n2network
+  

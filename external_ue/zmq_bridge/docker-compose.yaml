@@ -8,12 +8,19 @@ services:
       - SYS_NICE
       - IPC_LOCK
     environment:
-      - GNB_IP=10.10.3.231
-      - BRIDGE_IP=10.10.3.236
+      - GNB_IP=10.53.1.3
+      - BRIDGE_IP=10.53.1.6
       - UE_IP_BASE=233
+      - BIND_ALL=1
     networks:
       external_n3:
-        ipv4_address: 10.10.3.236
+        ipv4_address: 10.53.1.6
+        aliases:
+          - srsran_zmq_bridge
+      metrics:
+        ipv4_address: 172.19.1.6
+        aliases:
+          - srsran_zmq_bridge
     volumes:
       - ./config:/srsran/config
     command: >
@@ -24,4 +31,7 @@ services:
 networks:
   external_n3:
     external: true
-    name: n3br
+    name: ran
+  metrics:
+    external: true
+    name: metrics

@@ -20,31 +20,20 @@ ru_sdr:
   # Use UHD with the connected B210 SDR. Set device serial to your device's serial.
   device_driver: uhd
   # Correct UHD device args: use serial= without extra 'addr=' wrapper
-  device_args: type=b200,serial=310C56E
+  device_args: type=b200,serial=310C56E,num_recv_frames=64,num_send_frames=64
   srate: 23.04
   tx_gain: 80
   rx_gain: 40
 
 cell_cfg:
   dl_arfcn: 368500
-  band: 3
+  band: 78
   channel_bandwidth_MHz: 20
-  common_scs: 15
+  common_scs: 30
   plmn: "00101"
   tac: 7
-  pdcch:
-    dedicated:
-      ss2_type: common
-      dci_format_0_1_and_1_1: false
-    common:
-      ss0_index: 0
-      coreset0_index: 12
-  prach:
-    prach_config_index: 1
-  pdsch:
-    mcs_table: qam64
-  pusch:
-    mcs_table: qam64
+  pci: 1
+  
 
 log:
   filename: /tmp/gnb.log

@@ -28,10 +28,17 @@ class ZmqUeBridge(gr.top_block):
             zmq_hwm,
         )
         # bridge rep sink -> gNB rx (uplink aggregate)
+        # NOTE: by default the bridge binds its reply sinks to the configured
+        # bridge_ip. In multi-network Docker setups it's often preferable to
+        # bind on all interfaces (tcp://*:port) so peers from any attached
+        # network can connect. The CLI exposes `--bind-all` to enable this.
+        bind_addr = f"tcp://{bridge_ip}:2001"
+        if getattr(self, 'bind_all', False):
+            bind_addr = "tcp://*:2001"
         self.gnb_ul_sink = zeromq.rep_sink(
             gr.sizeof_gr_complex,
             1,
-            f"tcp://{bridge_ip}:2001",
+            bind_addr,
             zmq_timeout,
             False,
             zmq_hwm,
@@ -63,7 +70,7 @@ class ZmqUeBridge(gr.top_block):
             ue_dl = zeromq.rep_sink(
                 gr.sizeof_gr_complex,
                 1,
-                f"tcp://{bridge_ip}:{dl_port}",
+                ("tcp://*:%d" % dl_port) if getattr(self, 'bind_all', False) else f"tcp://{bridge_ip}:{dl_port}",
                 zmq_timeout,
                 False,
                 zmq_hwm,
@@ -84,13 +91,24 @@ def main():
         default="",
         help="Comma-separated UE IDs to activate (e.g. 1,2). If empty, uses 1..num-ues",
     )
-    parser.add_argument("--gnb-ip", default="10.10.3.231", help="gNB N3 IP")
-    parser.add_argument("--bridge-ip", default="10.10.3.236", help="Bridge IP on N3")
+    parser.add_argument("--gnb-ip", default="10.53.1.3", help="gNB N3 IP")
+    parser.add_argument("--bridge-ip", default="10.53.1.6", help="Bridge IP on N3")
+    parser.add_argument("--bind-all", action="store_true", help="Bind bridge reply sinks on all interfaces (tcp://*:port)")
     parser.add_argument(
         "--ue-ip-base",
         type=int,
         default=233,
         help="Last-octet base for UE IP allocation (UE1=base+1, UE2=base+2)",
+    )
+    parser.add_argument(
+        "--ue-ip-prefix",
+        default="10.53.1.",
+        help="IP prefix for computed UE IPs (e.g. '10.53.1.') when --ue-ips isn't provided",
+    )
+    parser.add_argument(
+        "--ue-ips",
+        default="",
+        help="Comma-separated explicit UE IPs (overrides --ue-ip-prefix/--ue-ip-base)",
     )
     args = parser.parse_args()
 
@@ -102,7 +120,19 @@ def main():
     if not ue_ids:
         raise ValueError("No UE IDs provided to bridge")
 
+    # prepare UE IP list: either explicit via --ue-ips or computed using prefix+base
+    explicit_ue_ips = [x.strip() for x in args.ue_ips.split(",") if x.strip()] if args.ue_ips.strip() else []
+    if explicit_ue_ips:
+        ue_ip_list = explicit_ue_ips
+    else:
+        ue_ip_list = [f"{args.ue_ip_prefix}{args.ue_ip_base + i}" for i in range(1, args.num_ues + 1)]
+
     tb = ZmqUeBridge(ue_ids, args.gnb_ip, args.bridge_ip, args.ue_ip_base)
+    # attach computed UE ips list to the top block for internal use
+    setattr(tb, 'ue_ip_list', ue_ip_list)
+    # If requested, instruct top block to bind reply sinks on all interfaces.
+    if args.bind_all:
+        setattr(tb, 'bind_all', True)
 
     def sig_handler(sig=None, frame=None):
         tb.stop()
