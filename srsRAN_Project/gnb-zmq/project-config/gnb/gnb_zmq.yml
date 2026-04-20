@@ -23,7 +23,9 @@ ru_sdr:
   # Use ZMQ RF frontend.
   device_driver: zmq
   # gNB TX -> external_ue bridge RX, and gNB RX <- bridge TX.
-  device_args: tx_port=tcp://10.53.1.3:2000,rx_port=tcp://10.53.1.6:2001,base_srate=23.04e6
+  # Route gNB ZMQ RF streams to the UE macvlan address so the UE's ZMQ sockets receive traffic
+  # UE listens on 10.10.3.232 ports 2101 (tx) and 2201 (rx)
+  device_args: tx_port=tcp://10.10.3.231:2101,rx_port=tcp://10.10.3.231:2201,base_srate=23.04e6
   srate: 23.04
   tx_gain: 80
   rx_gain: 40
