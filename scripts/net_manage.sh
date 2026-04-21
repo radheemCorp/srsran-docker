@@ -14,8 +14,8 @@ N2_SUBNET=${N2_SUBNET:-10.53.1.0/24}
 N2_GW=${N2_GW:-10.53.1.1}
 
 N3_NAME=${N3_NAME:-n3}
-N3_SUBNET=${N3_SUBNET:-10.53.2.0/24}
-N3_GW=${N3_GW:-10.53.2.1}
+N3_SUBNET=${N3_SUBNET:-10.10.3.0/24}
+N3_GW=${N3_GW:-10.10.3.236}
 
 
 N6_NAME=${N6_NAME:-n6}
@@ -26,6 +26,14 @@ N6_GW=${N6_GW:-10.41.0.1}
 METRICS_NAME=${METRICS_NAME:-metrics}
 METRICS_SUBNET=${METRICS_SUBNET:-172.19.1.0/24}
 METRICS_GW=${METRICS_GW:-172.19.1.1}
+
+# Host-side helper macvlan (so host can reach macvlan networks)
+HOST_MACVLAN_IF=${HOST_MACVLAN_IF:-macvlan_ran}
+HOST_MACVLAN_IP=${HOST_MACVLAN_IP:-10.53.1.254/24}
+
+# PDN aggregate route (via Open5GS on ran)
+PDN_ROUTE_SUBNET=${PDN_ROUTE_SUBNET:-10.45.0.0/16}
+PDN_ROUTE_VIA=${PDN_ROUTE_VIA:-10.53.1.2}
 
 DOCKER_OPTS_PARENT="-o parent=${PARENT_IF} -o macvlan_mode=bridge"
 
@@ -76,6 +84,51 @@ remove_bridge_network() {
   remove_macvlan_network "$name"
 }
 
+create_host_macvlan() {
+  local ifname=${HOST_MACVLAN_IF} ipaddr=${HOST_MACVLAN_IP}
+  if ip link show "$ifname" >/dev/null 2>&1; then
+    echo "Host macvlan interface '$ifname' already exists — skipping"
+  else
+    echo "Creating host macvlan interface '$ifname' linked to $PARENT_IF"
+    sudo ip link add "$ifname" link "$PARENT_IF" type macvlan mode bridge
+  fi
+
+  if ip addr show dev "$ifname" | grep -q "${ipaddr%/*}"; then
+    echo "IP $ipaddr already assigned to $ifname — skipping"
+  else
+    echo "Assigning $ipaddr to $ifname"
+    sudo ip addr add "$ipaddr" dev "$ifname" || true
+  fi
+
+  sudo ip link set "$ifname" up
+
+  # add PDN route via open5gs if missing
+  if ip route show | grep -q "${PDN_ROUTE_SUBNET}"; then
+    echo "Route for ${PDN_ROUTE_SUBNET} already exists — skipping"
+  else
+    echo "Adding route ${PDN_ROUTE_SUBNET} via ${PDN_ROUTE_VIA} dev ${ifname}"
+    sudo ip route add ${PDN_ROUTE_SUBNET} via ${PDN_ROUTE_VIA} dev ${ifname}
+  fi
+}
+
+remove_host_macvlan() {
+  local ifname=${HOST_MACVLAN_IF}
+  # remove PDN route if present
+  if ip route show | grep -q "${PDN_ROUTE_SUBNET}"; then
+    echo "Removing route ${PDN_ROUTE_SUBNET}"
+    sudo ip route del ${PDN_ROUTE_SUBNET} || true
+  else
+    echo "Route ${PDN_ROUTE_SUBNET} not present — skipping"
+  fi
+
+  if ip link show "$ifname" >/dev/null 2>&1; then
+    echo "Deleting host macvlan interface '$ifname'"
+    sudo ip link delete "$ifname" || true
+  else
+    echo "Host macvlan interface '$ifname' does not exist — skipping"
+  fi
+}
+
 usage() {
   cat <<EOF
 Usage: $0 <command>
@@ -105,9 +158,11 @@ case "$action" in
     create_macvlan_network "$N3_NAME" "$N3_SUBNET" "$N3_GW"
     create_macvlan_network "$N6_NAME" "$N6_SUBNET" "$N6_GW"
     create_bridge_network "$METRICS_NAME" "$METRICS_SUBNET" "$METRICS_GW"
+    create_host_macvlan
     echo "Done. Networks created (or already existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME"
     ;;
   remove)
+    remove_host_macvlan
     remove_macvlan_network "$N6_NAME"
     remove_macvlan_network "$N3_NAME"
     remove_macvlan_network "$N2_NAME"
