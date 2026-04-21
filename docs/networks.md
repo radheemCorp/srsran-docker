@@ -25,9 +25,24 @@ IP Address Management (IPAM) is set to static.
 
 This is critical for 5G components. In a gNB or UPF, you cannot rely on DHCP. You need to manually assign specific IPs (e.g., in your Pod spec annotations) so that the different 5G components know exactly where to find each other.
 
+## Host Routing tables 
+- `route -n`
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.0.1     0.0.0.0         UG    100    0        0 eno1
+10.45.0.0       10.53.1.2       255.255.0.0     UG    0      0        0 br-dfa5521eb807
+10.53.1.0       0.0.0.0         255.255.255.0   U     0      0        0 br-dfa5521eb807
+
+## UE routing tables
+- `ip netns exec ue1 route -n`
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.45.1.1       0.0.0.0         UG    0      0        0 tun_srsue
+10.45.1.0       0.0.0.0         255.255.255.0   U     0      0        0 tun_srsue
 
 
-## Configuration checklist and expected values
+# Current Network Configuration
 
 ### Networks
 - `ran` network
