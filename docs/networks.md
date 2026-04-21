@@ -1,95 +1,31 @@
-radr@devred:~/tuilm/srsran-docker$ cip
-------------------------------------------------------
-CONTAINER              ┊ IP                              ┊ PORT        ┊ EXT_PORT ┊ NETWORKS           ┊ WORKDIR                                               ┊ DEPENDS_ON
-ue2-ue_metrics_agent-1 ┊ 172.20.0.2                      ┊  "9100/tcp" ┊          ┊ ue2_default        ┊ /home/radr/tuilm/srsran-docker/external_ue/ue2        ┊ 
-srsran_ue_host2        ┊ 10.54.1.235                     ┊             ┊          ┊ ue-net             ┊ /home/radr/tuilm/srsran-docker/external_ue/ue2        ┊ 
-ue1-ue_metrics_agent-1 ┊ 172.18.0.2                      ┊  "9100/tcp" ┊          ┊ ue1_default        ┊ /home/radr/tuilm/srsran-docker/external_ue/ue1        ┊ 
-srsran_ue_host         ┊ 10.54.1.234                     ┊             ┊          ┊ ue-net             ┊ /home/radr/tuilm/srsran-docker/external_ue/ue1        ┊ 
-srsran_zmq_bridge      ┊ 172.19.1.6 10.53.1.6 10.54.1.6  ┊             ┊          ┊ metrics ran ue-net ┊ /home/radr/tuilm/srsran-docker/external_ue/zmq_bridge ┊ 
-srsran_gnb             ┊ 172.19.1.3 10.53.1.3            ┊             ┊          ┊ metrics ran        ┊ /home/radr/tuilm/srsran-docker/srsRAN_Project/gnb-zmq ┊ 5gc
-open5gs_5gc            ┊ 10.53.1.2                       ┊  "9999/tcp" ┊ 9999     ┊ ran                ┊ /home/radr/tuilm/srsran-docker/srsRAN_Project/gnb-zmq ┊ 
-------------------------------------------------------
-radr@devred:~/tuilm/srsran-docker$ 
+# Requirements
+N2 (Control Plane): Between the gNB and the AMF.
+
+N3 (User Plane): Between the gNB and the UPF (carries GTP-U packets).
+
+N4 (Control/User Split): Between the SMF and the UPF. N4 is the PFCP control link between SMF and UPF. In our case both are co‑located in one container/process they can talk over localhost or the container IP, so don’t need a separate macvlan network for N4.
+
+N6 (Data Network): Between the UPF and the Internet/Data Network.
+
+The "Type": macvlan
+Instead of using a standard bridge (which can be slow due to the Linux bridge's overhead), you are using macvlan.
+
+What it does: It creates a "sub-interface" directly off your physical card (eth0 or the default interface on host with internet access).
+
+Why use it: It gives each container its own unique MAC address on the physical network. This is high-performance and allows the container to act like a physical device on the host's wire.
+
+The "Master": eth0
+This tells the CNI that all these virtual networks (N2, N3, etc.) will physically exit the machine through the eth0 port of your Kubernetes worker node.
+
+The "Mode": bridge
+In macvlan bridge mode, the virtual interfaces created on the same host can talk to each other directly through the master interface without the packets needing to leave the physical network card.
+
+The "IPAM": static
+IP Address Management (IPAM) is set to static.
+
+This is critical for 5G components. In a gNB or UPF, you cannot rely on DHCP. You need to manually assign specific IPs (e.g., in your Pod spec annotations) so that the different 5G components know exactly where to find each other.
 
 
-# srsRAN Docker Networks
-radr@devred:~/tuilm/srsran-docker$ dnet
-NETWORK                        IPv4 SUBNETS                   IPv6 SUBNETS                            
--------                        ------------                   ------------                            
-bridge                         172.17.0.0/16                  -                                       
-host                           -                              -                                       
-metrics                        172.19.1.0/24                  -                                       
-none                           -                              -                                       
-ran                            10.53.1.0/24                   -                                       
-ue1_default                    172.18.0.0/16                  -                                       
-ue2_default                    172.20.0.0/16                  -                                       
-ue-net                         10.54.1.0/24                   -                                       
-radr@devred:~/tuilm/srsran-docker$ 
-
-# Bridge 
-radr@devred:~/tuilm/srsran-docker/srsRAN_Project/gnb-zmq$ docker exec srsran_zmq_bridge ss -tnp
-State    Recv-Q    Send-Q       Local Address:Port        Peer Address:Port     Process                                                                         
-ESTAB    0         0                10.53.1.6:2001           10.53.1.3:53350     users:(("python3",pid=8,fd=45))                                                
-ESTAB    0         0                10.54.1.6:42536        10.54.1.235:2102      users:(("python3",pid=8,fd=38))                                                
-ESTAB    0         0                10.53.1.6:43580          10.53.1.3:2000      users:(("python3",pid=8,fd=9))                                                 
-ESTAB    0         0                10.54.1.6:50854        10.54.1.234:2101      users:(("python3",pid=8,fd=28))   
-
-# UE1 
-## logs 
-radr@devred:~/tuilm/srsran-docker/external_ue$ docker compose --project-directory "/home/radr/tuilm/srsran-docker/external_ue/ue1" -f "/home/radr/tuilm/srsran-docker/external_ue/ue1/docker-compose.yaml" exec -it srsran_ue_host bash -lc '/srsran/config/start_ue.sh 1'
-Waiting for tun_srsue to appear...
-Configuration for UE1 written to /tmp/ue_1.conf
-Active RF plugins: libsrsran_rf_zmq.so
-Inactive RF plugins: 
-Reading configuration file /tmp/ue_1.conf...
-
-Built in Release mode using commit ec29b0c1f on branch master.
-
-Opening 1 channels in RF device=zmq with args=tx_port=tcp://*:2101,rx_port=tcp://10.53.1.6:2201,base_srate=23.04e6
-Supported RF device list: zmq file
-CHx base_srate=23.04e6
-Current sample rate is 1.92 MHz with a base rate of 23.04 MHz (x12 decimation)
-CH0 rx_port=tcp://10.53.1.6:2201
-CH0 tx_port=tcp://*:2101
-Current sample rate is 23.04 MHz with a base rate of 23.04 MHz (x1 decimation)
-Current sample rate is 23.04 MHz with a base rate of 23.04 MHz (x1 decimation)
-Waiting PHY to initialize ... done!
-Attaching UE...
-
-
-## state
-radr@devred:~/tuilm/srsran-docker/external_ue$ docker compose --project-directory "/home/radr/tuilm/srsran-docker/external_ue/ue1" -f "/home/radr/tuilm/srsran-docker/external_ue/ue1/docker-compose.yaml" exec -it srsran_ue_host bash
-root@50699e22dafd:/# ip netns ls  
-ue1
-root@50699e22dafd:/# ip netns exec ue1 ip a 
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host 
-       valid_lft forever preferred_lft forever
-root@50699e22dafd:/# ip netns exec ue1 ping 10.54.1.6 
-ping: connect: Network is unreachable
-root@50699e22dafd:/# ip netns exec ue1 ping 10.53.1.6 
-ping: connect: Network is unreachable
-root@50699e22dafd:/# ip netns exec ue1 ping 10.53.1.3 
-ping: connect: Network is unreachable
-root@50699e22dafd:/# ping 10.53.1.3
-PING 10.53.1.3 (10.53.1.3) 56(84) bytes of data.
-^C
---- 10.53.1.3 ping statistics ---
-4 packets transmitted, 0 received, 100% packet loss, time 3062ms
-
-root@50699e22dafd:/# ping 10.54.1.6
-PING 10.54.1.6 (10.54.1.6) 56(84) bytes of data.
-64 bytes from 10.54.1.6: icmp_seq=1 ttl=64 time=0.412 ms
-64 bytes from 10.54.1.6: icmp_seq=2 ttl=64 time=0.074 ms
-64 bytes from 10.54.1.6: icmp_seq=3 ttl=64 time=0.049 ms
-64 bytes from 10.54.1.6: icmp_seq=4 ttl=64 time=0.052 ms
-^C
---- 10.54.1.6 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3057ms
-rtt min/avg/max/mdev = 0.049/0.146/0.412/0.153 ms
 
 ## Configuration checklist and expected values
 
