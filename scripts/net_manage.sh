@@ -6,7 +6,7 @@ set -euo pipefail
 # by exporting environment variables before running this script.
 
 # Host physical interface used as macvlan parent
-PARENT_IF=${PARENT_IF:-eth0}
+PARENT_IF=${PARENT_IF:-eth3}
 
 # Network names and subnets (can be overridden)
 N2_NAME=${N2_NAME:-n2}
@@ -21,6 +21,11 @@ N3_GW=${N3_GW:-10.53.2.1}
 N6_NAME=${N6_NAME:-n6}
 N6_SUBNET=${N6_SUBNET:-10.41.0.0/24}
 N6_GW=${N6_GW:-10.41.0.1}
+
+# Metrics network (bridge, not macvlan)
+METRICS_NAME=${METRICS_NAME:-metrics}
+METRICS_SUBNET=${METRICS_SUBNET:-172.19.1.0/24}
+METRICS_GW=${METRICS_GW:-172.19.1.1}
 
 DOCKER_OPTS_PARENT="-o parent=${PARENT_IF} -o macvlan_mode=bridge"
 
@@ -52,6 +57,25 @@ remove_macvlan_network() {
   fi
 }
 
+create_bridge_network() {
+  local name=$1 subnet=$2 gateway=$3
+  if docker network inspect "$name" >/dev/null 2>&1; then
+    echo "Docker network '$name' already exists — skipping"
+    return 0
+  fi
+
+  echo "Creating bridge network '$name' (subnet=$subnet gateway=$gateway)"
+  docker network create --driver bridge \
+    --subnet="$subnet" \
+    --gateway="$gateway" \
+    "$name"
+}
+
+remove_bridge_network() {
+  local name=$1
+  remove_macvlan_network "$name"
+}
+
 usage() {
   cat <<EOF
 Usage: $0 <command>
@@ -63,13 +87,13 @@ Commands:
 
 Environment overrides:
   PARENT_IF, N2_NAME, N2_SUBNET, N2_GW, N3_NAME, N3_SUBNET, N3_GW,
-  N6_NAME, N6_SUBNET, N6_GW
+  N6_NAME, N6_SUBNET, N6_GW, METRICS_NAME, METRICS_SUBNET, METRICS_GW
 EOF
 }
 
 # Validate parent interface exists
 if ! ip link show "$PARENT_IF" >/dev/null 2>&1; then
-  echo "Parent interface '$PARENT_IF' not found. Export PARENT_IF to override (default eth0)." >&2
+  echo "Parent interface '$PARENT_IF' not found. Export PARENT_IF to override (default eth3)." >&2
   exit 1
 fi
 
@@ -80,13 +104,15 @@ case "$action" in
     create_macvlan_network "$N2_NAME" "$N2_SUBNET" "$N2_GW"
     create_macvlan_network "$N3_NAME" "$N3_SUBNET" "$N3_GW"
     create_macvlan_network "$N6_NAME" "$N6_SUBNET" "$N6_GW"
-    echo "Done. Networks created (or already existed): $N2_NAME $N3_NAME $N6_NAME"
+    create_bridge_network "$METRICS_NAME" "$METRICS_SUBNET" "$METRICS_GW"
+    echo "Done. Networks created (or already existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME"
     ;;
   remove)
     remove_macvlan_network "$N6_NAME"
     remove_macvlan_network "$N3_NAME"
     remove_macvlan_network "$N2_NAME"
-    echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME"
+    remove_bridge_network "$METRICS_NAME"
+    echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME"
     ;;
   help|-h|--help)
     usage
