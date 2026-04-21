@@ -346,3 +346,8 @@ docker compose logs -f gnb
 08:54:30.302636 IP 53c74a269ac2.59764 > srsran_gnb.n3br.cisco-sccp: Flags [.], ack 1409200157, win 21386, options [nop,nop,TS val 1087482812 ecr 2454899255], length 0
 08:54:30.302647 IP srsran_gnb.n3br.cisco-sccp > 53c74a269ac2.59764: Flags [P.], seq 1409200157:1409264465, ack 39688, win 503, options [nop,nop,TS val 2454899255 ecr 1087482812], length 64308
 08:54:30.302666 IP srsran_gnb.n3br.cisco-sccp > 53c74a269ac2.59764: Flag
+
+
+
+
+    
