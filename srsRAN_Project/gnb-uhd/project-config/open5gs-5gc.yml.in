@@ -58,7 +58,7 @@ mme:
 
   s1ap:
     server:
-      - address: ${OPEN5GS_IP}
+      - address: 0.0.0.0
   gtpc:
     server:
       - address: ${OPEN5GS_IP}
@@ -119,6 +119,7 @@ smf:
   gtpu:
     server:
       - address: 127.0.0.4
+        port: 2124
   metrics:
     server:
       - address: 127.0.0.4
@@ -163,7 +164,7 @@ amf:
         - uri: http://127.0.0.22:7777
   ngap:
     server:
-      - address: ${OPEN5GS_IP}
+      - address: 0.0.0.0
   guami:
     - plmn_id:
         mcc: 001
@@ -207,7 +208,7 @@ upf:
       - address: 127.0.0.7
   gtpu:
     server:
-      - address: ${OPEN5GS_IP}
+      - address: 0.0.0.0
         advertise: ${UPF_ADVERTISE_IP}
   session:
     - subnet: ${UE_IP_RANGE}

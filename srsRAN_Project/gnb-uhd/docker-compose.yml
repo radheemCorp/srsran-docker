@@ -1,19 +1,17 @@
 services:
   5gc:
     image: rptestbed/open5gs:v2.7.0-ubuntu22.04-20260417
-    build:
-      context: ../docker/open5gs
-      target: open5gs
-      args:
-        OS_VERSION: "22.04"
-        OPEN5GS_VERSION: "v2.7.0"
-    pull_policy: if_not_present
     container_name: open5gs_5gc
     env_file:
       - ./project-config/open5gs.env
     privileged: true
+    # REMOVED port mappings for 38412 and 2152 to avoid host-level conflicts.
+    # The gNB (in host mode) will communicate with these via the Docker Bridge IP.
+    expose:
+      - "38412/sctp"
+      - "2152/udp"
     ports:
-      - "9999:9999/tcp"
+      - "7777:7777/tcp"    # Keep healthcheck or dashboard ports if needed
     command: 5gc -c open5gs-5gc.yml
     healthcheck:
       test: [ "CMD-SHELL", "nc -z 127.0.0.20 7777" ]
@@ -22,59 +20,37 @@ services:
       retries: 60
     volumes:
       - ./project-config/subscriber_db.csv:/open5gs/subscriber_db.csv:ro
-      # Mount the template (.in) so the container entrypoint can envsubst
-      # into a generated open5gs-5gc.yml inside the container. Mounting
-      # the final rendered file directly to /open5gs/open5gs-5gc.yml prevents
-      # the entrypoint from writing the generated file and causes a
-      # "Read-only file system" error.
       - ./project-config/open5gs-5gc.yml.in:/open5gs/open5gs-5gc.yml.in:ro
     networks:
-      n2:
-        ipv4_address: 10.53.1.2
-      
+      srs_network:
+        ipv4_address: 172.16.1.2
+
   gnb:
     image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260414
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-      args:
-        OS_VERSION: "24.04"
-        EXTRA_CMAKE_ARGS: "-DENABLE_ZEROMQ=On -DENABLE_UHD=On -DENABLE_EXPORT=On -DENABLE_MKL=False -DENABLE_DPDK=Off"
-    pull_policy: if_not_present
     container_name: srsran_gnb
     privileged: true
+    network_mode: host  # Stays in host mode for USRP/SDR performance
     cap_add:
       - SYS_NICE
       - CAP_SYS_PTRACE
+      - NET_ADMIN
     volumes:
-      - /dev/bus/usb/:/dev/bus/usb/
-      - /usr/share/uhd/images:/usr/share/uhd/images
-      - ./project-config/gnb/gnb_uhd.yml:/gnb_config.yml:ro # UHD RF
+      - /dev/bus/usb:/dev/bus/usb
+      - /usr/share/uhd/images:/usr/share/uhd/images:ro
+      - ./project-config/gnb/gnb_uhd.yml:/gnb_config.yml:ro
       - ./project-config/gnb/gnb_compose_config.yml:/gnb_compose_config.yml:ro
       - ./gnb-storage:/tmp
     command: gnb -c /gnb_config.yml -c /gnb_compose_config.yml
     depends_on:
       5gc:
         condition: service_healthy
-    networks:
-      n2:
-        ipv4_address: 10.53.1.3
-      n3:
-        ipv4_address: 10.10.3.231
-      metrics:
-        ipv4_address: 172.19.1.3
-      
+
+networks:
+  srs_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24
 
 volumes:
   gnb-storage: {}
-
-networks:
-  n2:
-    external: true
-    name: n2
-  n3:
-    external: true
-    name: n3
-  metrics:
-    external: true
-    name: metrics
