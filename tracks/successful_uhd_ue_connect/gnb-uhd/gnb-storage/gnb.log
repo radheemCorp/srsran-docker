@@ -987,48 +987,4 @@ ru_sdr:
 2026-04-24T10:24:47.241275 [PHY     ] [I] [   462.7] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.1 sinr=-20.5dB t=14.4us
 2026-04-24T10:24:47.241547 [PHY     ] [I] [   462.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=2222 sinr=-4.3dB t=7.9us
 2026-04-24T10:24:47.242241 [PHY     ] [I] [   462.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.6 sinr=-12.8dB t=12.3us
-2026-04-24T10:24:47.243713 [SCHED   ] [I] [   463.0] Slot decisions pci=1 t=12us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[20..22) k1=7 newtx=false rv=3 tbs=88
-2026-04-24T10:24:47.243738 [PHY     ] [I] [   463.0] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=8.0us
-2026-04-24T10:24:47.243753 [PHY     ] [I] [   463.0] PDSCH: rnti=0x4603 h_id=3 k1=7 prb=[20, 22) symb=[2, 14) mod=64QAM rv=3 tbs=88 t=13.5us
-2026-04-24T10:24:47.251268 [PHY     ] [I] [   463.7] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.0 sinr=-37.2dB t=11.6us
-2026-04-24T10:24:47.253726 [SCHED   ] [I] [   464.0] Slot decisions pci=1 t=5us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[20..22) k1=7 newtx=false rv=1 tbs=88
-2026-04-24T10:24:47.253749 [PHY     ] [I] [   464.0] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=7.4us
-2026-04-24T10:24:47.253753 [DU-F1   ] [I] ue=0 du_ue=2 cu_ue=2 proc="UE Context Release": RRC container not ACKed within a time window of 120msec. Proceeding with the UE context release...
-2026-04-24T10:24:47.253756 [DU-MNG  ] [I] ue=0 proc="UE Delete": Procedure started....
-2026-04-24T10:24:47.253762 [DU-MNG  ] [I] ue=0: SRB and DRB traffic stopped
-2026-04-24T10:24:47.253764 [PHY     ] [I] [   464.0] PDSCH: rnti=0x4603 h_id=3 k1=7 prb=[20, 22) symb=[2, 14) mod=64QAM rv=1 tbs=88 t=15.5us
-2026-04-24T10:24:47.253778 [DU-F1   ] [I] ue=0 c-rnti=0x4603 du_ue=2 cu_ue=2: F1 UE context removed.
-2026-04-24T10:24:47.261271 [PHY     ] [I] [   464.7] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.2 sinr=-23.4dB t=13.1us
-2026-04-24T10:24:47.261530 [PHY     ] [I] [   464.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=2222 sinr=-7.6dB t=11.5us
-2026-04-24T10:24:47.262269 [PHY     ] [I] [   464.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.0 sinr=-27.5dB t=16.1us
-2026-04-24T10:24:47.270213 [MAC     ] [I] [  465.13] ue=0 crnti=0x4603 proc="MAC UE Removal": finished successfully
-2026-04-24T10:24:47.270215 [DU-MNG  ] [I] ue=0 proc="UE Delete": Procedure finished successfully.
-2026-04-24T10:24:47.270220 [DU-F1   ] [I] Tx PDU du=0 cu_ue=2 du_ue=2: UEContextReleaseComplete
-2026-04-24T10:24:47.270250 [CU-CP-F1] [I] Rx PDU du=0 ue=2 cu_ue=2 du_ue=2: UEContextReleaseComplete
-2026-04-24T10:24:47.270282 [CU-CP   ] [I] ue=2: "UE Removal Routine" finished successfully
-2026-04-24T10:24:47.270292 [NGAP    ] [I] Tx PDU ran_ue=2 amf_ue=3: UEContextReleaseComplete
-2026-04-24T10:27:17.362731 [DU      ] [I] Stopping DU...
-2026-04-24T10:27:17.362732 [DU      ] [I] Stopping DU-High...
-2026-04-24T10:27:17.362763 [SCHED   ] [I] [   114.4] cell=0: Cell scheduling was deactivated.
-2026-04-24T10:27:17.362851 [MAC     ] [I] [   114.4] cell=0: Cell was stopped.
-2026-04-24T10:27:17.362871 [DU-F1   ] [I] Tx PDU du=0 tid=4: F1RemovalRequest
-2026-04-24T10:27:17.362883 [CU-CP-F1] [I] Rx PDU du=0 tid=4: F1RemovalRequest
-2026-04-24T10:27:17.362887 [CU-CP-F1] [I] Tx PDU du=0 tid=4: F1RemovalResponse
-2026-04-24T10:27:17.362889 [DU-F1   ] [I] Rx PDU du=0 tid=4: F1RemovalResponse
-2026-04-24T10:27:17.362904 [CU-CP   ] [I] Removed DU 0
-2026-04-24T10:27:17.362906 [DU-F1   ] [I] F1 Removal: F1 TNL association shut down
-2026-04-24T10:27:17.362957 [DU      ] [I] DU-High stopped successfully
-2026-04-24T10:27:17.362957 [DU      ] [I] DU stopped successfully
-2026-04-24T10:27:17.362981 [CU-UP-E1] [I] Tx PDU tid=1: E1ReleaseRequest
-2026-04-24T10:27:17.362986 [CU-CP-E1] [I] Rx PDU tid=1: E1ReleaseRequest
-2026-04-24T10:27:17.362990 [CU-CP-E1] [I] Tx PDU tid=1: E1ReleaseResponse
-2026-04-24T10:27:17.362992 [CU-CP-E1] [I] "E1 Release Procedure" finished successfully
-2026-04-24T10:27:17.362995 [CU-UP-E1] [I] Rx PDU tid=1: E1ReleaseResponse
-2026-04-24T10:27:17.363002 [CU-CP   ] [I] Removed CU-UP 0
-2026-04-24T10:27:17.363004 [CU-UP-E1] [I] E1AP CU-UP Release Procedure: E1 TNL association shut down
-2026-04-24T10:27:17.363438 [CU-UP   ] [I] CU-UP stopped successfully
-2026-04-24T10:27:17.363445 [CU-CP   ] [I] Stopping CU-CP...
-2026-04-24T10:27:17.363824 [CU-CP   ] [I] CU-CP stopped successfully.
-2026-04-24T10:27:17.398914 [GNB     ] [I] Closing PCAP files...
-2026-04-24T10:27:17.398917 [GNB     ] [I] PCAP files successfully closed.
-(END)
+2026-04-24T10:24:47.243713 [SCHED   ] [I] [   463.0] Slot decisions pci=1 t=12us (1 PDSCH, 0 PUSCHs
