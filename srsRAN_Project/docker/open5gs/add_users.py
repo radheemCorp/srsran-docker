@@ -10,7 +10,7 @@ from misc.db.python.Open5GS import Open5GS
 
 
 def add_user(imsi, key="00112233445566778899aabbccddeeff", op=None,
-             opc="63bfa50ee6523365ff14c1f45f88737d", amf="9001", apn="srsapn", qci="9", ip_alloc=""):
+             opc="63bfa50ee6523365ff14c1f45f88737d", amf="9001", apn="internet", qci="9", ip_alloc=""):
     '''Add UE data to Open5GS mongodb'''
 
     if op is not None:
@@ -78,12 +78,13 @@ def read_from_db(db_file):
         if line.startswith("#"):
             pass
         else:
-            try:
-                name, imsi, key, op_type, op_c, amf, qci, ip_alloc = line.split(
-                    ',')
-            except ValueError as e:
-                print(f"Error reading subscriber_db.csv: {e}")
+            fields = line.rstrip("\n").split(',')
+            if len(fields) not in (8, 9):
+                print(f"Error reading subscriber_db.csv: expected 8 or 9 fields, got {len(fields)}")
                 return None
+
+            name, imsi, key, op_type, op_c, amf, qci, ip_alloc = fields[:8]
+            apn = fields[8] if len(fields) == 9 else "internet"
 
             opc = op_c
             op = None
@@ -92,7 +93,7 @@ def read_from_db(db_file):
                 opc = None
 
             subscriber_db.append({"imsi": imsi, "key": key, "op": op,
-                                  "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip()})
+                                  "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip(), "apn": apn})
 
     return subscriber_db
 
@@ -105,12 +106,13 @@ def read_from_string(sub_data):
 
     subscriber_db = []
 
-    try:
-        imsi, key, op_type, op_c, amf, qci, ip_alloc = sub_data.split(
-            ',')
-    except ValueError as e:
-        print(f"Error reading subscriber string: {e}")
+    fields = sub_data.split(',')
+    if len(fields) not in (7, 8):
+        print(f"Error reading subscriber string: expected 7 or 8 fields, got {len(fields)}")
         return None
+
+    imsi, key, op_type, op_c, amf, qci, ip_alloc = fields[:7]
+    apn = fields[7] if len(fields) == 8 else "internet"
 
     opc = op_c
     op = None
@@ -119,7 +121,7 @@ def read_from_string(sub_data):
         opc = None
 
     subscriber_db.append({"imsi": imsi, "key": key, "op": op,
-                          "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip()})
+                          "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip(), "apn": apn})
 
     return subscriber_db
 
@@ -127,7 +129,7 @@ def read_from_string(sub_data):
 @click.command()
 @click.option("--mongodb", default="127.0.0.1", help="IP address or hostname of the mongodb instance.")
 @click.option("--mongodb_port", default=27017, help="Port to connect to the mongodb instance.")
-@click.option("--subscriber_data", default="001010123456780,00112233445566778899aabbccddeeff,opc,63bfa50ee6523365ff14c1f45f88737d,8000,9,10.45.1.2", help="Single subscriber data string or full path to subscriber data csv-file.")
+@click.option("--subscriber_data", default="001010123456780,00112233445566778899aabbccddeeff,opc,63bfa50ee6523365ff14c1f45f88737d,8000,9,10.45.1.2", help="Single subscriber data string or full path to subscriber data csv-file. CSV may optionally include APN as a 9th column, and string input may optionally include APN as an 8th field.")
 def main(mongodb, mongodb_port, subscriber_data):
 
     open5gs_client = Open5GS(mongodb, mongodb_port)

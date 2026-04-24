@@ -1,0 +1,57 @@
+services:
+  5gc:
+    image: rptestbed/open5gs:v2.7.0-ubuntu22.04-20260417
+    container_name: open5gs_5gc
+    env_file:
+      - ./project-config/open5gs.env
+    privileged: true
+    # REMOVED port mappings for 38412 and 2152 to avoid host-level conflicts.
+    # The gNB (in host mode) will communicate with these via the Docker Bridge IP.
+    expose:
+      - "38412/sctp"
+      - "2152/udp"
+    ports:
+      - "7777:7777/tcp"    # Keep healthcheck or dashboard ports if needed
+      - "9999:9999/tcp"    # Optional: Add any additional ports needed for monitoring or management
+    command: 5gc -c open5gs-5gc.yml
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z 127.0.0.20 7777" ]
+      interval: 3s
+      timeout: 1s
+      retries: 60
+    volumes:
+      - ./project-config/subscriber_db.csv:/open5gs/subscriber_db.csv:ro
+      - ./project-config/open5gs-5gc.yml.in:/open5gs/open5gs-5gc.yml.in:ro
+    networks:
+      srs_network:
+        ipv4_address: 172.16.1.2
+
+  gnb:
+    image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260414
+    container_name: srsran_gnb
+    privileged: true
+    network_mode: host  # Stays in host mode for USRP/SDR performance
+    cap_add:
+      - SYS_NICE
+      - CAP_SYS_PTRACE
+      - NET_ADMIN
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb
+      - /usr/share/uhd/images:/usr/share/uhd/images:ro
+      - ./project-config/gnb/gnb_uhd.yml:/gnb_config.yml:ro
+      - ./project-config/gnb/gnb_compose_config.yml:/gnb_compose_config.yml:ro
+      - ./gnb-storage:/tmp
+    command: gnb -c /gnb_config.yml -c /gnb_compose_config.yml
+    depends_on:
+      5gc:
+        condition: service_healthy
+
+networks:
+  srs_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24
+
+volumes:
+  gnb-storage: {}

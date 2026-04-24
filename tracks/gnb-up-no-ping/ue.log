@@ -1,0 +1,64 @@
+
+
+
+testbed@testbed:~/testbed/srsran-docker/external_ue/ue2$ docker compose exec -it srsran_ue_host bash 
+root@b9eb95a8f00e:/# /srsran/config/start_ue.sh 2
+Waiting for tun_srsue to appear...
+Configuration for UE2 written to /tmp/ue_2.conf
+Active RF plugins: libsrsran_rf_zmq.so
+Inactive RF plugins: 
+Reading configuration file /tmp/ue_2.conf...
+
+Built in Release mode using commit ec29b0c1f on branch master.
+
+Opening 1 channels in RF device=zmq with args=tx_port=tcp://10.10.3.235:2102,rx_port=tcp://10.10.3.236:2202,base_srate=23.04e6
+Supported RF device list: zmq file
+CHx base_srate=23.04e6
+Current sample rate is 1.92 MHz with a base rate of 23.04 MHz (x12 decimation)
+CH0 rx_port=tcp://10.10.3.236:2202
+CH0 tx_port=tcp://10.10.3.235:2102
+Current sample rate is 23.04 MHz with a base rate of 23.04 MHz (x1 decimation)
+Current sample rate is 23.04 MHz with a base rate of 23.04 MHz (x1 decimation)
+Waiting PHY to initialize ... done!
+Attaching UE...
+Random Access Transmission: prach_occasion=0, preamble_index=0, ra-rnti=0x39, tti=174
+Random Access Complete.     c-rnti=0x4601, ta=0
+RRC Connected
+PDU Session Establishment successful. IP: 10.41.0.2
+RRC NR reconfiguration successful.
+tun_srsue detected. Configuring routes and triggering PDU session...
+Sending PDU session trigger (ping)...
+Initial nudge ping failed (normal if core routing isn't up yet)
+
+
+testbed@testbed:~/testbed/srsran-docker/external_ue/ue1$ docker compose exec -it srsran_ue_host bash 
+root@c189826997ad:/# /srsran/config/start_ue.sh 1
+Waiting for tun_srsue to appear...
+Configuration for UE1 written to /tmp/ue_1.conf
+Active RF plugins: libsrsran_rf_zmq.so
+Inactive RF plugins: 
+Reading configuration file /tmp/ue_1.conf...
+
+Built in Release mode using commit ec29b0c1f on branch master.
+
+Opening 1 channels in RF device=zmq with args=tx_port=tcp://10.10.3.234:2101,rx_port=tcp://10.10.3.236:2201,base_srate=23.04e6
+Supported RF device list: zmq file
+CHx base_srate=23.04e6
+Current sample rate is 1.92 MHz with a base rate of 23.04 MHz (x12 decimation)
+CH0 rx_port=tcp://10.10.3.236:2201
+CH0 tx_port=tcp://10.10.3.234:2101
+Current sample rate is 23.04 MHz with a base rate of 23.04 MHz (x1 decimation)
+Current sample rate is 23.04 MHz with a base rate of 23.04 MHz (x1 decimation)
+Waiting PHY to initialize ... done!
+Attaching UE...
+Random Access Transmission: prach_occasion=0, preamble_index=0, ra-rnti=0x39, tti=174
+Random Access Transmission: prach_occasion=0, preamble_index=0, ra-rnti=0x39, tti=334
+Random Access Complete.     c-rnti=0x4602, ta=0
+RRC Connected
+PDU Session Establishment successful. IP: 10.41.0.3
+RRC NR reconfiguration successful.
+tun_srsue detected. Configuring routes and triggering PDU session...
+Sending PDU session trigger (ping)...
+Initial nudge ping failed (normal if core routing isn't up yet)
+
+

@@ -1,0 +1,990 @@
+2026-04-24T10:14:17.300268 [GNB     ] [I] Built in Release mode using commit  on branch 
+2026-04-24T10:14:17.300842 [CONFIG  ] [I] Input configuration (only non-default values): 
+log:
+  filename: /tmp/gnb.log
+  all_level: info
+metrics:
+  autostart_stdout_metrics: true
+  enable_json: true
+remote_control:
+  enabled: true
+  bind_addr: 0.0.0.0
+cu_cp:
+  amf:
+    addr: 172.16.1.2
+    port: 38412
+    bind_addr: 172.16.1.1
+    supported_tracking_areas: "tac: 7\nplmn_list:\n  - plmn: 00101\n    tai_slice_support_list:\n      - sst: 1\n        sd: 1118481"
+pcap:
+  ngap_filename: /tmp/gnb_ngap.pcap
+  ngap_enable: false
+  mac_filename: /tmp/gnb_mac.pcap
+  mac_enable: false
+cell_cfg:
+  pci: 1
+  dl_arfcn: 632628
+  band: 78
+  common_scs: 30
+  channel_bandwidth_MHz: 20
+  plmn: 00101
+  tac: 7
+ru_sdr:
+  srate: 23.04
+  device_driver: uhd
+  device_args: type=b200,serial=310C56E,num_recv_frames=64,num_send_frames=64
+  tx_gain: 80
+  rx_gain: 40
+2026-04-24T10:14:17.797829 [CONFIG  ] [I] Worker pool "main_pool" instantiated with #workers=5, task_queue_size=2048, backoff_period=50us and priority=96.
+2026-04-24T10:14:17.808862 [GTPU    ] [I] GTP-U demux. queue_size=2046 batch_size=256 warn_on_drop=false test_mode=false
+2026-04-24T10:14:17.808958 [GTPU    ] [I] Tunnel added. teid=0x000000
+2026-04-24T10:14:17.845327 [DU-MNG  ] [I] The upper-bound on the number of UEs supported by cell {pci=1, du_cell_index=0} is 96 (the actual number might be lower than that). This is determined by the lowest of the following limits: SR (96), CSI (96) and SRS (n/a).
+2026-04-24T10:14:17.845563 [DU      ] [I] DU created successfully
+2026-04-24T10:14:17.845568 [DU      ] [I] O-DU created successfully
+2026-04-24T10:14:20.521218 [GNB     ] [I] SSB derived parameters for cell: 1, band: 78, dl_arfcn:632628, nof_crbs: 51 scs:30kHz, ssb_scs:30kHz:
+	 - SSB offset pointA:0 
+	 - k_SSB:0 
+	 - SSB arfcn:632256 
+	 - Coreset index:0 
+	 - Searchspace index:0
+2026-04-24T10:14:20.521244 [IO-EPOLL] [E] fd=0: Failed to register file descriptor. Cause: epoll_ctl failed with "Operation not permitted"
+2026-04-24T10:14:20.521252 [APP     ] [E] Couldn't register stdin handler
+2026-04-24T10:14:20.521253 [GNB     ] [I] Starting CU-CP...
+2026-04-24T10:14:20.522634 [CU-CP   ] [I] N2: Connection to AMF on 172.16.1.2:38412 was established
+2026-04-24T10:14:20.522697 [NGAP    ] [I] Tx PDU: NGSetupRequest
+2026-04-24T10:14:20.525722 [NGAP    ] [I] Rx PDU: NGSetupResponse
+2026-04-24T10:14:20.525737 [CU-CP   ] [I] Connected to AMF. Supported PLMNs: 00101
+2026-04-24T10:14:20.525843 [GNB     ] [I] CU-CP started successfully
+2026-04-24T10:14:20.525851 [CU-UP   ] [I] CU-UP starting...
+2026-04-24T10:14:20.525900 [CU-UP-E1] [I] Sending E1SetupRequest
+2026-04-24T10:14:20.525904 [CU-UP-E1] [I] Tx PDU tid=0: GNB-CU-UP-E1SetupRequest
+2026-04-24T10:14:20.525917 [CU-CP   ] [I] Added TNL connection to CU-UP 0
+2026-04-24T10:14:20.525923 [CU-CP-E1] [I] Rx PDU tid=0: GNB-CU-UP-E1SetupRequest
+2026-04-24T10:14:20.525930 [CU-CP-E1] [I] Tx PDU tid=0: GNB-CU-UP-E1SetupResponse
+2026-04-24T10:14:20.525935 [CU-UP-E1] [I] Rx PDU tid=0: GNB-CU-UP-E1SetupResponse
+2026-04-24T10:14:20.525937 [CU-UP-E1] [I] "E1AP CU-UP Setup Procedure" finalized
+2026-04-24T10:14:20.525997 [CU-UP   ] [I] CU-UP started successfully
+2026-04-24T10:14:20.526000 [DU      ] [I] Starting DU...
+2026-04-24T10:14:20.526001 [DU      ] [I] Starting DU-High...
+2026-04-24T10:14:20.526002 [DU-MNG  ] [I] DU manager starting...
+2026-04-24T10:14:20.526047 [CU-CP   ] [I] Added TNL connection to DU 0
+2026-04-24T10:14:20.540371 [DU-MNG  ] [I] SIB1 cell=0: {
+  "cellSelectionInfo": {
+    "q-RxLevMin": -70,
+    "q-QualMin": -20
+  },
+  "cellAccessRelatedInfo": {
+    "plmn-IdentityInfoList": [
+      {
+        "plmn-IdentityList": [
+          {
+            "mcc": [
+              0,
+              0,
+              1
+            ],
+            "mnc": [
+              0,
+              1
+            ]
+          }
+        ],
+        "trackingAreaCode": "000000000000000000000111",
+        "cellIdentity": "000000000000011001101100000000000000",
+        "cellReservedForOperatorUse": "notReserved"
+      }
+    ]
+  },
+  "connEstFailureControl": {
+    "connEstFailCount": "n1",
+    "connEstFailOffsetValidity": "s30",
+    "connEstFailOffset": 1
+  },
+  "servingCellConfigCommon": {
+    "downlinkConfigCommon": {
+      "frequencyInfoDL": {
+        "frequencyBandList": [
+          {
+            "freqBandIndicatorNR": 78
+          }
+        ],
+        "offsetToPointA": 0,
+        "scs-SpecificCarrierList": [
+          {
+            "offsetToCarrier": 0,
+            "subcarrierSpacing": "kHz30",
+            "carrierBandwidth": 51,
+            "txDirectCurrentLocation": 306
+          }
+        ]
+      },
+      "initialDownlinkBWP": {
+        "genericParameters": {
+          "locationAndBandwidth": 13750,
+          "subcarrierSpacing": "kHz30"
+        },
+        "pdcch-ConfigCommon": {
+          {
+            "commonSearchSpaceList": [
+              {
+                "searchSpaceId": 1,
+                "controlResourceSetId": 0,
+                "monitoringSlotPeriodicityAndOffset": {
+                },
+                "monitoringSymbolsWithinSlot": "10000000000000",
+                "nrofCandidates": {
+                  "aggregationLevel1": "n0",
+                  "aggregationLevel2": "n0",
+                  "aggregationLevel4": "n1",
+                  "aggregationLevel8": "n0",
+                  "aggregationLevel16": "n0"
+                },
+                "searchSpaceType": {
+                  "common": {
+                    "dci-Format0-0-AndFormat1-0": {
+                    }
+                  }
+                }
+              }
+            ],
+            "searchSpaceSIB1": 0,
+            "pagingSearchSpace": 1,
+            "ra-SearchSpace": 1
+          }
+        },
+        "pdsch-ConfigCommon": {
+          {
+            "pdsch-TimeDomainAllocationList": [
+              {
+                "mappingType": "typeA",
+                "startSymbolAndLength": 53
+              },
+              {
+                "mappingType": "typeA",
+                "startSymbolAndLength": 72
+              }
+            ]
+          }
+        }
+      },
+      "bcch-Config": {
+        "modificationPeriodCoeff": "n4"
+      },
+      "pcch-Config": {
+        "defaultPagingCycle": "rf128",
+        "nAndPagingFrameOffset": {
+        },
+        "ns": "one"
+      }
+    },
+    "uplinkConfigCommon": {
+      "frequencyInfoUL": {
+        "frequencyBandList": [
+          {
+            "freqBandIndicatorNR": 78
+          }
+        ],
+        "absoluteFrequencyPointA": 632016,
+        "scs-SpecificCarrierList": [
+          {
+            "offsetToCarrier": 0,
+            "subcarrierSpacing": "kHz30",
+            "carrierBandwidth": 51
+          }
+        ]
+      },
+      "initialUplinkBWP": {
+        "genericParameters": {
+          "locationAndBandwidth": 13750,
+          "subcarrierSpacing": "kHz30"
+        },
+        "rach-ConfigCommon": {
+          {
+            "rach-ConfigGeneric": {
+              "prach-ConfigurationIndex": 159,
+              "msg1-FDM": "one",
+              "msg1-FrequencyStart": 11,
+              "zeroCorrelationZoneConfig": 0,
+              "preambleReceivedTargetPower": -100,
+              "preambleTransMax": "n7",
+              "powerRampingStep": "dB4",
+              "ra-ResponseWindow": "sl20"
+            },
+            "ssb-perRACH-OccasionAndCB-PreamblesPerSSB": {
+              "one": "n64"
+            },
+            "ra-ContentionResolutionTimer": "sf64",
+            "prach-RootSequenceIndex": {
+              "l139": 1
+            },
+            "msg1-SubcarrierSpacing": "kHz30",
+            "restrictedSetConfig": "unrestrictedSet"
+          }
+        },
+        "pusch-ConfigCommon": {
+          {
+            "pusch-TimeDomainAllocationList": [
+              {
+                "k2": 4,
+                "mappingType": "typeA",
+                "startSymbolAndLength": 27
+              },
+              {
+                "k2": 5,
+                "mappingType": "typeA",
+                "startSymbolAndLength": 27
+              },
+              {
+                "k2": 6,
+                "mappingType": "typeA",
+                "startSymbolAndLength": 27
+              },
+              {
+                "k2": 7,
+                "mappingType": "typeA",
+                "startSymbolAndLength": 27
+              },
+              {
+                "k2": 11,
+                "mappingType": "typeA",
+                "startSymbolAndLength": 27
+              }
+            ],
+            "msg3-DeltaPreamble": 6,
+            "p0-NominalWithGrant": -76
+          }
+        },
+        "pucch-ConfigCommon": {
+          {
+            "pucch-ResourceCommon": 11,
+            "pucch-GroupHopping": "neither",
+            "p0-nominal": -90
+          }
+        }
+      },
+      "timeAlignmentTimerCommon": "infinity"
+    },
+    "n-TimingAdvanceOffset": "n25600",
+    "ssb-PositionsInBurst": {
+      "inOneGroup": "10000000"
+    },
+    "ssb-PeriodicityServingCell": "ms10",
+    "tdd-UL-DL-ConfigurationCommon": {
+      "referenceSubcarrierSpacing": "kHz30",
+      "pattern1": {
+        "dl-UL-TransmissionPeriodicity": "ms5",
+        "nrofDownlinkSlots": 6,
+        "nrofDownlinkSymbols": 8,
+        "nrofUplinkSlots": 3,
+        "nrofUplinkSymbols": 0
+      }
+    },
+    "ss-PBCH-BlockPower": -16
+  },
+  "ue-TimersAndConstants": {
+    "t300": "ms1000",
+    "t301": "ms1000",
+    "t310": "ms1000",
+    "n310": "n1",
+    "t311": "ms3000",
+    "n311": "n1",
+    "t319": "ms1000"
+  }
+}
+2026-04-24T10:14:20.540420 [DU-F1   ] [I] F1 Setup: Sending F1 Setup Request to CU-CP...
+2026-04-24T10:14:20.540425 [DU-F1   ] [I] Tx PDU du=0 tid=0: F1SetupRequest
+2026-04-24T10:14:20.540456 [CU-CP-F1] [I] Rx PDU du=0 tid=0: F1SetupRequest
+2026-04-24T10:14:20.540506 [CU-CP-F1] [I] Tx PDU du=0 tid=0: F1SetupResponse
+2026-04-24T10:14:20.540510 [DU-F1   ] [I] Rx PDU du=0 tid=0: F1SetupResponse
+2026-04-24T10:14:20.540512 [DU-F1   ] [I] F1 Setup: Procedure completed successfully.
+2026-04-24T10:14:20.540517 [SCHED   ] [I] [     0.0] cell=0: Cell scheduling was activated.
+2026-04-24T10:14:20.540523 [MAC     ] [I] [     0.0] cell=0: Cell was activated
+2026-04-24T10:14:20.540609 [DU-MNG  ] [I] DU manager started successfully.
+2026-04-24T10:14:20.540613 [DU      ] [I] DU-High started successfully
+2026-04-24T10:14:20.540618 [DU      ] [I] DU started successfully
+2026-04-24T10:14:20.541098 [SCHED   ] [I] [  266.19] Processed slot events pci=1: Cell creation idx=0 pci=1
+2026-04-24T10:14:44.095051 [PHY     ] [I] [  563.19] PRACH: rsi=1 rssi=-51.7dB detected_preambles=[{idx=59 ta=7.42us detection_metric=67.9 power_dB=-52.35}] t=143.5us
+2026-04-24T10:14:44.095425 [SCHED   ] [I] [   564.8] Processed slot events pci=1: prach(ra-rnti=0x10b preamble=59 tc-rnti=0x4601)
+2026-04-24T10:14:44.096474 [SCHED   ] [I] [  564.10] Slot decisions pci=1 t=1us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): RAR: ra-rnti=0x10b rb=[0..3) tbs=9
+2026-04-24T10:14:44.096506 [PHY     ] [I] [  564.10] PDCCH: rnti=0x010b ss_id=1 format=1_0 cce=0 al=4 t=18.5us
+2026-04-24T10:14:44.096526 [PHY     ] [I] [  564.10] PDSCH: rnti=0x010b prb=[0, 3) symb=[2, 14) mod=QPSK rv=0 tbs=9 t=17.6us
+2026-04-24T10:14:44.099946 [SCHED   ] [I] [  564.17] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=1024 rnti=0x4601 h_id=0 ss_id=1 rb=[8..11) newtx=true rv=0 tbs=11 msg3_delay=7
+2026-04-24T10:14:44.104009 [PHY     ] [I] [  564.17] PUSCH: rnti=0x4601 h_id=0 prb=[8, 11) symb=[0, 14) mod=QPSK rv=0 tbs=11 crc=OK iter=1.0 sinr=26.6dB t=73.1us uci_t=0.0us ret_t=6.3us
+2026-04-24T10:14:44.104022 [MAC     ] [I] [   565.5] UL rnti=0x4601 subPDUs: [CCCH48: len=6, SE_PHR: ph=[-7..-6)dB p_cmax=[20..21)dBm, PAD: len=0]
+2026-04-24T10:14:44.104035 [DU-MNG  ] [I] ue=0 rnti=0x4601 proc="UE Create": Procedure started....
+2026-04-24T10:14:44.104184 [DU-F1   ] [I] ue=0 c-rnti=0x4601 du_ue=0: F1 UE context created successfully.
+2026-04-24T10:14:44.104208 [RLC     ] [I] du=0 ue=0 SRB0 DL: RLC TM created. queue_size=8
+2026-04-24T10:14:44.104213 [RLC     ] [I] du=0 ue=0 SRB0 UL: RLC TM created. 
+2026-04-24T10:14:44.104279 [RLC     ] [I] du=0 ue=0 SRB1 DL: RLC AM configured. tx_sn_size=12 pdcp_sn_len=12 t_poll_retx=45 max_retx=8 poll_pdu=-1 poll_byte=-1 queue_size=32 queue_size_bytes=64000 max_window=0
+2026-04-24T10:14:44.104348 [RLC     ] [I] du=0 ue=0 SRB1 UL: RLC AM configured. rx_sn_size=12 t_reassembly=35 t_status_prohibit=0 max_sn_per_status={na}
+2026-04-24T10:14:44.105011 [MAC     ] [I] [   565.7] ue=0 crnti=0x4601 proc="MAC UE Creation": finished successfully
+2026-04-24T10:14:44.105015 [DU-MNG  ] [I] ue=0 rnti=0x4601 proc="UE Create": Procedure finished successfully.
+2026-04-24T10:14:44.105025 [RLC     ] [I] du=0 ue=0 SRB0 UL: RX SDU. sdu_len=6
+2026-04-24T10:14:44.105036 [DU-F1   ] [I] Tx PDU du=0 tid=1 ue=0 du_ue=0: InitialULRRCMessageTransfer
+2026-04-24T10:14:44.105050 [CU-CP-F1] [I] Rx PDU du=0 tid=1 du_ue=0: InitialULRRCMessageTransfer
+2026-04-24T10:14:44.105067 [CU-UEMNG] [I] ue=0 du_index=0 gnb_du_id=0 pci=1 rnti=0x4601 pcell_index=0: Created new CU-CP UE
+2026-04-24T10:14:44.105133 [CU-CP   ] [I] ue=0 c-rnti=0x4601: UE created
+2026-04-24T10:14:44.105138 [CU-CP-F1] [I] ue=0 du_ue=0 cu_ue=0: Added UE context
+2026-04-24T10:14:44.105153 [RRC     ] [I] ue=0 c-rnti=0x4601: CCCH UL rrcSetupRequest
+2026-04-24T10:14:44.105216 [PDCP    ] [I] ue=0 SRB1 DL: PDCP configured. rb_type=SRB rlc_mode=AM sn_size=12 discard_timer=infinity count_notify=3221225472 count_max=4294967294 warn_on_drop=false test_mode=false
+2026-04-24T10:14:44.105268 [PDCP    ] [I] ue=0 SRB1 UL: PDCP configured. rb_type=SRB rlc_mode=AM sn_size=12 t_reordering=infinity count_notify=3221225472 count_max=4294967294
+2026-04-24T10:14:44.105301 [RRC     ] [I] ue=0 c-rnti=0x4601: CCCH DL rrcSetup
+2026-04-24T10:14:44.105305 [CU-CP-F1] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.105311 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.105316 [RLC     ] [I] du=0 ue=0 SRB0 DL: TX SDU. sdu_len=301 queued_sdus=1 queued_bytes=301
+2026-04-24T10:14:44.106425 [SCHED   ] [I] [  565.10] Slot decisions pci=1 t=13us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=0 ss_id=1 rb=[0..23) k1=7 newtx=true rv=0 tbs=317 ri=1 dl_bo=0
+2026-04-24T10:14:44.106445 [RLC     ] [I] du=0 ue=0 SRB0 DL: TX PDU. pdu_len=301 grant_len=301
+2026-04-24T10:14:44.106448 [MAC     ] [I] [  565.10] DL PDU: ue=0 rnti=0x4601 size=317: CON_RES: id=16dd45016c6, SDU: lcid=0 nof_sdus=1 total_size=304
+2026-04-24T10:14:44.106478 [PHY     ] [I] [  565.10] PDCCH: rnti=0x4601 ss_id=1 format=1_0 cce=0 al=4 t=22.0us
+2026-04-24T10:14:44.106491 [PHY     ] [I] [  565.10] PDSCH: rnti=0x4601 h_id=0 k1=7 prb=[0, 23) symb=[2, 14) mod=QPSK rv=0 tbs=317 t=27.4us
+2026-04-24T10:14:44.113988 [PHY     ] [I] [  565.17] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=50 symb=[0, 14) cs=0 occ=0 ack=1 metric=13223.3 sinr=29.2dB t=35.0us
+2026-04-24T10:14:44.119015 [PHY     ] [I] [   566.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.3 sinr=-17.1dB t=26.2us
+2026-04-24T10:14:44.119175 [PHY     ] [I] [   566.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-1.9dB t=22.1us
+2026-04-24T10:14:44.139021 [PHY     ] [I] [   568.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=32269.0 sinr=30.8dB t=28.1us
+2026-04-24T10:14:44.139217 [PHY     ] [I] [   568.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-7.4dB t=19.9us
+2026-04-24T10:14:44.143007 [PHY     ] [I] [   569.3] PDCCH: rnti=0x4601 ss_id=1 format=0_0 cce=0 al=4 t=20.3us
+2026-04-24T10:14:44.144922 [SCHED   ] [I] [   569.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4601 h_id=0 ss_id=1 rb=[8..32) newtx=true rv=0 tbs=528 k2=4
+2026-04-24T10:14:44.149136 [PHY     ] [I] [   569.7] PUSCH: rnti=0x4601 h_id=0 prb=[8, 32) symb=[0, 14) mod=QPSK rv=0 tbs=528 crc=OK iter=2.0 sinr=21.0dB t=114.6us uci_t=0.0us ret_t=7.0us
+2026-04-24T10:14:44.149144 [MAC     ] [I] [  569.15] UL rnti=0x4601 ue=0 subPDUs: [lcid=1: len=35, SBSR: lcg=0 bs=0, SE_PHR: ph=[-24..-23)dB p_cmax=[20..21)dBm, PAD: len=485]
+2026-04-24T10:14:44.149146 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX PDU. pdu_len=35 dc=data p=1 si=full sn=0
+2026-04-24T10:14:44.149149 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX SDU. sn=0 sdu_len=33
+2026-04-24T10:14:44.149159 [DU-F1   ] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: ULRRCMessageTransfer
+2026-04-24T10:14:44.149166 [CU-CP-F1] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: ULRRCMessageTransfer
+2026-04-24T10:14:44.149170 [PDCP    ] [I] ue=0 SRB1 UL: RX PDU. type=data pdu_len=33 sn=0 count=0
+2026-04-24T10:14:44.149172 [PDCP    ] [I] ue=0 SRB1 UL: RX SDU. count=0
+2026-04-24T10:14:44.149187 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH UL rrcSetupComplete
+2026-04-24T10:14:44.149210 [NGAP    ] [I] Tx PDU ue=0 ran_ue=0: InitialUEMessage
+2026-04-24T10:14:44.149469 [SCHED   ] [I] [  569.16] Slot decisions pci=1 t=34us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=0 ss_id=2 rb=[0..2) k1=11 newtx=true rv=0 tbs=5 ri=1 dl_bo=5
+2026-04-24T10:14:44.149482 [MAC     ] [I] [  569.16] DL PDU: ue=0 rnti=0x4601 size=5: 
+2026-04-24T10:14:44.149509 [PHY     ] [I] [  569.16] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=4 al=4 t=19.7us
+2026-04-24T10:14:44.149520 [PHY     ] [I] [  569.16] PDSCH: rnti=0x4601 h_id=0 k1=11 prb=[0, 2) symb=[2, 8) mod=QPSK rv=0 tbs=5 t=21.5us
+2026-04-24T10:14:44.151472 [SCHED   ] [I] [   570.0] Slot decisions pci=1 t=21us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=1 ss_id=2 rb=[20..22) k1=7 newtx=true rv=0 tbs=11 ri=1 dl_bo=0
+2026-04-24T10:14:44.151484 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX status PDU. pdu_len=3 grant_len=9
+2026-04-24T10:14:44.151486 [MAC     ] [I] [   570.0] DL PDU: ue=0 rnti=0x4601 size=11: SDU: lcid=1 nof_sdus=1 total_size=5
+2026-04-24T10:14:44.151511 [PHY     ] [I] [   570.0] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=8 al=4 t=18.7us
+2026-04-24T10:14:44.151527 [PHY     ] [I] [   570.0] PDSCH: rnti=0x4601 h_id=1 k1=7 prb=[20, 22) symb=[2, 14) mod=QPSK rv=0 tbs=11 t=24.5us
+2026-04-24T10:14:44.152218 [NGAP    ] [I] Rx PDU ue=0 ran_ue=0 amf_ue=1: DownlinkNASTransport
+2026-04-24T10:14:44.152235 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH DL dlInformationTransfer
+2026-04-24T10:14:44.152240 [PDCP    ] [I] ue=0 SRB1 DL: TX PDU. type=data pdu_len=51 sn=0 count=0 is_retx=false
+2026-04-24T10:14:44.152244 [CU-CP-F1] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.152248 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.152252 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=51 pdcp_sn=0 is_retx=false queued_sdus=1 queued_bytes=51
+2026-04-24T10:14:44.152489 [SCHED   ] [I] [   570.2] Slot decisions pci=1 t=27us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=2 ss_id=2 rb=[0..10) k1=5 newtx=true rv=0 tbs=48 ri=1 dl_bo=12
+2026-04-24T10:14:44.152512 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=0 si=first sn=0 pdu_len=46 grant_len=46
+2026-04-24T10:14:44.152514 [MAC     ] [I] [   570.2] DL PDU: ue=0 rnti=0x4601 size=48: SDU: lcid=1 nof_sdus=1 total_size=48
+2026-04-24T10:14:44.152537 [PHY     ] [I] [   570.2] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=12 al=4 t=18.9us
+2026-04-24T10:14:44.152548 [PHY     ] [I] [   570.2] PDSCH: rnti=0x4601 h_id=2 k1=5 prb=[0, 10) symb=[2, 14) mod=QPSK rv=0 tbs=48 t=25.4us
+2026-04-24T10:14:44.152964 [SCHED   ] [I] [   570.3] Slot decisions pci=1 t=16us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..3) k1=4 newtx=true rv=0 tbs=14 ri=1 dl_bo=0
+2026-04-24T10:14:44.152977 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=1 si=last sn=0 so=44 pdu_len=11 grant_len=12
+2026-04-24T10:14:44.152979 [MAC     ] [I] [   570.3] DL PDU: ue=0 rnti=0x4601 size=14: SDU: lcid=1 nof_sdus=1 total_size=13
+2026-04-24T10:14:44.153001 [PHY     ] [I] [   570.3] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=12 al=4 t=17.3us
+2026-04-24T10:14:44.153027 [PHY     ] [I] [   570.3] PDSCH: rnti=0x4601 h_id=3 k1=4 prb=[0, 3) symb=[2, 14) mod=QPSK rv=0 tbs=14 t=21.0us
+2026-04-24T10:14:44.158553 [PHY     ] [I] [   570.7] PUCCH: rnti=0x4601 format=2 prb=[6, 7) prb2=na symb=[0, 2) ack=1111 sr=1 sinr=31.2dB t=15.0us
+2026-04-24T10:14:44.158950 [PHY     ] [I] [  570.15] PDCCH: rnti=0x4601 ss_id=2 format=0_1 cce=4 al=4 t=17.0us
+2026-04-24T10:14:44.159198 [PHY     ] [I] [   570.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=31.2dB t=10.2us
+2026-04-24T10:14:44.160922 [SCHED   ] [I] [  570.19] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4601 h_id=0 ss_id=2 rb=[0..6) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:14:44.164999 [PHY     ] [I] [  570.19] PUSCH: rnti=0x4601 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=OK iter=2.0 sinr=26.0dB t=77.6us uci_t=0.0us ret_t=4.0us
+2026-04-24T10:14:44.165007 [MAC     ] [I] [   571.7] UL rnti=0x4601 ue=0 subPDUs: [lcid=1: len=3, SBSR: lcg=0 bs=0, SE_PHR: ph=[-18..-17)dB p_cmax=[20..21)dBm, PAD: len=533]
+2026-04-24T10:14:44.165009 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX status PDU. ack_sn=1 n_nack=0
+2026-04-24T10:14:44.165015 [RLC     ] [I] du=0 ue=0 SRB1 DL: Handled status report. t=2us ack_sn=1 n_nack=0
+2026-04-24T10:14:44.178947 [PHY     ] [I] [   572.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-25.5dB t=23.0us
+2026-04-24T10:14:44.179223 [PHY     ] [I] [   572.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=32.3dB t=11.6us
+2026-04-24T10:14:44.186445 [SCHED   ] [I] [  573.10] Slot decisions pci=1 t=20us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=true rv=0 tbs=123 ri=1 dl_bo=0
+2026-04-24T10:14:44.186462 [MAC     ] [I] [  573.10] DL PDU: ue=0 rnti=0x4601 size=123: TA_CMD: tag_id=0, ta_cmd=30
+2026-04-24T10:14:44.186481 [PHY     ] [I] [  573.10] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=0 al=2 t=14.2us
+2026-04-24T10:14:44.186500 [PHY     ] [I] [  573.10] PDSCH: rnti=0x4601 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=123 t=22.4us
+2026-04-24T10:14:44.193978 [PHY     ] [I] [  573.17] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=0 metric=23489.1 sinr=29.5dB t=27.4us
+2026-04-24T10:14:44.196450 [SCHED   ] [I] [  574.10] Slot decisions pci=1 t=11us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=false rv=2 tbs=123
+2026-04-24T10:14:44.196478 [PHY     ] [I] [  574.10] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=0 al=2 t=12.7us
+2026-04-24T10:14:44.196514 [PHY     ] [I] [  574.10] PDSCH: rnti=0x4601 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=2 tbs=123 t=23.6us
+2026-04-24T10:14:44.198936 [PHY     ] [I] [   574.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.4 sinr=-16.7dB t=12.6us
+2026-04-24T10:14:44.199218 [PHY     ] [I] [   574.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=34.4dB t=26.0us
+2026-04-24T10:14:44.203996 [PHY     ] [I] [  574.17] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=1 metric=971.4 sinr=15.7dB t=23.0us
+2026-04-24T10:14:44.218965 [PHY     ] [I] [   576.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.4 sinr=-18.4dB t=13.9us
+2026-04-24T10:14:44.219229 [PHY     ] [I] [   576.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=36.7dB t=17.8us
+2026-04-24T10:14:44.226460 [SCHED   ] [I] [  577.10] Slot decisions pci=1 t=15us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=true rv=0 tbs=116 ri=1 dl_bo=0
+2026-04-24T10:14:44.226472 [MAC     ] [I] [  577.10] DL PDU: ue=0 rnti=0x4601 size=116: TA_CMD: tag_id=0, ta_cmd=30
+2026-04-24T10:14:44.226487 [PHY     ] [I] [  577.10] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=0 al=2 t=11.0us
+2026-04-24T10:14:44.226506 [PHY     ] [I] [  577.10] PDSCH: rnti=0x4601 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=116 t=21.4us
+2026-04-24T10:14:44.234007 [PHY     ] [I] [  577.17] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=0 metric=975.2 sinr=15.7dB t=12.6us
+2026-04-24T10:14:44.236455 [SCHED   ] [I] [  578.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=false rv=2 tbs=116
+2026-04-24T10:14:44.236481 [PHY     ] [I] [  578.10] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=0 al=2 t=11.2us
+2026-04-24T10:14:44.236506 [PHY     ] [I] [  578.10] PDSCH: rnti=0x4601 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=2 tbs=116 t=20.1us
+2026-04-24T10:14:44.238990 [PHY     ] [I] [   578.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-30.1dB t=13.3us
+2026-04-24T10:14:44.239253 [PHY     ] [I] [   578.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=32.5dB t=16.3us
+2026-04-24T10:14:44.244066 [PHY     ] [I] [  578.17] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=1 metric=227.6 sinr=9.3dB t=23.8us
+2026-04-24T10:14:44.258990 [PHY     ] [I] [   580.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-20.6dB t=23.7us
+2026-04-24T10:14:44.259163 [PHY     ] [I] [   580.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=29.0dB t=11.5us
+2026-04-24T10:14:44.278999 [PHY     ] [I] [   582.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.3 sinr=-24.4dB t=13.6us
+2026-04-24T10:14:44.279151 [PHY     ] [I] [   582.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=27.2dB t=7.0us
+2026-04-24T10:14:44.299002 [PHY     ] [I] [   584.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-21.9dB t=27.3us
+2026-04-24T10:14:44.299193 [PHY     ] [I] [   584.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=28.3dB t=29.5us
+2026-04-24T10:14:44.306993 [SCHED   ] [I] [  585.11] Slot decisions pci=1 t=22us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..2) k1=6 newtx=true rv=0 tbs=116 ri=1 dl_bo=0
+2026-04-24T10:14:44.307011 [MAC     ] [I] [  585.11] DL PDU: ue=0 rnti=0x4601 size=116: TA_CMD: tag_id=0, ta_cmd=32
+2026-04-24T10:14:44.307032 [PHY     ] [I] [  585.11] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=4 al=2 t=19.1us
+2026-04-24T10:14:44.307053 [PHY     ] [I] [  585.11] PDSCH: rnti=0x4601 h_id=3 k1=6 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=116 t=29.7us
+2026-04-24T10:14:44.313964 [PHY     ] [I] [  585.17] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=0 metric=220.6 sinr=9.2dB t=24.9us
+2026-04-24T10:14:44.316410 [SCHED   ] [I] [  586.10] Slot decisions pci=1 t=10us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=false rv=2 tbs=116
+2026-04-24T10:14:44.316440 [PHY     ] [I] [  586.10] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=0 al=2 t=13.0us
+2026-04-24T10:14:44.316466 [PHY     ] [I] [  586.10] PDSCH: rnti=0x4601 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=2 tbs=116 t=23.1us
+2026-04-24T10:14:44.319007 [PHY     ] [I] [   586.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-23.1dB t=13.7us
+2026-04-24T10:14:44.319188 [PHY     ] [I] [   586.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=29.3dB t=20.0us
+2026-04-24T10:14:44.323984 [PHY     ] [I] [  586.17] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=1 metric=994.7 sinr=15.7dB t=12.7us
+2026-04-24T10:14:44.338983 [PHY     ] [I] [   588.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=1025.0 sinr=15.9dB t=24.8us
+2026-04-24T10:14:44.339214 [PHY     ] [I] [   588.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=32.4dB t=16.0us
+2026-04-24T10:14:44.343022 [PHY     ] [I] [   589.3] PDCCH: rnti=0x4601 ss_id=2 format=0_1 cce=14 al=2 t=11.9us
+2026-04-24T10:14:44.344940 [SCHED   ] [I] [   589.7] Slot decisions pci=1 t=2us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4601 h_id=0 ss_id=2 rb=[0..6) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:14:44.349023 [PHY     ] [I] [   589.7] PUSCH: rnti=0x4601 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=OK iter=2.0 sinr=25.8dB t=86.7us uci_t=0.0us ret_t=6.1us
+2026-04-24T10:14:44.349038 [MAC     ] [I] [  589.15] UL rnti=0x4601 ue=0 subPDUs: [lcid=1: len=31, SBSR: lcg=0 bs=0, SE_PHR: ph=[-15..-14)dB p_cmax=[20..21)dBm, PAD: len=505]
+2026-04-24T10:14:44.349041 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX PDU. pdu_len=31 dc=data p=1 si=full sn=1
+2026-04-24T10:14:44.349044 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX SDU. sn=1 sdu_len=29
+2026-04-24T10:14:44.349061 [DU-F1   ] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: ULRRCMessageTransfer
+2026-04-24T10:14:44.349068 [CU-CP-F1] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: ULRRCMessageTransfer
+2026-04-24T10:14:44.349072 [PDCP    ] [I] ue=0 SRB1 UL: RX PDU. type=data pdu_len=29 sn=1 count=1
+2026-04-24T10:14:44.349075 [PDCP    ] [I] ue=0 SRB1 UL: RX SDU. count=1
+2026-04-24T10:14:44.349082 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH UL ulInformationTransfer
+2026-04-24T10:14:44.349094 [NGAP    ] [I] Tx PDU ue=0 ran_ue=0 amf_ue=1: UplinkNASTransport
+2026-04-24T10:14:44.349468 [SCHED   ] [I] [  589.16] Slot decisions pci=1 t=27us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..2) k1=11 newtx=true rv=0 tbs=54 ri=1 dl_bo=0
+2026-04-24T10:14:44.349482 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX status PDU. pdu_len=3 grant_len=4
+2026-04-24T10:14:44.349485 [MAC     ] [I] [  589.16] DL PDU: ue=0 rnti=0x4601 size=54: SDU: lcid=1 nof_sdus=1 total_size=5
+2026-04-24T10:14:44.349503 [PHY     ] [I] [  589.16] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=10 al=2 t=12.3us
+2026-04-24T10:14:44.349525 [PHY     ] [I] [  589.16] PDSCH: rnti=0x4601 h_id=3 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=0 tbs=54 t=15.6us
+2026-04-24T10:14:44.351744 [NGAP    ] [I] Rx PDU ue=0 ran_ue=0 amf_ue=1: DownlinkNASTransport
+2026-04-24T10:14:44.351754 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH DL dlInformationTransfer
+2026-04-24T10:14:44.351759 [PDCP    ] [I] ue=0 SRB1 DL: TX PDU. type=data pdu_len=51 sn=1 count=1 is_retx=false
+2026-04-24T10:14:44.351765 [CU-CP-F1] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.351769 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.351775 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=51 pdcp_sn=1 is_retx=false queued_sdus=1 queued_bytes=51
+2026-04-24T10:14:44.351956 [SCHED   ] [I] [   590.1] Slot decisions pci=1 t=21us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=2 ss_id=2 rb=[0..2) k1=6 newtx=true rv=0 tbs=116 ri=1 dl_bo=0
+2026-04-24T10:14:44.351978 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=1 si=full sn=1 pdu_len=53 grant_len=53
+2026-04-24T10:14:44.351980 [MAC     ] [I] [   590.1] DL PDU: ue=0 rnti=0x4601 size=116: SDU: lcid=1 nof_sdus=1 total_size=55
+2026-04-24T10:14:44.351998 [PHY     ] [I] [   590.1] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=8 al=2 t=12.7us
+2026-04-24T10:14:44.352008 [PHY     ] [I] [   590.1] PDSCH: rnti=0x4601 h_id=2 k1=6 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=116 t=19.5us
+2026-04-24T10:14:44.358916 [PHY     ] [I] [   590.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 ack=11 metric=994.7 sinr=15.7dB t=14.7us
+2026-04-24T10:14:44.358919 [PHY     ] [I] [   590.7] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=22 metric=0.2 sinr=-18.4dB t=16.4us
+2026-04-24T10:14:44.359193 [PHY     ] [I] [   590.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=31.2dB t=9.7us
+2026-04-24T10:14:44.362960 [PHY     ] [I] [   591.3] PDCCH: rnti=0x4601 ss_id=2 format=0_1 cce=14 al=2 t=10.2us
+2026-04-24T10:14:44.364933 [SCHED   ] [I] [   591.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4601 h_id=0 ss_id=2 rb=[0..6) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:14:44.369059 [PHY     ] [I] [   591.7] PUSCH: rnti=0x4601 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=OK iter=2.0 sinr=25.5dB t=104.5us uci_t=0.0us ret_t=7.0us
+2026-04-24T10:14:44.369072 [MAC     ] [I] [  591.15] UL rnti=0x4601 ue=0 subPDUs: [lcid=1: len=3, SBSR: lcg=0 bs=0, SE_PHR: ph=[-14..-13)dB p_cmax=[20..21)dBm, PAD: len=533]
+2026-04-24T10:14:44.369075 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX status PDU. ack_sn=2 n_nack=0
+2026-04-24T10:14:44.369083 [RLC     ] [I] du=0 ue=0 SRB1 DL: Handled status report. t=3us ack_sn=2 n_nack=0
+2026-04-24T10:14:44.379025 [PHY     ] [I] [   592.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.0 sinr=-40.5dB t=32.0us
+2026-04-24T10:14:44.379247 [PHY     ] [I] [   592.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=32.0dB t=19.3us
+2026-04-24T10:14:44.398978 [PHY     ] [I] [   594.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-26.4dB t=28.0us
+2026-04-24T10:14:44.399239 [PHY     ] [I] [   594.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=32.4dB t=18.5us
+2026-04-24T10:14:44.418969 [PHY     ] [I] [   596.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-17.8dB t=12.7us
+2026-04-24T10:14:44.419143 [PHY     ] [I] [   596.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=33.4dB t=13.2us
+2026-04-24T10:14:44.439004 [PHY     ] [I] [   598.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-33.4dB t=20.5us
+2026-04-24T10:14:44.439149 [PHY     ] [I] [   598.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=33.1dB t=8.3us
+2026-04-24T10:14:44.458986 [PHY     ] [I] [   600.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-29.6dB t=13.8us
+2026-04-24T10:14:44.459154 [PHY     ] [I] [   600.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=31.3dB t=7.5us
+2026-04-24T10:14:44.478974 [PHY     ] [I] [   602.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-29.5dB t=12.8us
+2026-04-24T10:14:44.479186 [PHY     ] [I] [   602.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=30.5dB t=17.9us
+2026-04-24T10:14:44.499012 [PHY     ] [I] [   604.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-19.5dB t=19.6us
+2026-04-24T10:14:44.499189 [PHY     ] [I] [   604.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=33.3dB t=14.3us
+2026-04-24T10:14:44.518949 [PHY     ] [I] [   606.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.5 sinr=-21.9dB t=26.8us
+2026-04-24T10:14:44.519223 [PHY     ] [I] [   606.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=24.7dB t=26.0us
+2026-04-24T10:14:44.538991 [PHY     ] [I] [   608.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-21.0dB t=27.5us
+2026-04-24T10:14:44.539215 [PHY     ] [I] [   608.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=28.6dB t=10.2us
+2026-04-24T10:14:44.558967 [PHY     ] [I] [   610.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-21.7dB t=23.6us
+2026-04-24T10:14:44.559197 [PHY     ] [I] [   610.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=25.8dB t=15.5us
+2026-04-24T10:14:44.578993 [PHY     ] [I] [   612.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-20.3dB t=21.6us
+2026-04-24T10:14:44.579220 [PHY     ] [I] [   612.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=25.1dB t=12.9us
+2026-04-24T10:14:44.598988 [PHY     ] [I] [   614.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.0 sinr=-30.1dB t=13.4us
+2026-04-24T10:14:44.599144 [PHY     ] [I] [   614.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=32.2dB t=8.5us
+2026-04-24T10:14:44.618982 [PHY     ] [I] [   616.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-28.4dB t=13.9us
+2026-04-24T10:14:44.619153 [PHY     ] [I] [   616.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=32.1dB t=10.2us
+2026-04-24T10:14:44.639002 [PHY     ] [I] [   618.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-31.7dB t=13.3us
+2026-04-24T10:14:44.639170 [PHY     ] [I] [   618.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=30.6dB t=7.4us
+2026-04-24T10:14:44.659024 [PHY     ] [I] [   620.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.3 sinr=-17.5dB t=18.9us
+2026-04-24T10:14:44.659173 [PHY     ] [I] [   620.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=23.5dB t=9.9us
+2026-04-24T10:14:44.678947 [PHY     ] [I] [   622.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=905.7 sinr=15.3dB t=13.0us
+2026-04-24T10:14:44.679200 [PHY     ] [I] [   622.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=24.0dB t=6.8us
+2026-04-24T10:14:44.683031 [PHY     ] [I] [   623.3] PDCCH: rnti=0x4601 ss_id=2 format=0_1 cce=14 al=2 t=14.5us
+2026-04-24T10:14:44.684941 [SCHED   ] [I] [   623.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4601 h_id=0 ss_id=2 rb=[0..6) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:14:44.689020 [PHY     ] [I] [   623.7] PUSCH: rnti=0x4601 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=OK iter=2.0 sinr=22.9dB t=89.3us uci_t=0.0us ret_t=5.3us
+2026-04-24T10:14:44.689035 [MAC     ] [I] [  623.15] UL rnti=0x4601 ue=0 subPDUs: [lcid=1: len=32, SBSR: lcg=0 bs=0, SE_PHR: ph=[-17..-16)dB p_cmax=[20..21)dBm, PAD: len=504]
+2026-04-24T10:14:44.689038 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX PDU. pdu_len=32 dc=data p=1 si=full sn=2
+2026-04-24T10:14:44.689041 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX SDU. sn=2 sdu_len=30
+2026-04-24T10:14:44.689058 [DU-F1   ] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: ULRRCMessageTransfer
+2026-04-24T10:14:44.689065 [CU-CP-F1] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: ULRRCMessageTransfer
+2026-04-24T10:14:44.689071 [PDCP    ] [I] ue=0 SRB1 UL: RX PDU. type=data pdu_len=30 sn=2 count=2
+2026-04-24T10:14:44.689074 [PDCP    ] [I] ue=0 SRB1 UL: RX SDU. count=2
+2026-04-24T10:14:44.689080 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH UL ulInformationTransfer
+2026-04-24T10:14:44.689093 [NGAP    ] [I] Tx PDU ue=0 ran_ue=0 amf_ue=1: UplinkNASTransport
+2026-04-24T10:14:44.689488 [SCHED   ] [I] [  623.16] Slot decisions pci=1 t=29us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=2 ss_id=2 rb=[0..2) k1=11 newtx=true rv=0 tbs=46 ri=1 dl_bo=0
+2026-04-24T10:14:44.689504 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX status PDU. pdu_len=3 grant_len=4
+2026-04-24T10:14:44.689507 [MAC     ] [I] [  623.16] DL PDU: ue=0 rnti=0x4601 size=46: SDU: lcid=1 nof_sdus=1 total_size=5
+2026-04-24T10:14:44.689524 [PHY     ] [I] [  623.16] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=10 al=2 t=11.5us
+2026-04-24T10:14:44.689538 [PHY     ] [I] [  623.16] PDSCH: rnti=0x4601 h_id=2 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=0 tbs=46 t=23.7us
+2026-04-24T10:14:44.691708 [NGAP    ] [I] Rx PDU ue=0 ran_ue=0 amf_ue=1: DownlinkNASTransport
+2026-04-24T10:14:44.691716 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH DL dlInformationTransfer
+2026-04-24T10:14:44.691720 [PDCP    ] [I] ue=0 SRB1 DL: TX PDU. type=data pdu_len=28 sn=2 count=2 is_retx=false
+2026-04-24T10:14:44.691726 [CU-CP-F1] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.691730 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.691735 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=28 pdcp_sn=2 is_retx=false queued_sdus=1 queued_bytes=28
+2026-04-24T10:14:44.691927 [SCHED   ] [I] [   624.1] Slot decisions pci=1 t=23us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[10..12) k1=6 newtx=true rv=0 tbs=96 ri=1 dl_bo=0
+2026-04-24T10:14:44.691955 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=1 si=full sn=2 pdu_len=30 grant_len=30
+2026-04-24T10:14:44.691957 [MAC     ] [I] [   624.1] DL PDU: ue=0 rnti=0x4601 size=96: SDU: lcid=1 nof_sdus=1 total_size=32
+2026-04-24T10:14:44.691961 [PHY     ] [I] [   624.1] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=8 al=2 t=11.4us
+2026-04-24T10:14:44.691988 [PHY     ] [I] [   624.1] PDSCH: rnti=0x4601 h_id=3 k1=6 prb=[10, 12) symb=[2, 14) mod=64QAM rv=0 tbs=96 t=24.4us
+2026-04-24T10:14:44.698940 [PHY     ] [I] [   624.7] PUCCH: rnti=0x4601 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=22 metric=0.2 sinr=-22.7dB t=17.6us
+2026-04-24T10:14:44.698940 [PHY     ] [I] [   624.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 ack=01 metric=878.9 sinr=15.2dB t=17.0us
+2026-04-24T10:14:44.699202 [PHY     ] [I] [   624.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=26.1dB t=16.5us
+2026-04-24T10:14:44.699476 [SCHED   ] [I] [  624.16] Slot decisions pci=1 t=14us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=2 ss_id=2 rb=[0..2) k1=11 newtx=false rv=2 tbs=46
+2026-04-24T10:14:44.699502 [PHY     ] [I] [  624.16] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=10 al=2 t=10.7us
+2026-04-24T10:14:44.699520 [PHY     ] [I] [  624.16] PDSCH: rnti=0x4601 h_id=2 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=2 tbs=46 t=15.7us
+2026-04-24T10:14:44.702922 [PHY     ] [I] [   625.3] PDCCH: rnti=0x4601 ss_id=2 format=0_1 cce=14 al=2 t=12.3us
+2026-04-24T10:14:44.704946 [SCHED   ] [I] [   625.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4601 h_id=0 ss_id=2 rb=[2..8) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:14:44.709036 [PHY     ] [I] [   625.7] PUSCH: rnti=0x4601 h_id=0 prb=[2, 8) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=OK iter=2.0 ack=1 sinr=23.9dB t=95.8us uci_t=37.8us ret_t=4.0us
+2026-04-24T10:14:44.709044 [MAC     ] [I] [  625.15] UL rnti=0x4601 ue=0 subPDUs: [lcid=1: len=3, lcid=1: len=84, SBSR: lcg=0 bs=0, SE_PHR: ph=[-17..-16)dB p_cmax=[20..21)dBm, PAD: len=447]
+2026-04-24T10:14:44.709047 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX status PDU. ack_sn=3 n_nack=0
+2026-04-24T10:14:44.709049 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX PDU. pdu_len=84 dc=data p=1 si=full sn=3
+2026-04-24T10:14:44.709054 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX SDU. sn=3 sdu_len=82
+2026-04-24T10:14:44.709055 [RLC     ] [I] du=0 ue=0 SRB1 DL: Handled status report. t=5us ack_sn=3 n_nack=0
+2026-04-24T10:14:44.709059 [DU-F1   ] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: ULRRCMessageTransfer
+2026-04-24T10:14:44.709064 [CU-CP-F1] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: ULRRCMessageTransfer
+2026-04-24T10:14:44.709067 [PDCP    ] [I] ue=0 SRB1 UL: RX PDU. type=data pdu_len=82 sn=3 count=3
+2026-04-24T10:14:44.709068 [PDCP    ] [I] ue=0 SRB1 UL: RX SDU. count=3
+2026-04-24T10:14:44.709072 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH UL ulInformationTransfer
+2026-04-24T10:14:44.709079 [NGAP    ] [I] Tx PDU ue=0 ran_ue=0 amf_ue=1: UplinkNASTransport
+2026-04-24T10:14:44.709458 [SCHED   ] [I] [  625.16] Slot decisions pci=1 t=20us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=2 ss_id=2 rb=[0..2) k1=11 newtx=true rv=0 tbs=46 ri=1 dl_bo=0
+2026-04-24T10:14:44.709470 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX status PDU. pdu_len=3 grant_len=4
+2026-04-24T10:14:44.709472 [MAC     ] [I] [  625.16] DL PDU: ue=0 rnti=0x4601 size=46: SDU: lcid=1 nof_sdus=1 total_size=5
+2026-04-24T10:14:44.709490 [PHY     ] [I] [  625.16] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=10 al=2 t=11.7us
+2026-04-24T10:14:44.709511 [PHY     ] [I] [  625.16] PDSCH: rnti=0x4601 h_id=2 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=0 tbs=46 t=24.1us
+2026-04-24T10:14:44.711629 [NGAP    ] [I] Rx PDU ue=0 ran_ue=0 amf_ue=1: DownlinkNASTransport
+2026-04-24T10:14:44.711635 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH DL dlInformationTransfer
+2026-04-24T10:14:44.711639 [PDCP    ] [I] ue=0 SRB1 DL: TX PDU. type=data pdu_len=20 sn=3 count=3 is_retx=false
+2026-04-24T10:14:44.711643 [CU-CP-F1] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.711647 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: DLRRCMessageTransfer
+2026-04-24T10:14:44.711650 [NGAP    ] [I] Rx PDU ue=0 ran_ue=0 amf_ue=1: UEContextReleaseCommand
+2026-04-24T10:14:44.711651 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=20 pdcp_sn=3 is_retx=false queued_sdus=1 queued_bytes=20
+2026-04-24T10:14:44.711671 [PDCP    ] [I] ue=0 SRB1 DL: TX PDU. type=data pdu_len=8 sn=4 count=4 is_retx=false
+2026-04-24T10:14:44.711673 [RRC     ] [I] ue=0 c-rnti=0x4601: DCCH DL rrcRelease
+2026-04-24T10:14:44.711680 [CU-CP-F1] [I] Tx PDU du=0 ue=0 cu_ue=0 du_ue=0: UEContextReleaseCommand
+2026-04-24T10:14:44.711683 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: UEContextReleaseCommand
+2026-04-24T10:14:44.711697 [DU-MNG  ] [I] ue=0: DRB traffic stopped
+2026-04-24T10:14:44.711704 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=8 pdcp_sn=4 is_retx=false queued_sdus=2 queued_bytes=28
+2026-04-24T10:14:44.711937 [SCHED   ] [I] [   626.1] Slot decisions pci=1 t=16us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=3 ss_id=2 rb=[0..2) k1=6 newtx=true rv=0 tbs=96 ri=1 dl_bo=0
+2026-04-24T10:14:44.711954 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=0 si=full sn=3 pdu_len=22 grant_len=32
+2026-04-24T10:14:44.711955 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=0 si=first sn=4 pdu_len=8 grant_len=8
+2026-04-24T10:14:44.711957 [MAC     ] [I] [   626.1] DL PDU: ue=0 rnti=0x4601 size=96: SDU: lcid=1 nof_sdus=2 total_size=34
+2026-04-24T10:14:44.711974 [PHY     ] [I] [   626.1] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=8 al=2 t=12.2us
+2026-04-24T10:14:44.711991 [PHY     ] [I] [   626.1] PDSCH: rnti=0x4601 h_id=3 k1=6 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=96 t=17.4us
+2026-04-24T10:14:44.712465 [SCHED   ] [I] [   626.2] Slot decisions pci=1 t=14us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4601 h_id=1 ss_id=2 rb=[0..2) k1=5 newtx=true rv=0 tbs=88 ri=1 dl_bo=0
+2026-04-24T10:14:44.712480 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=1 si=last sn=4 so=6 pdu_len=6 grant_len=6
+2026-04-24T10:14:44.712482 [MAC     ] [I] [   626.2] DL PDU: ue=0 rnti=0x4601 size=88: SDU: lcid=1 nof_sdus=1 total_size=8
+2026-04-24T10:14:44.712497 [PHY     ] [I] [   626.2] PDCCH: rnti=0x4601 ss_id=2 format=1_1 cce=6 al=2 t=10.8us
+2026-04-24T10:14:44.712522 [PHY     ] [I] [   626.2] PDSCH: rnti=0x4601 h_id=1 k1=5 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=88 t=18.9us
+2026-04-24T10:14:44.718542 [PHY     ] [I] [   626.7] PUCCH: rnti=0x4601 format=2 prb=[6, 7) prb2=na symb=[0, 2) ack=111 sr=1 sinr=31.1dB t=18.6us
+2026-04-24T10:14:44.718964 [PHY     ] [I] [  626.15] PDCCH: rnti=0x4601 ss_id=2 format=0_1 cce=2 al=2 t=11.3us
+2026-04-24T10:14:44.719218 [PHY     ] [I] [   626.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1100 sinr=30.8dB t=7.7us
+2026-04-24T10:14:44.720945 [SCHED   ] [I] [  626.19] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4601 h_id=0 ss_id=2 rb=[0..6) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:14:44.725028 [PHY     ] [I] [  626.19] PUSCH: rnti=0x4601 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=OK iter=2.0 sinr=24.6dB t=79.9us uci_t=0.0us ret_t=3.5us
+2026-04-24T10:14:44.725038 [MAC     ] [I] [   627.7] UL rnti=0x4601 ue=0 subPDUs: [lcid=1: len=3, SBSR: lcg=0 bs=0, SE_PHR: ph=[-17..-16)dB p_cmax=[20..21)dBm, PAD: len=533]
+2026-04-24T10:14:44.725039 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX status PDU. ack_sn=5 n_nack=0
+2026-04-24T10:14:44.725045 [RLC     ] [I] du=0 ue=0 SRB1 DL: Handled status report. t=2us ack_sn=5 n_nack=0
+2026-04-24T10:14:44.725052 [DU-MNG  ] [I] ue=0 proc="UE Delete": Procedure started....
+2026-04-24T10:14:44.725058 [DU-MNG  ] [I] ue=0: SRB and DRB traffic stopped
+2026-04-24T10:14:44.725062 [DU-F1   ] [I] ue=0 c-rnti=0x4601 du_ue=0 cu_ue=0: F1 UE context removed.
+2026-04-24T10:14:44.738964 [PHY     ] [I] [   628.7] PUCCH: rnti=0x4601 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-16.0dB t=24.6us
+2026-04-24T10:14:44.739245 [PHY     ] [I] [   628.8] PUCCH: rnti=0x4601 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-1.8dB t=13.6us
+2026-04-24T10:14:44.741414 [MAC     ] [I] [   629.0] ue=0 crnti=0x4601 proc="MAC UE Removal": finished successfully
+2026-04-24T10:14:44.801439 [DU-MNG  ] [I] ue=0 proc="UE Delete": Procedure finished successfully.
+2026-04-24T10:14:44.801448 [DU-F1   ] [I] Tx PDU du=0 cu_ue=0 du_ue=0: UEContextReleaseComplete
+2026-04-24T10:14:44.801484 [CU-CP-F1] [I] Rx PDU du=0 ue=0 cu_ue=0 du_ue=0: UEContextReleaseComplete
+2026-04-24T10:14:44.801544 [CU-CP   ] [I] ue=0: "UE Removal Routine" finished successfully
+2026-04-24T10:14:44.801561 [NGAP    ] [I] Tx PDU ran_ue=0 amf_ue=1: UEContextReleaseComplete
+2026-04-24T10:22:31.915129 [PHY     ] [I] [  241.19] PRACH: rsi=1 rssi=-50.1dB detected_preambles=[{idx=57 ta=7.55us detection_metric=43.6 power_dB=-50.73}] t=144.2us
+2026-04-24T10:22:31.915515 [SCHED   ] [I] [   242.8] Processed slot events pci=1: prach(ra-rnti=0x10b preamble=57 tc-rnti=0x4602)
+2026-04-24T10:22:31.916573 [SCHED   ] [I] [  242.10] Slot decisions pci=1 t=1us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): RAR: ra-rnti=0x10b rb=[0..3) tbs=9
+2026-04-24T10:22:31.916604 [PHY     ] [I] [  242.10] PDCCH: rnti=0x010b ss_id=1 format=1_0 cce=0 al=4 t=17.2us
+2026-04-24T10:22:31.916607 [PHY     ] [I] [  242.10] PDSCH: rnti=0x010b prb=[0, 3) symb=[2, 14) mod=QPSK rv=0 tbs=9 t=20.8us
+2026-04-24T10:22:31.920006 [SCHED   ] [I] [  242.17] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=1024 rnti=0x4602 h_id=0 ss_id=1 rb=[8..11) newtx=true rv=0 tbs=11 msg3_delay=7
+2026-04-24T10:22:31.924126 [PHY     ] [I] [  242.17] PUSCH: rnti=0x4602 h_id=0 prb=[8, 11) symb=[0, 14) mod=QPSK rv=0 tbs=11 crc=OK iter=1.0 sinr=26.5dB t=69.8us uci_t=0.0us ret_t=4.7us
+2026-04-24T10:22:31.924138 [MAC     ] [I] [   243.5] UL rnti=0x4602 subPDUs: [CCCH48: len=6, PAD: len=3]
+2026-04-24T10:22:31.924146 [DU-MNG  ] [I] ue=0 rnti=0x4602 proc="UE Create": Procedure started....
+2026-04-24T10:22:31.924280 [DU-F1   ] [I] ue=0 c-rnti=0x4602 du_ue=1: F1 UE context created successfully.
+2026-04-24T10:22:31.924294 [RLC     ] [I] du=0 ue=0 SRB0 DL: RLC TM created. queue_size=8
+2026-04-24T10:22:31.924297 [RLC     ] [I] du=0 ue=0 SRB0 UL: RLC TM created. 
+2026-04-24T10:22:31.924359 [RLC     ] [I] du=0 ue=0 SRB1 DL: RLC AM configured. tx_sn_size=12 pdcp_sn_len=12 t_poll_retx=45 max_retx=8 poll_pdu=-1 poll_byte=-1 queue_size=32 queue_size_bytes=64000 max_window=0
+2026-04-24T10:22:31.924424 [RLC     ] [I] du=0 ue=0 SRB1 UL: RLC AM configured. rx_sn_size=12 t_reassembly=35 t_status_prohibit=0 max_sn_per_status={na}
+2026-04-24T10:22:31.925064 [MAC     ] [I] [   243.7] ue=0 crnti=0x4602 proc="MAC UE Creation": finished successfully
+2026-04-24T10:22:31.925069 [DU-MNG  ] [I] ue=0 rnti=0x4602 proc="UE Create": Procedure finished successfully.
+2026-04-24T10:22:31.925072 [RLC     ] [I] du=0 ue=0 SRB0 UL: RX SDU. sdu_len=6
+2026-04-24T10:22:31.925082 [DU-F1   ] [I] Tx PDU du=0 tid=2 ue=0 du_ue=1: InitialULRRCMessageTransfer
+2026-04-24T10:22:31.925090 [CU-CP-F1] [I] Rx PDU du=0 tid=2 du_ue=1: InitialULRRCMessageTransfer
+2026-04-24T10:22:31.925102 [CU-UEMNG] [I] ue=1 du_index=0 gnb_du_id=0 pci=1 rnti=0x4602 pcell_index=0: Created new CU-CP UE
+2026-04-24T10:22:31.925158 [CU-CP   ] [I] ue=1 c-rnti=0x4602: UE created
+2026-04-24T10:22:31.925162 [CU-CP-F1] [I] ue=1 du_ue=1 cu_ue=1: Added UE context
+2026-04-24T10:22:31.925167 [RRC     ] [I] ue=1 c-rnti=0x4602: CCCH UL rrcSetupRequest
+2026-04-24T10:22:31.925188 [PDCP    ] [I] ue=1 SRB1 DL: PDCP configured. rb_type=SRB rlc_mode=AM sn_size=12 discard_timer=infinity count_notify=3221225472 count_max=4294967294 warn_on_drop=false test_mode=false
+2026-04-24T10:22:31.925205 [PDCP    ] [I] ue=1 SRB1 UL: PDCP configured. rb_type=SRB rlc_mode=AM sn_size=12 t_reordering=infinity count_notify=3221225472 count_max=4294967294
+2026-04-24T10:22:31.925217 [RRC     ] [I] ue=1 c-rnti=0x4602: CCCH DL rrcSetup
+2026-04-24T10:22:31.925220 [CU-CP-F1] [I] Tx PDU du=0 ue=1 cu_ue=1 du_ue=1: DLRRCMessageTransfer
+2026-04-24T10:22:31.925225 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=1 du_ue=1: DLRRCMessageTransfer
+2026-04-24T10:22:31.925229 [RLC     ] [I] du=0 ue=0 SRB0 DL: TX SDU. sdu_len=301 queued_sdus=1 queued_bytes=301
+2026-04-24T10:22:31.926588 [SCHED   ] [I] [  243.10] Slot decisions pci=1 t=12us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=0 ss_id=1 rb=[0..23) k1=7 newtx=true rv=0 tbs=317 ri=1 dl_bo=0
+2026-04-24T10:22:31.926600 [RLC     ] [I] du=0 ue=0 SRB0 DL: TX PDU. pdu_len=301 grant_len=301
+2026-04-24T10:22:31.926603 [MAC     ] [I] [  243.10] DL PDU: ue=0 rnti=0x4602 size=317: CON_RES: id=11afbaba18e6, SDU: lcid=0 nof_sdus=1 total_size=304
+2026-04-24T10:22:31.926627 [PHY     ] [I] [  243.10] PDCCH: rnti=0x4602 ss_id=1 format=1_0 cce=0 al=4 t=19.0us
+2026-04-24T10:22:31.926658 [PHY     ] [I] [  243.10] PDSCH: rnti=0x4602 h_id=0 k1=7 prb=[0, 23) symb=[2, 14) mod=QPSK rv=0 tbs=317 t=26.4us
+2026-04-24T10:22:31.934089 [PHY     ] [I] [  243.17] PUCCH: rnti=0x4602 format=1 prb1=0 prb2=50 symb=[0, 14) cs=0 occ=0 ack=1 metric=1321.8 sinr=19.6dB t=29.7us
+2026-04-24T10:22:31.939668 [PHY     ] [I] [   244.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-28.9dB t=27.8us
+2026-04-24T10:22:31.939804 [PHY     ] [I] [   244.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=0001 sinr=34.1dB t=24.3us
+2026-04-24T10:22:31.959559 [PHY     ] [I] [   246.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=2711.2 sinr=20.1dB t=31.7us
+2026-04-24T10:22:31.959793 [PHY     ] [I] [   246.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=27.3dB t=22.8us
+2026-04-24T10:22:31.963119 [PHY     ] [I] [   247.3] PDCCH: rnti=0x4602 ss_id=1 format=0_0 cce=0 al=4 t=19.7us
+2026-04-24T10:22:31.965043 [SCHED   ] [I] [   247.7] Slot decisions pci=1 t=2us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4602 h_id=0 ss_id=1 rb=[8..32) newtx=true rv=0 tbs=528 k2=4
+2026-04-24T10:22:31.969176 [PHY     ] [I] [   247.7] PUSCH: rnti=0x4602 h_id=0 prb=[8, 32) symb=[0, 14) mod=QPSK rv=0 tbs=528 crc=OK iter=2.0 sinr=18.6dB t=110.3us uci_t=0.0us ret_t=3.8us
+2026-04-24T10:22:31.969186 [MAC     ] [I] [  247.15] UL rnti=0x4602 ue=0 subPDUs: [lcid=1: len=66, SBSR: lcg=0 bs=0, SE_PHR: ph=[-25..-24)dB p_cmax=[22..23)dBm, PAD: len=454]
+2026-04-24T10:22:31.969189 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX PDU. pdu_len=66 dc=data p=1 si=full sn=0
+2026-04-24T10:22:31.969191 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX SDU. sn=0 sdu_len=64
+2026-04-24T10:22:31.969204 [DU-F1   ] [I] Tx PDU du=0 ue=0 cu_ue=1 du_ue=1: ULRRCMessageTransfer
+2026-04-24T10:22:31.969212 [CU-CP-F1] [I] Rx PDU du=0 ue=1 cu_ue=1 du_ue=1: ULRRCMessageTransfer
+2026-04-24T10:22:31.969215 [PDCP    ] [I] ue=1 SRB1 UL: RX PDU. type=data pdu_len=64 sn=0 count=0
+2026-04-24T10:22:31.969217 [PDCP    ] [I] ue=1 SRB1 UL: RX SDU. count=0
+2026-04-24T10:22:31.969227 [RRC     ] [I] ue=1 c-rnti=0x4602: DCCH UL rrcSetupComplete
+2026-04-24T10:22:31.969248 [NGAP    ] [I] Tx PDU ue=1 ran_ue=1: InitialUEMessage
+2026-04-24T10:22:31.969545 [SCHED   ] [I] [  247.16] Slot decisions pci=1 t=31us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=0 ss_id=2 rb=[0..2) k1=11 newtx=true rv=0 tbs=51 ri=1 dl_bo=0
+2026-04-24T10:22:31.969561 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX status PDU. pdu_len=3 grant_len=4
+2026-04-24T10:22:31.969563 [MAC     ] [I] [  247.16] DL PDU: ue=0 rnti=0x4602 size=51: TA_CMD: tag_id=0, ta_cmd=29, SDU: lcid=1 nof_sdus=1 total_size=5
+2026-04-24T10:22:31.969582 [PHY     ] [I] [  247.16] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=13.6us
+2026-04-24T10:22:31.969585 [NGAP    ] [I] Rx PDU ue=1 ran_ue=1 amf_ue=2: DownlinkNASTransport
+2026-04-24T10:22:31.969596 [RRC     ] [I] ue=1 c-rnti=0x4602: DCCH DL dlInformationTransfer
+2026-04-24T10:22:31.969596 [PHY     ] [I] [  247.16] PDSCH: rnti=0x4602 h_id=0 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=0 tbs=51 t=21.8us
+2026-04-24T10:22:31.969600 [PDCP    ] [I] ue=1 SRB1 DL: TX PDU. type=data pdu_len=13 sn=0 count=0 is_retx=false
+2026-04-24T10:22:31.969605 [CU-CP-F1] [I] Tx PDU du=0 ue=1 cu_ue=1 du_ue=1: DLRRCMessageTransfer
+2026-04-24T10:22:31.969619 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=1 du_ue=1: DLRRCMessageTransfer
+2026-04-24T10:22:31.969623 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=13 pdcp_sn=0 is_retx=false queued_sdus=1 queued_bytes=13
+2026-04-24T10:22:31.971576 [SCHED   ] [I] [   248.0] Slot decisions pci=1 t=18us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[20..22) k1=7 newtx=true rv=0 tbs=106 ri=1 dl_bo=0
+2026-04-24T10:22:31.971592 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=1 si=full sn=0 pdu_len=15 grant_len=15
+2026-04-24T10:22:31.971594 [MAC     ] [I] [   248.0] DL PDU: ue=0 rnti=0x4602 size=106: SDU: lcid=1 nof_sdus=1 total_size=17
+2026-04-24T10:22:31.971617 [PHY     ] [I] [   248.0] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=14 al=2 t=10.8us
+2026-04-24T10:22:31.971637 [PHY     ] [I] [   248.0] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[20, 22) symb=[2, 14) mod=64QAM rv=0 tbs=106 t=22.1us
+2026-04-24T10:22:31.979107 [PHY     ] [I] [   248.7] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=00 metric=2648.7 sinr=20.0dB t=16.0us
+2026-04-24T10:22:31.979545 [SCHED   ] [I] [  248.16] Slot decisions pci=1 t=12us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=0 ss_id=2 rb=[0..2) k1=11 newtx=false rv=2 tbs=51
+2026-04-24T10:22:31.979570 [PHY     ] [I] [  248.16] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=11.3us
+2026-04-24T10:22:31.979575 [PHY     ] [I] [   248.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-36.4dB t=12.0us
+2026-04-24T10:22:31.979577 [PHY     ] [I] [  248.16] PDSCH: rnti=0x4602 h_id=0 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=2 tbs=51 t=17.1us
+2026-04-24T10:22:31.979843 [PHY     ] [I] [   248.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1010 sinr=33.2dB t=12.7us
+2026-04-24T10:22:31.981572 [SCHED   ] [I] [   249.0] Slot decisions pci=1 t=8us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[20..22) k1=7 newtx=false rv=2 tbs=106
+2026-04-24T10:22:31.981604 [PHY     ] [I] [   249.0] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=14 al=2 t=9.3us
+2026-04-24T10:22:31.981620 [PHY     ] [I] [   249.0] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[20, 22) symb=[2, 14) mod=64QAM rv=2 tbs=106 t=14.3us
+2026-04-24T10:22:31.989121 [PHY     ] [I] [   249.7] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=11 metric=445.3 sinr=12.2dB t=25.3us
+2026-04-24T10:22:31.999570 [PHY     ] [I] [   250.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=436.6 sinr=12.1dB t=15.6us
+2026-04-24T10:22:31.999829 [PHY     ] [I] [   250.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=26.6dB t=13.4us
+2026-04-24T10:22:32.003120 [PHY     ] [I] [   251.3] PDCCH: rnti=0x4602 ss_id=2 format=0_1 cce=0 al=2 t=9.1us
+2026-04-24T10:22:32.005040 [SCHED   ] [I] [   251.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4602 h_id=0 ss_id=2 rb=[0..6) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:22:32.006530 [SCHED   ] [I] [  251.10] Slot decisions pci=1 t=12us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=7 newtx=true rv=0 tbs=96 ri=1 dl_bo=0
+2026-04-24T10:22:32.006542 [MAC     ] [I] [  251.10] DL PDU: ue=0 rnti=0x4602 size=96: TA_CMD: tag_id=0, ta_cmd=30
+2026-04-24T10:22:32.006557 [PHY     ] [I] [  251.10] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=10.6us
+2026-04-24T10:22:32.006577 [PHY     ] [I] [  251.10] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=96 t=17.3us
+2026-04-24T10:22:32.009097 [PHY     ] [I] [   251.7] PUSCH: rnti=0x4602 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=OK iter=2.0 sinr=25.7dB t=78.4us uci_t=0.0us ret_t=3.9us
+2026-04-24T10:22:32.009105 [MAC     ] [I] [  251.15] UL rnti=0x4602 ue=0 subPDUs: [lcid=1: len=3, SBSR: lcg=0 bs=0, SE_PHR: ph=[-20..-19)dB p_cmax=[22..23)dBm, PAD: len=533]
+2026-04-24T10:22:32.009112 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX status PDU. ack_sn=1 n_nack=0
+2026-04-24T10:22:32.009118 [RLC     ] [I] du=0 ue=0 SRB1 DL: Handled status report. t=2us ack_sn=1 n_nack=0
+2026-04-24T10:22:32.014108 [PHY     ] [I] [  251.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=1 metric=141.4 sinr=7.3dB t=15.8us
+2026-04-24T10:22:32.019571 [PHY     ] [I] [   252.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-26.8dB t=15.2us
+2026-04-24T10:22:32.019851 [PHY     ] [I] [   252.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1010 sinr=25.7dB t=13.9us
+2026-04-24T10:22:32.039574 [PHY     ] [I] [   254.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.3 sinr=-14.4dB t=13.7us
+2026-04-24T10:22:32.039830 [PHY     ] [I] [   254.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1010 sinr=25.3dB t=10.3us
+2026-04-24T10:22:32.046570 [SCHED   ] [I] [  255.10] Slot decisions pci=1 t=10us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=7 newtx=true rv=0 tbs=80 ri=1 dl_bo=0
+2026-04-24T10:22:32.046581 [MAC     ] [I] [  255.10] DL PDU: ue=0 rnti=0x4602 size=80: TA_CMD: tag_id=0, ta_cmd=32
+2026-04-24T10:22:32.046595 [PHY     ] [I] [  255.10] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=10.6us
+2026-04-24T10:22:32.046603 [PHY     ] [I] [  255.10] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=80 t=16.2us
+2026-04-24T10:22:32.054125 [PHY     ] [I] [  255.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=1 metric=444.8 sinr=12.2dB t=13.9us
+2026-04-24T10:22:32.059609 [PHY     ] [I] [   256.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=427.4 sinr=12.1dB t=24.9us
+2026-04-24T10:22:32.059778 [PHY     ] [I] [   256.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1011 sinr=30.5dB t=8.0us
+2026-04-24T10:22:32.063024 [PHY     ] [I] [   257.3] PDCCH: rnti=0x4602 ss_id=2 format=0_1 cce=0 al=2 t=9.3us
+2026-04-24T10:22:32.065049 [SCHED   ] [I] [   257.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4602 h_id=0 ss_id=2 rb=[0..6) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:22:32.069114 [PHY     ] [I] [   257.7] PUSCH: rnti=0x4602 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=OK iter=2.0 sinr=23.4dB t=74.2us uci_t=0.0us ret_t=3.6us
+2026-04-24T10:22:32.069123 [MAC     ] [I] [  257.15] UL rnti=0x4602 ue=0 subPDUs: [lcid=1: len=69, SBSR: lcg=0 bs=0, SE_PHR: ph=[-20..-19)dB p_cmax=[22..23)dBm, PAD: len=467]
+2026-04-24T10:22:32.069124 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX PDU. pdu_len=69 dc=data p=1 si=full sn=1
+2026-04-24T10:22:32.069126 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX SDU. sn=1 sdu_len=67
+2026-04-24T10:22:32.069134 [DU-F1   ] [I] Tx PDU du=0 ue=0 cu_ue=1 du_ue=1: ULRRCMessageTransfer
+2026-04-24T10:22:32.069137 [CU-CP-F1] [I] Rx PDU du=0 ue=1 cu_ue=1 du_ue=1: ULRRCMessageTransfer
+2026-04-24T10:22:32.069140 [PDCP    ] [I] ue=1 SRB1 UL: RX PDU. type=data pdu_len=67 sn=1 count=1
+2026-04-24T10:22:32.069141 [PDCP    ] [I] ue=1 SRB1 UL: RX SDU. count=1
+2026-04-24T10:22:32.069146 [RRC     ] [I] ue=1 c-rnti=0x4602: DCCH UL ulInformationTransfer
+2026-04-24T10:22:32.069154 [NGAP    ] [I] Tx PDU ue=1 ran_ue=1 amf_ue=2: UplinkNASTransport
+2026-04-24T10:22:32.069577 [SCHED   ] [I] [  257.16] Slot decisions pci=1 t=14us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=11 newtx=true rv=0 tbs=46 ri=1 dl_bo=0
+2026-04-24T10:22:32.069586 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX status PDU. pdu_len=3 grant_len=4
+2026-04-24T10:22:32.069588 [MAC     ] [I] [  257.16] DL PDU: ue=0 rnti=0x4602 size=46: SDU: lcid=1 nof_sdus=1 total_size=5
+2026-04-24T10:22:32.069602 [PHY     ] [I] [  257.16] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=10.2us
+2026-04-24T10:22:32.069628 [PHY     ] [I] [  257.16] PDSCH: rnti=0x4602 h_id=1 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=0 tbs=46 t=15.2us
+2026-04-24T10:22:32.070583 [NGAP    ] [I] Rx PDU ue=1 ran_ue=1 amf_ue=2: DownlinkNASTransport
+2026-04-24T10:22:32.070587 [RRC     ] [I] ue=1 c-rnti=0x4602: DCCH DL dlInformationTransfer
+2026-04-24T10:22:32.070591 [PDCP    ] [I] ue=1 SRB1 DL: TX PDU. type=data pdu_len=13 sn=1 count=1 is_retx=false
+2026-04-24T10:22:32.070594 [CU-CP-F1] [I] Tx PDU du=0 ue=1 cu_ue=1 du_ue=1: DLRRCMessageTransfer
+2026-04-24T10:22:32.070598 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=1 du_ue=1: DLRRCMessageTransfer
+2026-04-24T10:22:32.070601 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=13 pdcp_sn=1 is_retx=false queued_sdus=1 queued_bytes=13
+2026-04-24T10:22:32.070675 [NGAP    ] [I] Rx PDU ue=1 ran_ue=1 amf_ue=2: UEContextReleaseCommand
+2026-04-24T10:22:32.070687 [PDCP    ] [I] ue=1 SRB1 DL: TX PDU. type=data pdu_len=8 sn=2 count=2 is_retx=false
+2026-04-24T10:22:32.070689 [RRC     ] [I] ue=1 c-rnti=0x4602: DCCH DL rrcRelease
+2026-04-24T10:22:32.070696 [CU-CP-F1] [I] Tx PDU du=0 ue=1 cu_ue=1 du_ue=1: UEContextReleaseCommand
+2026-04-24T10:22:32.070700 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=1 du_ue=1: UEContextReleaseCommand
+2026-04-24T10:22:32.070707 [DU-MNG  ] [I] ue=0: DRB traffic stopped
+2026-04-24T10:22:32.070712 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=8 pdcp_sn=2 is_retx=false queued_sdus=2 queued_bytes=21
+2026-04-24T10:22:32.071522 [SCHED   ] [I] [   258.0] Slot decisions pci=1 t=10us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=0 ss_id=2 rb=[20..22) k1=7 newtx=true rv=0 tbs=96 ri=1 dl_bo=0
+2026-04-24T10:22:32.071535 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=0 si=full sn=1 pdu_len=15 grant_len=25
+2026-04-24T10:22:32.071537 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=0 si=first sn=2 pdu_len=8 grant_len=8
+2026-04-24T10:22:32.071538 [MAC     ] [I] [   258.0] DL PDU: ue=0 rnti=0x4602 size=96: SDU: lcid=1 nof_sdus=2 total_size=27
+2026-04-24T10:22:32.071560 [PHY     ] [I] [   258.0] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=14 al=2 t=9.1us
+2026-04-24T10:22:32.071571 [PHY     ] [I] [   258.0] PDSCH: rnti=0x4602 h_id=0 k1=7 prb=[20, 22) symb=[2, 14) mod=64QAM rv=0 tbs=96 t=18.7us
+2026-04-24T10:22:32.072092 [SCHED   ] [I] [   258.1] Slot decisions pci=1 t=14us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=2 ss_id=2 rb=[0..2) k1=6 newtx=true rv=0 tbs=96 ri=1 dl_bo=0
+2026-04-24T10:22:32.072104 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=1 si=last sn=2 so=6 pdu_len=6 grant_len=6
+2026-04-24T10:22:32.072106 [MAC     ] [I] [   258.1] DL PDU: ue=0 rnti=0x4602 size=96: SDU: lcid=1 nof_sdus=1 total_size=8
+2026-04-24T10:22:32.072125 [PHY     ] [I] [   258.1] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=0 al=2 t=10.4us
+2026-04-24T10:22:32.072141 [PHY     ] [I] [   258.1] PDSCH: rnti=0x4602 h_id=2 k1=6 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=96 t=14.3us
+2026-04-24T10:22:32.078722 [PHY     ] [I] [   258.7] PUCCH: rnti=0x4602 format=2 prb=[44, 45) prb2=na symb=[2, 4) ack=011 sinr=19.3dB t=12.1us
+2026-04-24T10:22:32.079055 [SCHED   ] [I] [  258.15] Slot decisions pci=1 t=12us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=4 newtx=false rv=2 tbs=46
+2026-04-24T10:22:32.079077 [PHY     ] [I] [  258.15] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=10.6us
+2026-04-24T10:22:32.079091 [PHY     ] [I] [  258.15] PDSCH: rnti=0x4602 h_id=1 k1=4 prb=[0, 2) symb=[2, 8) mod=64QAM rv=2 tbs=46 t=11.7us
+2026-04-24T10:22:32.079628 [PHY     ] [I] [   258.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=436.3 sinr=12.1dB t=15.2us
+2026-04-24T10:22:32.079774 [PHY     ] [I] [   258.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=1010 sinr=30.5dB t=7.5us
+2026-04-24T10:22:32.083060 [PHY     ] [I] [   259.3] PDCCH: rnti=0x4602 ss_id=2 format=0_1 cce=0 al=2 t=8.9us
+2026-04-24T10:22:32.085091 [SCHED   ] [I] [   259.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4602 h_id=0 ss_id=2 rb=[0..6) newtx=true rv=0 tbs=544 k2=4
+2026-04-24T10:22:32.085110 [PHY     ] [I] [  258.19] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.2 sinr=-16.4dB t=13.9us
+2026-04-24T10:22:32.086573 [SCHED   ] [I] [  259.10] Slot decisions pci=1 t=7us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=7 newtx=false rv=3 tbs=46
+2026-04-24T10:22:32.086594 [PHY     ] [I] [  259.10] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=9.8us
+2026-04-24T10:22:32.086604 [PHY     ] [I] [  259.10] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[0, 2) symb=[2, 8) mod=64QAM rv=3 tbs=46 t=9.5us
+2026-04-24T10:22:32.089165 [PHY     ] [I] [   259.7] PUSCH: rnti=0x4602 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=KO iter=6.0 sinr=-20.2dB t=118.1us uci_t=0.0us ret_t=3.3us
+2026-04-24T10:22:32.093063 [PHY     ] [I] [   260.3] PDCCH: rnti=0x4602 ss_id=2 format=0_1 cce=0 al=2 t=7.7us
+2026-04-24T10:22:32.094050 [PHY     ] [I] [  259.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.1 sinr=-20.8dB t=14.6us
+2026-04-24T10:22:32.094538 [SCHED   ] [I] [   260.6] Slot decisions pci=1 t=8us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=11 newtx=false rv=1 tbs=46
+2026-04-24T10:22:32.094558 [PHY     ] [I] [   260.6] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=6 al=2 t=9.7us
+2026-04-24T10:22:32.094576 [PHY     ] [I] [   260.6] PDSCH: rnti=0x4602 h_id=1 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=1 tbs=46 t=16.7us
+2026-04-24T10:22:32.095091 [SCHED   ] [I] [   260.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4602 h_id=0 ss_id=2 rb=[0..6) newtx=false rv=0 tbs=544 k2=4
+2026-04-24T10:22:32.099184 [PHY     ] [I] [   260.7] PUSCH: rnti=0x4602 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=KO iter=6.0 sinr=-23.0dB t=107.9us uci_t=0.0us ret_t=2.0us
+2026-04-24T10:22:32.099625 [PHY     ] [I] [   260.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-18.9dB t=12.8us
+2026-04-24T10:22:32.099782 [PHY     ] [I] [   260.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-4.8dB t=13.2us
+2026-04-24T10:22:32.103050 [PHY     ] [I] [   261.3] PDCCH: rnti=0x4602 ss_id=2 format=0_1 cce=0 al=2 t=8.8us
+2026-04-24T10:22:32.104055 [PHY     ] [I] [  260.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.6 sinr=-22.3dB t=15.2us
+2026-04-24T10:22:32.104571 [SCHED   ] [I] [   261.6] Slot decisions pci=1 t=9us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=11 newtx=false rv=0 tbs=46
+2026-04-24T10:22:32.104592 [PHY     ] [I] [   261.6] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=6 al=2 t=10.1us
+2026-04-24T10:22:32.104596 [PHY     ] [I] [   261.6] PDSCH: rnti=0x4602 h_id=1 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=0 tbs=46 t=10.9us
+2026-04-24T10:22:32.105099 [SCHED   ] [I] [   261.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4602 h_id=0 ss_id=2 rb=[0..6) newtx=false rv=0 tbs=544 k2=4
+2026-04-24T10:22:32.109209 [PHY     ] [I] [   261.7] PUSCH: rnti=0x4602 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=KO iter=6.0 sinr=-27.1dB t=118.1us uci_t=0.0us ret_t=2.8us
+2026-04-24T10:22:32.113075 [PHY     ] [I] [   262.3] PDCCH: rnti=0x4602 ss_id=2 format=0_1 cce=0 al=2 t=8.0us
+2026-04-24T10:22:32.114060 [PHY     ] [I] [  261.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.3 sinr=-19.2dB t=13.9us
+2026-04-24T10:22:32.114571 [SCHED   ] [I] [   262.6] rnti=0x4602 h_id=1: Discarding DL HARQ process TB with tbs=46. Cause: Maximum number of reTxs 4 exceeded
+2026-04-24T10:22:32.115061 [SCHED   ] [I] [   262.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4602 h_id=0 ss_id=2 rb=[0..6) newtx=false rv=0 tbs=544 k2=4
+2026-04-24T10:22:32.116519 [RLC     ] [I] du=0 ue=0 SRB1 DL: Poll retransmit timer expired after 45ms.
+2026-04-24T10:22:32.117052 [SCHED   ] [I] [  262.11] Slot decisions pci=1 t=9us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=6 newtx=true rv=0 tbs=76 ri=1 dl_bo=0
+2026-04-24T10:22:32.117060 [RLC     ] [I] du=0 ue=0 SRB1 DL: RETX PDU. dc=data p=1 si=full sn=1 pdu_len=15 grant_len=15 retx_count=0
+2026-04-24T10:22:32.117062 [MAC     ] [I] [  262.11] DL PDU: ue=0 rnti=0x4602 size=76: SDU: lcid=1 nof_sdus=1 total_size=17
+2026-04-24T10:22:32.117074 [PHY     ] [I] [  262.11] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=2 al=2 t=8.4us
+2026-04-24T10:22:32.117101 [PHY     ] [I] [  262.11] PDSCH: rnti=0x4602 h_id=1 k1=6 prb=[0, 2) symb=[2, 14) mod=16QAM rv=0 tbs=76 t=17.0us
+2026-04-24T10:22:32.119191 [PHY     ] [I] [   262.7] PUSCH: rnti=0x4602 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=KO iter=6.0 sinr=-23.1dB t=108.3us uci_t=0.0us ret_t=1.9us
+2026-04-24T10:22:32.119532 [PHY     ] [I] [   262.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-21.1dB t=14.2us
+2026-04-24T10:22:32.119812 [PHY     ] [I] [   262.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-11.5dB t=12.6us
+2026-04-24T10:22:32.123098 [PHY     ] [I] [   263.3] PDCCH: rnti=0x4602 ss_id=2 format=0_1 cce=0 al=2 t=9.0us
+2026-04-24T10:22:32.124045 [PHY     ] [I] [  262.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.3 sinr=-20.5dB t=13.4us
+2026-04-24T10:22:32.125018 [SCHED   ] [I] [   263.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4602 h_id=0 ss_id=2 rb=[0..6) newtx=false rv=0 tbs=544 k2=4
+2026-04-24T10:22:32.126506 [SCHED   ] [I] [  263.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=7 newtx=false rv=2 tbs=76
+2026-04-24T10:22:32.126526 [PHY     ] [I] [  263.10] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=9.8us
+2026-04-24T10:22:32.126542 [PHY     ] [I] [  263.10] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[0, 2) symb=[2, 14) mod=16QAM rv=2 tbs=76 t=14.5us
+2026-04-24T10:22:32.129170 [PHY     ] [I] [   263.7] PUSCH: rnti=0x4602 h_id=0 prb=[0, 6) symb=[0, 14) mod=64QAM rv=0 tbs=544 crc=KO iter=6.0 sinr=-22.0dB t=105.9us uci_t=0.0us ret_t=1.6us
+2026-04-24T10:22:32.129490 [SCHED   ] [I] [  263.16] rnti=0x4602 h_id=0: Discarding UL HARQ process TB with tbs=544. Cause: Maximum number of reTxs 4 exceeded
+2026-04-24T10:22:32.134088 [PHY     ] [I] [  263.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.4 sinr=-21.9dB t=13.1us
+2026-04-24T10:22:32.136541 [SCHED   ] [I] [  264.10] Slot decisions pci=1 t=9us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=7 newtx=false rv=3 tbs=76
+2026-04-24T10:22:32.136559 [PHY     ] [I] [  264.10] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=9.1us
+2026-04-24T10:22:32.136575 [PHY     ] [I] [  264.10] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[0, 2) symb=[2, 14) mod=16QAM rv=3 tbs=76 t=14.2us
+2026-04-24T10:22:32.139563 [PHY     ] [I] [   264.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-24.4dB t=16.0us
+2026-04-24T10:22:32.139811 [PHY     ] [I] [   264.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-5.9dB t=8.6us
+2026-04-24T10:22:32.144074 [PHY     ] [I] [  264.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.2 sinr=-17.2dB t=12.7us
+2026-04-24T10:22:32.146530 [SCHED   ] [I] [  265.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=7 newtx=false rv=1 tbs=76
+2026-04-24T10:22:32.146548 [PHY     ] [I] [  265.10] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=8.9us
+2026-04-24T10:22:32.146556 [PHY     ] [I] [  265.10] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[0, 2) symb=[2, 14) mod=16QAM rv=1 tbs=76 t=16.5us
+2026-04-24T10:22:32.154069 [PHY     ] [I] [  265.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.1 sinr=-27.4dB t=13.6us
+2026-04-24T10:22:32.156526 [SCHED   ] [I] [  266.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=1 ss_id=2 rb=[0..2) k1=7 newtx=false rv=0 tbs=76
+2026-04-24T10:22:32.156544 [PHY     ] [I] [  266.10] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=10 al=2 t=9.0us
+2026-04-24T10:22:32.156555 [PHY     ] [I] [  266.10] PDSCH: rnti=0x4602 h_id=1 k1=7 prb=[0, 2) symb=[2, 14) mod=16QAM rv=0 tbs=76 t=14.0us
+2026-04-24T10:22:32.159550 [PHY     ] [I] [   266.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-24.5dB t=13.8us
+2026-04-24T10:22:32.159801 [PHY     ] [I] [   266.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-8.1dB t=7.8us
+2026-04-24T10:22:32.161589 [RLC     ] [I] du=0 ue=0 SRB1 DL: Poll retransmit timer expired after 45ms.
+2026-04-24T10:22:32.162015 [SCHED   ] [I] [   267.1] Slot decisions pci=1 t=10us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=2 ss_id=2 rb=[0..2) k1=6 newtx=true rv=0 tbs=69 ri=1 dl_bo=0
+2026-04-24T10:22:32.162023 [RLC     ] [I] du=0 ue=0 SRB1 DL: RETX PDU. dc=data p=1 si=full sn=1 pdu_len=15 grant_len=15 retx_count=1
+2026-04-24T10:22:32.162025 [MAC     ] [I] [   267.1] DL PDU: ue=0 rnti=0x4602 size=69: SDU: lcid=1 nof_sdus=1 total_size=17
+2026-04-24T10:22:32.162037 [PHY     ] [I] [   267.1] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=0 al=2 t=8.4us
+2026-04-24T10:22:32.162052 [PHY     ] [I] [   267.1] PDSCH: rnti=0x4602 h_id=2 k1=6 prb=[0, 2) symb=[2, 14) mod=16QAM rv=0 tbs=69 t=13.8us
+2026-04-24T10:22:32.164087 [PHY     ] [I] [  266.17] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.1 sinr=-22.8dB t=13.4us
+2026-04-24T10:22:32.164593 [SCHED   ] [I] [   267.6] rnti=0x4602 h_id=1: Discarding DL HARQ process TB with tbs=76. Cause: Maximum number of reTxs 4 exceeded
+2026-04-24T10:22:32.169131 [PHY     ] [I] [   267.7] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.1 sinr=-19.9dB t=12.6us
+2026-04-24T10:22:32.171593 [SCHED   ] [I] [   268.0] Slot decisions pci=1 t=5us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=2 ss_id=2 rb=[20..22) k1=7 newtx=false rv=2 tbs=69
+2026-04-24T10:22:32.171619 [PHY     ] [I] [   268.0] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=14 al=2 t=8.1us
+2026-04-24T10:22:32.171633 [PHY     ] [I] [   268.0] PDSCH: rnti=0x4602 h_id=2 k1=7 prb=[20, 22) symb=[2, 14) mod=16QAM rv=2 tbs=69 t=13.0us
+2026-04-24T10:22:32.179037 [PHY     ] [I] [   268.7] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.3 sinr=-18.7dB t=12.8us
+2026-04-24T10:22:32.179565 [PHY     ] [I] [   268.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.3 sinr=-20.8dB t=15.2us
+2026-04-24T10:22:32.179826 [PHY     ] [I] [   268.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-8.2dB t=10.6us
+2026-04-24T10:22:32.181568 [SCHED   ] [I] [   269.0] Slot decisions pci=1 t=9us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4602 h_id=2 ss_id=2 rb=[20..22) k1=7 newtx=false rv=3 tbs=69
+2026-04-24T10:22:32.181591 [PHY     ] [I] [   269.0] PDCCH: rnti=0x4602 ss_id=2 format=1_1 cce=14 al=2 t=10.1us
+2026-04-24T10:22:32.181602 [PHY     ] [I] [   269.0] PDSCH: rnti=0x4602 h_id=2 k1=7 prb=[20, 22) symb=[2, 14) mod=16QAM rv=3 tbs=69 t=14.7us
+2026-04-24T10:22:32.189056 [PHY     ] [I] [   269.7] PUCCH: rnti=0x4602 format=1 prb1=2 prb2=na symb=[0, 14) cs=0 occ=0 ack=1 metric=1.4 sinr=-12.5dB t=13.1us
+2026-04-24T10:22:32.190512 [DU-F1   ] [I] ue=0 du_ue=1 cu_ue=1 proc="UE Context Release": RRC container not ACKed within a time window of 120msec. Proceeding with the UE context release...
+2026-04-24T10:22:32.190516 [DU-MNG  ] [I] ue=0 proc="UE Delete": Procedure started....
+2026-04-24T10:22:32.190523 [DU-MNG  ] [I] ue=0: SRB and DRB traffic stopped
+2026-04-24T10:22:32.190526 [DU-F1   ] [I] ue=0 c-rnti=0x4602 du_ue=1 cu_ue=1: F1 UE context removed.
+2026-04-24T10:22:32.199563 [PHY     ] [I] [   270.8] PUCCH: rnti=0x4602 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-18.6dB t=12.8us
+2026-04-24T10:22:32.199788 [PHY     ] [I] [   270.9] PUCCH: rnti=0x4602 format=2 prb=[7, 8) prb2=na symb=[4, 6) csi1=2222 sinr=-4.3dB t=11.4us
+2026-04-24T10:22:32.207098 [MAC     ] [I] [  271.11] ue=0 crnti=0x4602 proc="MAC UE Removal": finished successfully
+2026-04-24T10:22:32.207100 [DU-MNG  ] [I] ue=0 proc="UE Delete": Procedure finished successfully.
+2026-04-24T10:22:32.207104 [DU-F1   ] [I] Tx PDU du=0 cu_ue=1 du_ue=1: UEContextReleaseComplete
+2026-04-24T10:22:32.207138 [CU-CP-F1] [I] Rx PDU du=0 ue=1 cu_ue=1 du_ue=1: UEContextReleaseComplete
+2026-04-24T10:22:32.207173 [CU-CP   ] [I] ue=1: "UE Removal Routine" finished successfully
+2026-04-24T10:22:32.207184 [NGAP    ] [I] Tx PDU ran_ue=1 amf_ue=2: UEContextReleaseComplete
+2026-04-24T10:24:47.077347 [PHY     ] [I] [  445.19] PRACH: rsi=1 rssi=-57.2dB detected_preambles=[{idx=41 ta=7.42us detection_metric=9.4 power_dB=-60.62}] t=147.1us
+2026-04-24T10:24:47.077716 [SCHED   ] [I] [   446.8] Processed slot events pci=1: prach(ra-rnti=0x10b preamble=41 tc-rnti=0x4603)
+2026-04-24T10:24:47.078757 [SCHED   ] [I] [  446.10] Slot decisions pci=1 t=2us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): RAR: ra-rnti=0x10b rb=[0..3) tbs=9
+2026-04-24T10:24:47.078795 [PHY     ] [I] [  446.10] PDCCH: rnti=0x010b ss_id=1 format=1_0 cce=0 al=4 t=20.5us
+2026-04-24T10:24:47.078810 [PHY     ] [I] [  446.10] PDSCH: rnti=0x010b prb=[0, 3) symb=[2, 14) mod=QPSK rv=0 tbs=9 t=26.6us
+2026-04-24T10:24:47.082254 [SCHED   ] [I] [  446.17] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=1024 rnti=0x4603 h_id=0 ss_id=1 rb=[8..11) newtx=true rv=0 tbs=11 msg3_delay=7
+2026-04-24T10:24:47.086389 [PHY     ] [I] [  446.17] PUSCH: rnti=0x4603 h_id=0 prb=[8, 11) symb=[0, 14) mod=QPSK rv=0 tbs=11 crc=KO iter=6.0 sinr=-24.2dB t=139.6us uci_t=0.0us ret_t=6.1us
+2026-04-24T10:24:47.086774 [PHY     ] [I] [   447.6] PDCCH: rnti=0x4603 ss_id=1 format=0_0 cce=0 al=4 t=20.7us
+2026-04-24T10:24:47.092228 [SCHED   ] [I] [  447.17] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=1024 rnti=0x4603 h_id=0 ss_id=1 rb=[8..11) newtx=false rv=0 tbs=11 k2=11
+2026-04-24T10:24:47.096295 [PHY     ] [I] [  447.17] PUSCH: rnti=0x4603 h_id=0 prb=[8, 11) symb=[0, 14) mod=QPSK rv=0 tbs=11 crc=OK iter=1.0 sinr=21.5dB t=64.4us uci_t=0.0us ret_t=3.6us
+2026-04-24T10:24:47.096305 [MAC     ] [I] [   448.5] UL rnti=0x4603 subPDUs: [CCCH48: len=6, PAD: len=3]
+2026-04-24T10:24:47.096313 [DU-MNG  ] [I] ue=0 rnti=0x4603 proc="UE Create": Procedure started....
+2026-04-24T10:24:47.096452 [DU-F1   ] [I] ue=0 c-rnti=0x4603 du_ue=2: F1 UE context created successfully.
+2026-04-24T10:24:47.096480 [RLC     ] [I] du=0 ue=0 SRB0 DL: RLC TM created. queue_size=8
+2026-04-24T10:24:47.096481 [RLC     ] [I] du=0 ue=0 SRB0 UL: RLC TM created. 
+2026-04-24T10:24:47.096542 [RLC     ] [I] du=0 ue=0 SRB1 DL: RLC AM configured. tx_sn_size=12 pdcp_sn_len=12 t_poll_retx=45 max_retx=8 poll_pdu=-1 poll_byte=-1 queue_size=32 queue_size_bytes=64000 max_window=0
+2026-04-24T10:24:47.096610 [RLC     ] [I] du=0 ue=0 SRB1 UL: RLC AM configured. rx_sn_size=12 t_reassembly=35 t_status_prohibit=0 max_sn_per_status={na}
+2026-04-24T10:24:47.097281 [MAC     ] [I] [   448.7] ue=0 crnti=0x4603 proc="MAC UE Creation": finished successfully
+2026-04-24T10:24:47.097287 [DU-MNG  ] [I] ue=0 rnti=0x4603 proc="UE Create": Procedure finished successfully.
+2026-04-24T10:24:47.097291 [RLC     ] [I] du=0 ue=0 SRB0 UL: RX SDU. sdu_len=6
+2026-04-24T10:24:47.097302 [DU-F1   ] [I] Tx PDU du=0 tid=3 ue=0 du_ue=2: InitialULRRCMessageTransfer
+2026-04-24T10:24:47.097312 [CU-CP-F1] [I] Rx PDU du=0 tid=3 du_ue=2: InitialULRRCMessageTransfer
+2026-04-24T10:24:47.097321 [CU-UEMNG] [I] ue=2 du_index=0 gnb_du_id=0 pci=1 rnti=0x4603 pcell_index=0: Created new CU-CP UE
+2026-04-24T10:24:47.097370 [CU-CP   ] [I] ue=2 c-rnti=0x4603: UE created
+2026-04-24T10:24:47.097374 [CU-CP-F1] [I] ue=2 du_ue=2 cu_ue=2: Added UE context
+2026-04-24T10:24:47.097379 [RRC     ] [I] ue=2 c-rnti=0x4603: CCCH UL rrcSetupRequest
+2026-04-24T10:24:47.097414 [PDCP    ] [I] ue=2 SRB1 DL: PDCP configured. rb_type=SRB rlc_mode=AM sn_size=12 discard_timer=infinity count_notify=3221225472 count_max=4294967294 warn_on_drop=false test_mode=false
+2026-04-24T10:24:47.097474 [PDCP    ] [I] ue=2 SRB1 UL: PDCP configured. rb_type=SRB rlc_mode=AM sn_size=12 t_reordering=infinity count_notify=3221225472 count_max=4294967294
+2026-04-24T10:24:47.097487 [RRC     ] [I] ue=2 c-rnti=0x4603: CCCH DL rrcSetup
+2026-04-24T10:24:47.097490 [CU-CP-F1] [I] Tx PDU du=0 ue=2 cu_ue=2 du_ue=2: DLRRCMessageTransfer
+2026-04-24T10:24:47.097499 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=2 du_ue=2: DLRRCMessageTransfer
+2026-04-24T10:24:47.097504 [RLC     ] [I] du=0 ue=0 SRB0 DL: TX SDU. sdu_len=301 queued_sdus=1 queued_bytes=301
+2026-04-24T10:24:47.098692 [SCHED   ] [I] [  448.10] Slot decisions pci=1 t=13us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=0 ss_id=1 rb=[0..23) k1=7 newtx=true rv=0 tbs=317 ri=1 dl_bo=0
+2026-04-24T10:24:47.098707 [RLC     ] [I] du=0 ue=0 SRB0 DL: TX PDU. pdu_len=301 grant_len=301
+2026-04-24T10:24:47.098709 [MAC     ] [I] [  448.10] DL PDU: ue=0 rnti=0x4603 size=317: CON_RES: id=194ea7e87ba6, SDU: lcid=0 nof_sdus=1 total_size=304
+2026-04-24T10:24:47.098734 [PHY     ] [I] [  448.10] PDCCH: rnti=0x4603 ss_id=1 format=1_0 cce=0 al=4 t=19.4us
+2026-04-24T10:24:47.098741 [PHY     ] [I] [  448.10] PDSCH: rnti=0x4603 h_id=0 k1=7 prb=[0, 23) symb=[2, 14) mod=QPSK rv=0 tbs=317 t=23.8us
+2026-04-24T10:24:47.101565 [PHY     ] [I] [   448.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=2222 sinr=-12.4dB t=21.9us
+2026-04-24T10:24:47.102275 [PHY     ] [I] [   448.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.3 sinr=-14.9dB t=31.0us
+2026-04-24T10:24:47.106240 [PHY     ] [I] [  448.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=50 symb=[0, 14) cs=0 occ=0 ack=1 metric=2469.4 sinr=21.3dB t=13.7us
+2026-04-24T10:24:47.121602 [PHY     ] [I] [   450.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=1010 sinr=23.2dB t=16.8us
+2026-04-24T10:24:47.122288 [PHY     ] [I] [   450.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=yes metric=665.8 sinr=14.0dB t=25.3us
+2026-04-24T10:24:47.125310 [PHY     ] [I] [   451.3] PDCCH: rnti=0x4603 ss_id=1 format=0_0 cce=0 al=4 t=17.7us
+2026-04-24T10:24:47.127233 [SCHED   ] [I] [   451.7] Slot decisions pci=1 t=1us (0 PDSCHs, 1 PUSCH, 0 PUCCHs): UL: ue=0 rnti=0x4603 h_id=0 ss_id=1 rb=[8..32) newtx=true rv=0 tbs=528 k2=4
+2026-04-24T10:24:47.131383 [PHY     ] [I] [   451.7] PUSCH: rnti=0x4603 h_id=0 prb=[8, 32) symb=[0, 14) mod=QPSK rv=0 tbs=528 crc=OK iter=2.0 sinr=13.6dB t=104.2us uci_t=0.0us ret_t=3.1us
+2026-04-24T10:24:47.131391 [MAC     ] [I] [  451.15] UL rnti=0x4603 ue=0 subPDUs: [lcid=1: len=35, SBSR: lcg=0 bs=0, SE_PHR: ph=[-20..-19)dB p_cmax=[22..23)dBm, PAD: len=485]
+2026-04-24T10:24:47.131394 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX PDU. pdu_len=35 dc=data p=1 si=full sn=0
+2026-04-24T10:24:47.131396 [RLC     ] [I] du=0 ue=0 SRB1 UL: RX SDU. sn=0 sdu_len=33
+2026-04-24T10:24:47.131408 [DU-F1   ] [I] Tx PDU du=0 ue=0 cu_ue=2 du_ue=2: ULRRCMessageTransfer
+2026-04-24T10:24:47.131414 [CU-CP-F1] [I] Rx PDU du=0 ue=2 cu_ue=2 du_ue=2: ULRRCMessageTransfer
+2026-04-24T10:24:47.131417 [PDCP    ] [I] ue=2 SRB1 UL: RX PDU. type=data pdu_len=33 sn=0 count=0
+2026-04-24T10:24:47.131419 [PDCP    ] [I] ue=2 SRB1 UL: RX SDU. count=0
+2026-04-24T10:24:47.131426 [RRC     ] [I] ue=2 c-rnti=0x4603: DCCH UL rrcSetupComplete
+2026-04-24T10:24:47.131452 [NGAP    ] [I] Tx PDU ue=2 ran_ue=2: InitialUEMessage
+2026-04-24T10:24:47.131777 [SCHED   ] [I] [  451.16] Slot decisions pci=1 t=26us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=0 ss_id=2 rb=[0..2) k1=11 newtx=true rv=0 tbs=40 ri=1 dl_bo=0
+2026-04-24T10:24:47.131788 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX status PDU. pdu_len=3 grant_len=4
+2026-04-24T10:24:47.131790 [MAC     ] [I] [  451.16] DL PDU: ue=0 rnti=0x4603 size=40: SDU: lcid=1 nof_sdus=1 total_size=5
+2026-04-24T10:24:47.131805 [PHY     ] [I] [  451.16] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=12 al=2 t=10.5us
+2026-04-24T10:24:47.131822 [PHY     ] [I] [  451.16] PDSCH: rnti=0x4603 h_id=0 k1=11 prb=[0, 2) symb=[2, 8) mod=64QAM rv=0 tbs=40 t=18.9us
+2026-04-24T10:24:47.133881 [NGAP    ] [I] Rx PDU ue=2 ran_ue=2 amf_ue=3: DownlinkNASTransport
+2026-04-24T10:24:47.133891 [RRC     ] [I] ue=2 c-rnti=0x4603: DCCH DL dlInformationTransfer
+2026-04-24T10:24:47.133895 [PDCP    ] [I] ue=2 SRB1 DL: TX PDU. type=data pdu_len=13 sn=0 count=0 is_retx=false
+2026-04-24T10:24:47.133899 [CU-CP-F1] [I] Tx PDU du=0 ue=2 cu_ue=2 du_ue=2: DLRRCMessageTransfer
+2026-04-24T10:24:47.133903 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=2 du_ue=2: DLRRCMessageTransfer
+2026-04-24T10:24:47.133913 [NGAP    ] [I] Rx PDU ue=2 ran_ue=2 amf_ue=3: UEContextReleaseCommand
+2026-04-24T10:24:47.133917 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=13 pdcp_sn=0 is_retx=false queued_sdus=1 queued_bytes=13
+2026-04-24T10:24:47.133922 [PDCP    ] [I] ue=2 SRB1 DL: TX PDU. type=data pdu_len=8 sn=1 count=1 is_retx=false
+2026-04-24T10:24:47.133923 [RRC     ] [I] ue=2 c-rnti=0x4603: DCCH DL rrcRelease
+2026-04-24T10:24:47.133928 [CU-CP-F1] [I] Tx PDU du=0 ue=2 cu_ue=2 du_ue=2: UEContextReleaseCommand
+2026-04-24T10:24:47.133930 [DU-F1   ] [I] Rx PDU du=0 ue=0 cu_ue=2 du_ue=2: UEContextReleaseCommand
+2026-04-24T10:24:47.133936 [DU-MNG  ] [I] ue=0: DRB traffic stopped
+2026-04-24T10:24:47.133942 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX SDU. sdu_len=8 pdcp_sn=1 is_retx=false queued_sdus=2 queued_bytes=21
+2026-04-24T10:24:47.134203 [SCHED   ] [I] [   452.1] Slot decisions pci=1 t=18us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=1 ss_id=2 rb=[0..2) k1=6 newtx=true rv=0 tbs=88 ri=1 dl_bo=0
+2026-04-24T10:24:47.134219 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=0 si=full sn=0 pdu_len=15 grant_len=25
+2026-04-24T10:24:47.134221 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=0 si=first sn=1 pdu_len=8 grant_len=8
+2026-04-24T10:24:47.134222 [MAC     ] [I] [   452.1] DL PDU: ue=0 rnti=0x4603 size=88: SDU: lcid=1 nof_sdus=2 total_size=27
+2026-04-24T10:24:47.134240 [PHY     ] [I] [   452.1] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=12.0us
+2026-04-24T10:24:47.134252 [PHY     ] [I] [   452.1] PDSCH: rnti=0x4603 h_id=1 k1=6 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=88 t=19.5us
+2026-04-24T10:24:47.134758 [SCHED   ] [I] [   452.2] Slot decisions pci=1 t=13us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=2 ss_id=2 rb=[0..2) k1=5 newtx=true rv=0 tbs=80 ri=1 dl_bo=0
+2026-04-24T10:24:47.134771 [RLC     ] [I] du=0 ue=0 SRB1 DL: TX PDU. dc=data p=1 si=last sn=1 so=6 pdu_len=6 grant_len=6
+2026-04-24T10:24:47.134772 [MAC     ] [I] [   452.2] DL PDU: ue=0 rnti=0x4603 size=80: SDU: lcid=1 nof_sdus=1 total_size=8
+2026-04-24T10:24:47.134788 [PHY     ] [I] [   452.2] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=8.9us
+2026-04-24T10:24:47.134813 [PHY     ] [I] [   452.2] PDSCH: rnti=0x4603 h_id=2 k1=5 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=80 t=19.3us
+2026-04-24T10:24:47.138714 [SCHED   ] [I] [  452.10] Slot decisions pci=1 t=8us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=true rv=0 tbs=88 ri=1 dl_bo=0
+2026-04-24T10:24:47.138722 [MAC     ] [I] [  452.10] DL PDU: ue=0 rnti=0x4603 size=88: TA_CMD: tag_id=0, ta_cmd=30
+2026-04-24T10:24:47.138734 [PHY     ] [I] [  452.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=8.4us
+2026-04-24T10:24:47.138749 [PHY     ] [I] [  452.10] PDSCH: rnti=0x4603 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=88 t=12.9us
+2026-04-24T10:24:47.140891 [PHY     ] [I] [   452.7] PUCCH: rnti=0x4603 format=2 prb=[6, 7) prb2=na symb=[0, 2) ack=111 sinr=20.9dB t=13.4us
+2026-04-24T10:24:47.141532 [PHY     ] [I] [   452.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=1011 sinr=22.6dB t=6.4us
+2026-04-24T10:24:47.142291 [PHY     ] [I] [   452.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-20.6dB t=24.8us
+2026-04-24T10:24:47.146266 [PHY     ] [I] [  452.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.8 sinr=-17.1dB t=12.2us
+2026-04-24T10:24:47.148716 [SCHED   ] [I] [  453.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=false rv=2 tbs=88
+2026-04-24T10:24:47.148734 [PHY     ] [I] [  453.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=8.6us
+2026-04-24T10:24:47.148747 [PHY     ] [I] [  453.10] PDSCH: rnti=0x4603 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=2 tbs=88 t=18.7us
+2026-04-24T10:24:47.156272 [PHY     ] [I] [  453.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.3 sinr=-23.0dB t=14.8us
+2026-04-24T10:24:47.158729 [SCHED   ] [I] [  454.10] Slot decisions pci=1 t=9us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=false rv=3 tbs=88
+2026-04-24T10:24:47.158754 [PHY     ] [I] [  454.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=11.5us
+2026-04-24T10:24:47.158766 [PHY     ] [I] [  454.10] PDSCH: rnti=0x4603 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=3 tbs=88 t=15.7us
+2026-04-24T10:24:47.161589 [PHY     ] [I] [   454.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=2222 sinr=-2.7dB t=14.3us
+2026-04-24T10:24:47.162305 [PHY     ] [I] [   454.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.3 sinr=-17.2dB t=26.6us
+2026-04-24T10:24:47.166266 [PHY     ] [I] [  454.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.1 sinr=-33.9dB t=13.3us
+2026-04-24T10:24:47.168721 [SCHED   ] [I] [  455.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=false rv=1 tbs=88
+2026-04-24T10:24:47.168745 [PHY     ] [I] [  455.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=12.1us
+2026-04-24T10:24:47.168752 [PHY     ] [I] [  455.10] PDSCH: rnti=0x4603 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=1 tbs=88 t=16.5us
+2026-04-24T10:24:47.176284 [PHY     ] [I] [  455.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.1 sinr=-23.4dB t=22.0us
+2026-04-24T10:24:47.178729 [SCHED   ] [I] [  456.10] Slot decisions pci=1 t=8us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[0..2) k1=7 newtx=false rv=0 tbs=88
+2026-04-24T10:24:47.178752 [PHY     ] [I] [  456.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=10.0us
+2026-04-24T10:24:47.178767 [PHY     ] [I] [  456.10] PDSCH: rnti=0x4603 h_id=3 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=88 t=13.2us
+2026-04-24T10:24:47.179698 [RLC     ] [I] du=0 ue=0 SRB1 DL: Poll retransmit timer expired after 45ms.
+2026-04-24T10:24:47.180234 [SCHED   ] [I] [  456.13] Slot decisions pci=1 t=10us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=2 ss_id=2 rb=[0..2) k1=4 newtx=true rv=0 tbs=96 ri=1 dl_bo=0
+2026-04-24T10:24:47.180244 [RLC     ] [I] du=0 ue=0 SRB1 DL: RETX PDU. dc=data p=1 si=full sn=0 pdu_len=15 grant_len=15 retx_count=0
+2026-04-24T10:24:47.180246 [MAC     ] [I] [  456.13] DL PDU: ue=0 rnti=0x4603 size=96: SDU: lcid=1 nof_sdus=1 total_size=17
+2026-04-24T10:24:47.180261 [PHY     ] [I] [  456.13] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=12 al=2 t=10.5us
+2026-04-24T10:24:47.180281 [PHY     ] [I] [  456.13] PDSCH: rnti=0x4603 h_id=2 k1=4 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=96 t=14.3us
+2026-04-24T10:24:47.181602 [PHY     ] [I] [   456.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=2222 sinr=-10.2dB t=11.0us
+2026-04-24T10:24:47.182297 [PHY     ] [I] [   456.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-24.9dB t=14.3us
+2026-04-24T10:24:47.186292 [PHY     ] [I] [  456.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=22 metric=0.2 sinr=-18.6dB t=14.0us
+2026-04-24T10:24:47.186696 [SCHED   ] [I] [   457.6] rnti=0x4603 h_id=3: Discarding DL HARQ process TB with tbs=88. Cause: Maximum number of reTxs 4 exceeded
+2026-04-24T10:24:47.188744 [SCHED   ] [I] [  457.10] Slot decisions pci=1 t=5us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=2 ss_id=2 rb=[0..2) k1=7 newtx=false rv=2 tbs=96
+2026-04-24T10:24:47.188763 [PHY     ] [I] [  457.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=8.8us
+2026-04-24T10:24:47.188777 [PHY     ] [I] [  457.10] PDSCH: rnti=0x4603 h_id=2 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=2 tbs=96 t=13.5us
+2026-04-24T10:24:47.196294 [PHY     ] [I] [  457.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.3 sinr=-36.3dB t=13.3us
+2026-04-24T10:24:47.198739 [SCHED   ] [I] [  458.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=2 ss_id=2 rb=[0..2) k1=7 newtx=false rv=3 tbs=96
+2026-04-24T10:24:47.198758 [PHY     ] [I] [  458.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=8.9us
+2026-04-24T10:24:47.198770 [PHY     ] [I] [  458.10] PDSCH: rnti=0x4603 h_id=2 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=3 tbs=96 t=12.9us
+2026-04-24T10:24:47.201537 [PHY     ] [I] [   458.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=2222 sinr=-6.5dB t=9.5us
+2026-04-24T10:24:47.202337 [PHY     ] [I] [   458.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.2 sinr=-21.0dB t=13.3us
+2026-04-24T10:24:47.206285 [PHY     ] [I] [  458.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.4 sinr=-24.3dB t=11.8us
+2026-04-24T10:24:47.208754 [SCHED   ] [I] [  459.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=2 ss_id=2 rb=[0..2) k1=7 newtx=false rv=1 tbs=96
+2026-04-24T10:24:47.208774 [PHY     ] [I] [  459.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=9.3us
+2026-04-24T10:24:47.208792 [PHY     ] [I] [  459.10] PDSCH: rnti=0x4603 h_id=2 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=1 tbs=96 t=16.8us
+2026-04-24T10:24:47.216293 [PHY     ] [I] [  459.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.7 sinr=-16.3dB t=13.4us
+2026-04-24T10:24:47.218754 [SCHED   ] [I] [  460.10] Slot decisions pci=1 t=6us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=2 ss_id=2 rb=[0..2) k1=7 newtx=false rv=0 tbs=96
+2026-04-24T10:24:47.218773 [PHY     ] [I] [  460.10] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=9.2us
+2026-04-24T10:24:47.218789 [PHY     ] [I] [  460.10] PDSCH: rnti=0x4603 h_id=2 k1=7 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=96 t=13.6us
+2026-04-24T10:24:47.221518 [PHY     ] [I] [   460.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=2222 sinr=-5.9dB t=8.2us
+2026-04-24T10:24:47.222236 [PHY     ] [I] [   460.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.1 sinr=-23.5dB t=17.3us
+2026-04-24T10:24:47.224771 [RLC     ] [I] du=0 ue=0 SRB1 DL: Poll retransmit timer expired after 45ms.
+2026-04-24T10:24:47.225222 [SCHED   ] [I] [   461.3] Slot decisions pci=1 t=9us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[0..2) k1=4 newtx=true rv=0 tbs=88 ri=1 dl_bo=0
+2026-04-24T10:24:47.225231 [RLC     ] [I] du=0 ue=0 SRB1 DL: RETX PDU. dc=data p=1 si=full sn=0 pdu_len=15 grant_len=15 retx_count=1
+2026-04-24T10:24:47.225232 [MAC     ] [I] [   461.3] DL PDU: ue=0 rnti=0x4603 size=88: SDU: lcid=1 nof_sdus=1 total_size=17
+2026-04-24T10:24:47.225245 [PHY     ] [I] [   461.3] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=2 al=2 t=8.9us
+2026-04-24T10:24:47.225259 [PHY     ] [I] [   461.3] PDSCH: rnti=0x4603 h_id=3 k1=4 prb=[0, 2) symb=[2, 14) mod=64QAM rv=0 tbs=88 t=13.5us
+2026-04-24T10:24:47.226313 [PHY     ] [I] [  460.17] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.4 sinr=-13.9dB t=13.5us
+2026-04-24T10:24:47.226717 [SCHED   ] [I] [   461.6] rnti=0x4603 h_id=2: Discarding DL HARQ process TB with tbs=96. Cause: Maximum number of reTxs 4 exceeded
+2026-04-24T10:24:47.231252 [PHY     ] [I] [   461.7] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.0 sinr=-35.4dB t=12.9us
+2026-04-24T10:24:47.233717 [SCHED   ] [I] [   462.0] Slot decisions pci=1 t=7us (1 PDSCH, 0 PUSCHs, 0 PUCCHs): DL: ue=0 c-rnti=0x4603 h_id=3 ss_id=2 rb=[20..22) k1=7 newtx=false rv=2 tbs=88
+2026-04-24T10:24:47.233746 [PHY     ] [I] [   462.0] PDCCH: rnti=0x4603 ss_id=2 format=1_1 cce=6 al=2 t=10.0us
+2026-04-24T10:24:47.233767 [PHY     ] [I] [   462.0] PDSCH: rnti=0x4603 h_id=3 k1=7 prb=[20, 22) symb=[2, 14) mod=64QAM rv=2 tbs=88 t=19.4us
+2026-04-24T10:24:47.241275 [PHY     ] [I] [   462.7] PUCCH: rnti=0x4603 format=1 prb1=0 prb2=na symb=[0, 14) cs=0 occ=0 ack=2 metric=0.1 sinr=-20.5dB t=14.4us
+2026-04-24T10:24:47.241547 [PHY     ] [I] [   462.8] PUCCH: rnti=0x4603 format=2 prb=[7, 8) prb2=na symb=[6, 8) csi1=2222 sinr=-4.3dB t=7.9us
+2026-04-24T10:24:47.242241 [PHY     ] [I] [   462.9] PUCCH: rnti=0x4603 format=1 prb1=4 prb2=na symb=[0, 14) cs=0 occ=0 sr=no metric=0.6 sinr=-12.8dB t=12.3us
+2026-04-24T10:24:47.243713 [SCHED   ] [I] [   463.0] Slot decisions pci=1 t=12us (1 PDSCH, 0 PUSCHs

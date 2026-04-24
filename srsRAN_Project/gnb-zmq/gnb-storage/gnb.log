@@ -1,0 +1,864 @@
+2026-04-21T10:18:41.673671 [GNB     ] [I] Built in Release mode using commit  on branch 
+2026-04-21T10:18:41.674200 [CONFIG  ] [I] Input configuration (only non-default values): 
+log:
+  filename: /tmp/gnb.log
+  all_level: info
+metrics:
+  autostart_stdout_metrics: true
+  enable_json: true
+remote_control:
+  enabled: true
+  bind_addr: 0.0.0.0
+cu_cp:
+  inactivity_timer: 7200
+  amf:
+    addr: 10.53.1.2
+    port: 38412
+    bind_addr: 10.53.1.3
+    supported_tracking_areas: "tac: 7\nplmn_list:\n  - plmn: 00101\n    tai_slice_support_list:\n      - sst: 1"
+pcap:
+  ngap_filename: /tmp/gnb_ngap.pcap
+  ngap_enable: enable
+  mac_filename: /tmp/gnb_mac.pcap
+  mac_enable: enable
+cell_cfg:
+  dl_arfcn: 368500
+  band: 3
+  common_scs: 15
+  channel_bandwidth_MHz: 20
+  plmn: 00101
+  tac: 7
+  pdcch:
+    common:
+      coreset0_index: 12
+      ss0_index: 0
+    dedicated:
+      dci_format_0_1_and_1_1: false
+      ss2_type: common
+  pdsch:
+    mcs_table: qam64
+  pusch:
+    mcs_table: qam64
+  prach:
+    prach_config_index: 1
+    total_nof_ra_preambles: 64
+ru_sdr:
+  srate: 23.04
+  device_driver: zmq
+  device_args: tx_port=tcp://10.10.3.231:2101,rx_port=tcp://10.10.3.231:2201,base_srate=23.04e6
+  tx_gain: 80
+  rx_gain: 40
+2026-04-21T10:18:42.235514 [GNB     ] [W] Could not check scaling governor. filename=/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor error=No such file or directory
+2026-04-21T10:18:42.235575 [GNB     ] [W] DRM KMS polling is enabled, which may hinder performance. You can disable it using the "srsran_performance" script
+2026-04-21T10:18:42.237605 [CONFIG  ] [I] Worker pool "main_pool" instantiated with #workers=5, task_queue_size=2048, backoff_period=50us and priority=96.
+2026-04-21T10:18:42.256024 [GTPU    ] [I] GTP-U demux. queue_size=2046 batch_size=256 warn_on_drop=false test_mode=false
+2026-04-21T10:18:42.256303 [GTPU    ] [I] Tunnel added. teid=0x000000
+2026-04-21T10:18:42.319996 [DU-MNG  ] [I] The upper-bound on the number of UEs supported by cell {pci=1, du_cell_index=0} is 160 (the actual number might be lower than that). This is determined by the lowest of the following limits: SR (160), CSI (160) and SRS (n/a).
+2026-04-21T10:18:42.320554 [DU      ] [I] DU created successfully
+2026-04-21T10:18:42.320560 [DU      ] [I] O-DU created successfully
+2026-04-21T10:18:42.334825 [zmq:tx:0:0] [I] Binding to address tcp://10.10.3.231:2101.
+2026-04-21T10:18:42.348060 [zmq:rx:0:0] [I] Connecting to address tcp://10.10.3.231:2201.
+2026-04-21T10:18:43.359612 [GNB     ] [I] SSB derived parameters for cell: 1, band: 3, dl_arfcn:368500, nof_crbs: 106 scs:15kHz, ssb_scs:15kHz:
+	 - SSB offset pointA:40 
+	 - k_SSB:6 
+	 - SSB arfcn:368410 
+	 - Coreset index:12 
+	 - Searchspace index:0
+2026-04-21T10:18:43.359649 [IO-EPOLL] [E] fd=0: Failed to register file descriptor. Cause: epoll_ctl failed with "Operation not permitted"
+2026-04-21T10:18:43.359663 [APP     ] [E] Couldn't register stdin handler
+2026-04-21T10:18:43.359665 [GNB     ] [I] Starting CU-CP...
+2026-04-21T10:18:43.360186 [CU-CP   ] [I] N2: Connection to AMF on 10.53.1.2:38412 was established
+2026-04-21T10:18:43.364340 [NGAP    ] [I] Tx PDU: NGSetupRequest
+2026-04-21T10:18:43.366531 [NGAP    ] [I] Rx PDU: NGSetupResponse
+2026-04-21T10:18:43.366848 [CU-CP   ] [I] Connected to AMF. Supported PLMNs: 00101
+2026-04-21T10:18:43.366867 [GNB     ] [I] CU-CP started successfully
+2026-04-21T10:18:43.366872 [CU-UP   ] [I] CU-UP starting...
+2026-04-21T10:18:43.367184 [CU-CP   ] [I] Added TNL connection to CU-UP 0
+2026-04-21T10:18:43.367914 [CU-UP-E1] [I] Sending E1SetupRequest
+2026-04-21T10:18:43.368139 [CU-UP-E1] [I] Tx PDU tid=0: GNB-CU-UP-E1SetupRequest
+2026-04-21T10:18:43.368148 [CU-CP-E1] [I] Rx PDU tid=0: GNB-CU-UP-E1SetupRequest
+2026-04-21T10:18:43.368152 [CU-CP-E1] [I] Tx PDU tid=0: GNB-CU-UP-E1SetupResponse
+2026-04-21T10:18:43.368157 [CU-UP-E1] [I] Rx PDU tid=0: GNB-CU-UP-E1SetupResponse
+2026-04-21T10:18:43.368159 [CU-UP-E1] [I] "E1AP CU-UP Setup Procedure" finalized
+2026-04-21T10:18:43.368173 [CU-UP   ] [I] CU-UP started successfully
+2026-04-21T10:18:43.368175 [DU      ] [I] Starting DU...
+2026-04-21T10:18:43.368177 [DU      ] [I] Starting DU-High...
+2026-04-21T10:18:43.368178 [DU-MNG  ] [I] DU manager starting...
+2026-04-21T10:18:43.368652 [CU-CP   ] [I] Added TNL connection to DU 0
+2026-04-21T10:18:43.382660 [DU-MNG  ] [I] SIB1 cell=0: {
+  "cellSelectionInfo": {
+    "q-RxLevMin": -70,
+    "q-QualMin": -20
+  },
+  "cellAccessRelatedInfo": {
+    "plmn-IdentityInfoList": [
+      {
+        "plmn-IdentityList": [
+          {
+            "mcc": [
+              0,
+              0,
+              1
+            ],
+            "mnc": [
+              0,
+              1
+            ]
+          }
+        ],
+        "trackingAreaCode": "000000000000000000000111",
+        "cellIdentity": "000000000000011001101100000000000000",
+        "cellReservedForOperatorUse": "notReserved"
+      }
+    ]
+  },
+  "connEstFailureControl": {
+    "connEstFailCount": "n1",
+    "connEstFailOffsetValidity": "s30",
+    "connEstFailOffset": 1
+  },
+  "servingCellConfigCommon": {
+    "downlinkConfigCommon": {
+      "frequencyInfoDL": {
+        "frequencyBandList": [
+          {
+            "freqBandIndicatorNR": 3
+          }
+        ],
+        "offsetToPointA": 40,
+        "scs-SpecificCarrierList": [
+          {
+            "offsetToCarrier": 0,
+            "subcarrierSpacing": "kHz15",
+            "carrierBandwidth": 106,
+            "txDirectCurrentLocation": 636
+          }
+        ]
+      },
+      "initialDownlinkBWP": {
+        "genericParameters": {
+          "locationAndBandwidth": 28875,
+          "subcarrierSpacing": "kHz15"
+        },
+        "pdcch-ConfigCommon": {
+          {
+            "commonSearchSpaceList": [
+              {
+                "searchSpaceId": 1,
+                "controlResourceSetId": 0,
+                "monitoringSlotPeriodicityAndOffset": {
+                },
+                "monitoringSymbolsWithinSlot": "10000000000000",
+                "nrofCandidates": {
+                  "aggregationLevel1": "n0",
+                  "aggregationLevel2": "n0",
+                  "aggregationLevel4": "n1",
+                  "aggregationLevel8": "n0",
+                  "aggregationLevel16": "n0"
+                },
+                "searchSpaceType": {
+                  "common": {
+                    "dci-Format0-0-AndFormat1-0": {
+                    }
+                  }
+                }
+              }
+            ],
+            "searchSpaceSIB1": 0,
+            "pagingSearchSpace": 1,
+            "ra-SearchSpace": 1
+          }
+        },
+        "pdsch-ConfigCommon": {
+          {
+            "pdsch-TimeDomainAllocationList": [
+              {
+                "mappingType": "typeA",
+                "startSymbolAndLength": 40
+              }
+            ]
+          }
+        }
+      },
+      "bcch-Config": {
+        "modificationPeriodCoeff": "n4"
+      },
+      "pcch-Config": {
+        "defaultPagingCycle": "rf128",
+        "nAndPagingFrameOffset": {
+        },
+        "ns": "one"
+      }
+    },
+    "uplinkConfigCommon": {
+      "frequencyInfoUL": {
+        "frequencyBandList": [
+          {
+            "freqBandIndicatorNR": 3
+          }
+        ],
+        "absoluteFrequencyPointA": 347592,
+        "scs-SpecificCarrierList": [
+          {
+            "offsetToCarrier": 0,
+            "subcarrierSpacing": "kHz15",
+            "carrierBandwidth": 106
+          }
+        ]
+      },
+      "initialUplinkBWP": {
+        "genericParameters": {
+          "locationAndBandwidth": 28875,
+          "subcarrierSpacing": "kHz15"
+        },
+        "rach-ConfigCommon": {
+          {
+            "rach-ConfigGeneric": {
+              "prach-ConfigurationIndex": 1,
+              "msg1-FDM": "one",
+              "msg1-FrequencyStart": 8,
+              "zeroCorrelationZoneConfig": 0,
+              "preambleReceivedTargetPower": -100,
+              "preambleTransMax": "n7",
+              "powerRampingStep": "dB4",
+              "ra-ResponseWindow": "sl10"
+            },
+            "ssb-perRACH-OccasionAndCB-PreamblesPerSSB": {
+              "one": "n64"
+            },
+            "ra-ContentionResolutionTimer": "sf64",
+            "prach-RootSequenceIndex": {
+              "l839": 1
+            },
+            "restrictedSetConfig": "unrestrictedSet"
+          }
+        },
+        "pusch-ConfigCommon": {
+          {
+            "pusch-TimeDomainAllocationList": [
+              {
+                "k2": 4,
+                "mappingType": "typeA",
+                "startSymbolAndLength": 27
+              }
+            ],
+            "msg3-DeltaPreamble": 6,
+            "p0-NominalWithGrant": -76
+          }
+        },
+        "pucch-ConfigCommon": {
+          {
+            "pucch-ResourceCommon": 11,
+            "pucch-GroupHopping": "neither",
+            "p0-nominal": -90
+          }
+        }
+      },
+      "timeAlignmentTimerCommon": "infinity"
+    },
+    "n-TimingAdvanceOffset": "n25600",
+    "ssb-PositionsInBurst": {
+      "inOneGroup": "10000000"
+    },
+    "ssb-PeriodicityServingCell": "ms10",
+    "ss-PBCH-BlockPower": -16
+  },
+  "ue-TimersAndConstants": {
+    "t300": "ms1000",
+    "t301": "ms1000",
+    "t310": "ms1000",
+    "n310": "n1",
+    "t311": "ms3000",
+    "n311": "n1",
+    "t319": "ms1000"
+  }
+}
+2026-04-21T10:18:43.384737 [DU-F1   ] [I] F1 Setup: Sending F1 Setup Request to CU-CP...
+2026-04-21T10:18:43.384740 [DU-F1   ] [I] Tx PDU du=0 tid=0: F1SetupRequest
+2026-04-21T10:18:43.385228 [CU-CP-F1] [I] Rx PDU du=0 tid=0: F1SetupRequest
+2026-04-21T10:18:43.385701 [CU-CP-F1] [I] Tx PDU du=0 tid=0: F1SetupResponse
+2026-04-21T10:18:43.385705 [DU-F1   ] [I] Rx PDU du=0 tid=0: F1SetupResponse
+2026-04-21T10:18:43.385707 [DU-F1   ] [I] F1 Setup: Procedure completed successfully.
+2026-04-21T10:18:43.385714 [SCHED   ] [I] [     0.0] cell=0: Cell scheduling was activated.
+2026-04-21T10:18:43.385724 [MAC     ] [I] [     0.0] cell=0: Cell was activated
+2026-04-21T10:18:43.385753 [DU-MNG  ] [I] DU manager started successfully.
+2026-04-21T10:18:43.385754 [DU      ] [I] DU-High started successfully
+2026-04-21T10:18:43.385756 [DU      ] [I] DU started successfully
+2026-04-21T10:18:44.385784 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:44.385790 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:44.385877 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:45.385785 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:45.385789 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:45.385907 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:46.385784 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:46.385790 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:46.385939 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:47.385785 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:47.385790 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:47.385976 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:48.385785 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:48.385790 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:48.385977 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:49.385786 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:49.385794 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:49.386018 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:50.385786 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:50.385798 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:50.386048 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:51.385786 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:51.385799 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:51.386082 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:52.385786 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:52.385799 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:52.386122 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:53.385787 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:53.385800 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:53.386134 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:54.385791 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:54.385801 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:54.386148 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:55.385787 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:55.385801 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:55.386175 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:56.385789 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:56.385802 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:56.386184 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:57.385790 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:57.385802 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:57.386187 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:58.385791 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:58.385802 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:58.386193 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:18:59.385791 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:18:59.385802 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:18:59.386210 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:00.385791 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:00.385803 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:00.386248 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:01.385792 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:01.385803 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:01.386296 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:02.385792 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:02.385804 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:02.386333 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:03.385792 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:03.385804 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:03.386359 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:04.385797 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:04.385805 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:04.386398 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:05.385798 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:05.385810 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:05.386412 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:06.385798 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:06.385810 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:06.386425 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:07.385799 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:07.385810 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:07.386436 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:08.385800 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:08.385811 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:08.386452 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:09.385799 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:09.385817 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:09.386456 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:10.385802 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:10.385812 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:10.386497 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:11.385803 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:11.385812 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:11.386514 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:12.385803 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:12.385813 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:12.386526 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:13.385803 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:13.385813 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:13.386579 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:14.385805 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:14.385813 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:14.386598 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:15.385805 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:15.385814 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:15.386600 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:16.385810 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:16.385814 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:16.386624 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:17.385807 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:17.385815 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:17.386674 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:18.385806 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:18.385815 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:18.386721 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:19.385807 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:19.385814 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:19.386764 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:20.385808 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:20.385815 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:20.386799 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:21.385808 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:21.385816 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:21.386801 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:22.385808 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:22.385816 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:22.386810 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:23.385809 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:23.385816 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:23.386811 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:24.385810 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:24.385817 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:24.386827 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:25.385810 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:25.385817 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:25.386867 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:26.385810 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:26.385818 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:26.386881 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:27.385810 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:27.385818 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:27.386923 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:28.385811 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:28.385819 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:28.386956 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:29.385812 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:29.385820 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:29.386983 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:30.385812 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:30.385820 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:30.386993 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:31.385813 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:31.385820 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:31.387014 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:32.385813 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:32.385821 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:32.387056 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:33.385813 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:33.385821 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:33.387069 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:34.385814 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:34.385821 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:34.387111 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:35.385814 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:35.385822 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:35.387154 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:36.385815 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:36.385822 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:36.387156 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:37.385815 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:37.385823 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:37.387164 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:38.385816 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:38.385823 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:38.387188 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:39.385815 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:39.385823 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:39.387202 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:40.385816 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:40.385824 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:40.387211 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:41.385816 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:41.385824 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:41.387266 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:42.385817 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:42.385825 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:42.387315 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:43.385817 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:43.385825 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:43.387352 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:44.385817 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:44.385825 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:44.387378 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:45.385818 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:45.385826 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:45.387403 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:46.385818 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:46.385826 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:46.387447 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:47.385818 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:47.385826 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:47.387474 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:48.385819 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:48.385827 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:48.387527 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:49.385819 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:49.385827 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:49.387564 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:50.385820 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:50.385828 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:50.387578 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:51.385821 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:51.385828 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:51.387588 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:52.385820 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:52.385828 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:52.387624 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:53.385821 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:53.385828 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:53.387633 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:54.385822 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:54.385829 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:54.387679 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:55.385821 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:55.385829 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:55.387716 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:56.385822 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:56.385829 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:56.387732 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:57.385823 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:57.385830 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:57.387752 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:58.385823 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:58.385830 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:58.387778 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:19:59.385823 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:19:59.385831 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:19:59.387807 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:00.385824 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:00.385831 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:00.387813 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:01.385824 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:01.385831 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:01.387827 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:02.385825 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:02.385831 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:02.387846 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:03.385825 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:03.385832 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:03.387860 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:04.385825 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:04.385832 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:04.387871 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:05.385826 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:05.385832 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:05.387879 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:06.385827 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:06.385832 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:06.387912 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:07.385827 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:07.385833 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:07.387937 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:08.385827 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:08.385833 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:08.387951 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:09.385827 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:09.385834 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:09.387984 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:10.385828 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:10.385834 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:10.387997 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:11.385828 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:11.385834 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:11.388052 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:12.385829 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:12.385835 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:12.388069 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:13.385829 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:13.385835 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:13.388106 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:14.385829 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:14.385836 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:14.388154 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:15.385830 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:15.385837 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:15.388195 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:16.385830 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:16.385836 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:16.388238 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:17.385830 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:17.385837 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:17.388247 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:18.385831 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:18.385837 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:18.388255 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:19.385831 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:19.385838 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:19.388258 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:20.385832 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:20.385838 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:20.388290 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:21.385832 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:21.385838 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:21.388324 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:22.385832 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:22.385838 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:22.388363 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:23.385832 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:23.385838 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:23.388394 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:24.385833 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:24.385839 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:24.388415 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:25.385833 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:25.385839 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:25.388456 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:26.385834 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:26.385839 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:26.388462 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:27.385834 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:27.385841 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:27.388515 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:28.385834 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:28.385841 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:28.388556 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:29.385835 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:29.385841 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:29.388572 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:30.385835 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:30.385842 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:30.388591 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:31.385835 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:31.385842 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:31.388611 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:32.385836 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:32.385842 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:32.388617 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:33.385837 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:33.385842 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:33.388643 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:34.385836 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:34.385843 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:34.388672 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:35.385837 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:35.385844 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:35.388726 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:36.385837 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:36.385844 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:36.388771 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:37.385838 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:37.385844 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:37.388798 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:38.385838 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:38.385845 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:38.388818 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:39.385840 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:39.385846 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:39.388873 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:40.385840 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:40.385846 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:40.388885 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:41.385840 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:41.385846 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:41.388936 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:42.385841 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:42.385846 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:42.388938 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:43.385841 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:43.385847 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:43.388973 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:44.385841 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:44.385847 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:44.389023 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:45.385842 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:45.385848 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:45.389040 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:46.385842 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:46.385848 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:46.389077 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:47.385842 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:47.385849 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:47.389129 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:48.385845 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:48.385849 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:48.389149 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:49.385843 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:49.385849 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:49.389188 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:50.385844 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:50.385850 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:50.389197 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:51.385844 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:51.385851 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:51.389228 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:52.385845 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:52.385850 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:52.389270 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:53.385845 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:53.385851 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:53.389282 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:54.385846 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:54.385851 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:54.389322 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:55.385847 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:55.385852 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:55.389353 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:56.385847 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:56.385852 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:56.389357 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:57.385848 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:57.385853 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:57.389406 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:58.385847 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:58.385853 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:58.389444 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:20:59.385848 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:20:59.385854 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:20:59.389456 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:00.385849 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:00.385854 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:00.389477 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:01.385849 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:01.385854 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:01.389509 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:02.385849 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:02.385855 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:02.389553 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:03.385849 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:03.385855 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:03.389586 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:04.385849 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:04.385855 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:04.389595 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:05.385850 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:05.385855 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:05.389612 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:06.385851 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:06.385855 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:06.389644 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:07.385852 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:07.385855 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:07.389698 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:08.385851 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:08.385856 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:08.389721 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:09.385852 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:09.385856 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:09.389735 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:10.385852 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:10.385857 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:10.389788 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:11.385853 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:11.385858 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:11.389803 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:12.385853 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:12.385858 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:12.389842 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:13.385853 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:13.385858 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:13.389883 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:14.385855 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:14.385859 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:14.389897 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:15.385855 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:15.385859 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:15.389904 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:16.385855 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:16.385860 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:16.389936 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:17.385855 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:17.385860 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:17.389970 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:18.385855 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:18.385861 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:18.390004 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:19.385856 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:19.385862 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:19.390014 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:20.385857 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:20.385862 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:20.390055 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:21.385857 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:21.385862 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:21.390068 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:22.385857 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:22.385862 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:22.390072 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:23.385857 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:23.385863 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:23.390092 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:24.385859 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:24.385863 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:24.390135 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:25.385858 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:25.385863 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:25.390181 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:26.385859 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:26.385864 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:26.390213 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:27.385859 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:27.385864 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:27.390222 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:28.385860 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:28.385865 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:28.390254 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:29.385859 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:29.385865 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:29.390291 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:30.385860 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:30.385865 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:30.390335 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:31.385861 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:31.385866 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:31.390341 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:32.385860 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:32.385866 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:32.390374 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:33.385861 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:33.385867 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:33.390379 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:34.385863 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:34.385867 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:34.390426 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:35.385862 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:35.385867 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:35.390459 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:36.385863 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:36.385867 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:36.390507 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:37.385863 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:37.385868 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:37.390531 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:38.385864 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:38.385868 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:38.390556 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:39.385863 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:39.385868 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:39.390567 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:40.385864 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:40.385870 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:40.390598 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:41.385864 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:41.385869 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:41.390606 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:42.385864 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:42.385869 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:42.390655 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:43.385865 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:43.385870 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:43.390698 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:44.385867 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:44.385870 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:44.390730 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:45.385865 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:45.385871 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:45.390743 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:46.385866 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:46.385871 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:46.390769 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:47.385866 [zmq:tx:0:0] [I] Waiting for request.
+2026-04-21T10:21:47.385871 [zmq:rx:0:0] [I] Waiting for data.
+2026-04-21T10:21:47.390794 [zmq:rx:0:0] [I] Waiting for reading samples. Completed 0 of 23040 samples.
+2026-04-21T10:21:47.514676 [SCHED   ] [I] [    10.3] Processed slot events pci=1: Cell creation idx=0 pci=1
+2026-04-21T10:21:47.516599 [DU      ] [I] Stopping DU...
+2026-04-21T10:21:47.516600 [DU      ] [I] Stopping DU-High...
+2026-04-21T10:21:47.516691 [SCHED   ] [I] [    10.6] cell=0: Cell scheduling was deactivated.
+2026-04-21T10:21:47.516764 [MAC     ] [I] [    10.6] cell=0: Cell was stopped.
+2026-04-21T10:21:47.517554 [DU-F1   ] [I] Tx PDU du=0 tid=1: F1RemovalRequest
+2026-04-21T10:21:47.517563 [CU-CP-F1] [I] Rx PDU du=0 tid=1: F1RemovalRequest
+2026-04-21T10:21:47.517567 [CU-CP-F1] [I] Tx PDU du=0 tid=1: F1RemovalResponse
+2026-04-21T10:21:47.517572 [DU-F1   ] [I] Rx PDU du=0 tid=1: F1RemovalResponse
+2026-04-21T10:21:47.517586 [CU-CP   ] [I] Removed DU 0
+2026-04-21T10:21:47.517588 [DU-F1   ] [I] F1 Removal: F1 TNL association shut down
+2026-04-21T10:21:47.517681 [DU      ] [I] DU-High stopped successfully
+2026-04-21T10:21:47.517681 [DU      ] [I] DU stopped successfully
+2026-04-21T10:21:47.517718 [CU-UP-E1] [I] Tx PDU tid=1: E1ReleaseRequest
+2026-04-21T10:21:47.517721 [CU-CP-E1] [I] Rx PDU tid=1: E1ReleaseRequest
+2026-04-21T10:21:47.517724 [CU-CP-E1] [I] Tx PDU tid=1: E1ReleaseResponse
+2026-04-21T10:21:47.517726 [CU-CP-E1] [I] "E1 Release Procedure" finished successfully
+2026-04-21T10:21:47.517728 [CU-UP-E1] [I] Rx PDU tid=1: E1ReleaseResponse
+2026-04-21T10:21:47.517735 [CU-CP   ] [I] Removed CU-UP 0
+2026-04-21T10:21:47.517736 [CU-UP-E1] [I] E1AP CU-UP Release Procedure: E1 TNL association shut down
+2026-04-21T10:21:47.517972 [CU-UP   ] [I] CU-UP stopped successfully
+2026-04-21T10:21:47.517974 [CU-CP   ] [I] Stopping CU-CP...
+2026-04-21T10:21:47.518096 [CU-CP   ] [I] CU-CP stopped successfully.
+2026-04-21T10:21:47.535525 [GNB     ] [I] Closing PCAP files...
+2026-04-21T10:21:47.535665 [GNB     ] [I] PCAP files successfully closed.
+(END)

@@ -260,4 +260,7 @@ docker compose logs -f 5gc | grep --line-buffered -i -E '001010000000101|0010100
 # Follow gNB logs
 docker compose logs -f gnb
 
+# check which ue is connected 
+docker logs open5gs_5gc | grep "SUPI"
+
 ```
