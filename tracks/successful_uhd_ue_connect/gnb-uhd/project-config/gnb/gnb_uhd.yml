@@ -15,7 +15,7 @@ cu_cp:
           - plmn: "00101"
             tai_slice_support_list:
               - sst: 1
-                sd: 1118481
+                sd: "1118481"  # 0x111111 in decimal
 
 
 ru_sdr:

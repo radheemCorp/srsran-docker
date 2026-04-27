@@ -1,40 +1,23 @@
-### 1. Why the UE is rejected (The "SUCI" Failure)
-Even if you aligned the slice values, the **Open5GS logs** show the UE is being rejected much earlier in the registration process due to a security identification error:
+# Slice configuration 
+## Open5gs 
+- the slice configuration in the open5gs is set in hexadecimal format (currently set to 111111)
+- the open5gs runs in privilged mode but has its own docker network 
+- the open5gs server is assigned a static ip so the gnb can be configured to connec to that ip.
 
-*   **The Error:** The AMF log reports `ERROR: HNET PKI Value Not Avaiable` and `Expectation supi failed`.
-*   **The Cause:** The UE is attempting to connect using a **SUCI** (Subscription Concealed Identifier), which is an encrypted version of the IMSI. To process this, the Core (specifically the UDM) must have a **Home Network Public Key** to decrypt the SUCI into a **SUPI** (the actual IMSI).
-*   **The Rejection:** Because the Core cannot find the decryption key, it returns a `400 Bad Request` internally, and the AMF sends a **`Registration reject`** to the UE. In 5G NAS protocols, Cause #95 indicates a **"Semantically incorrect message,"** which in this context means the Core could not identify the subscriber from the encrypted payload.
+## gnb 
+- the slice configuration in the gnb is set in decimal format (currently set to 1118481)
+- the gnb runs in network mode host to simplify network configuration since it was becoming difficult to manage docker netwroks  
 
-### Summary of the "Drop" Cycle
-1.  **gNB** accepts the RRC connection from the UE.
-2.  **UE** sends a Registration Request with an encrypted **SUCI**.
-3.  **Open5GS** fails to decrypt the SUCI because the **Home Network PKI** is missing from the configuration.
-4.  **Open5GS** rejects the registration with Cause #95.
-5.  **Open5GS** sends a `UEContextReleaseCommand`, and the gNB drops the UE.
+## UE connection process
+- the UE name,imsi,key,op_type,op_c,amf,qci,ip_alloc,apn are set in the srsRAN_Project/gnb-uhd/project-config/subscriber_db.csv
+- the open5gs is not configured to set the ue network slice using subscriber csv, the sst value defaults to 1 and the sd is set empty.
+- In our case teh UE device requests the sd 111111 hence we use the open5gs UI (available at localhost:9999) to set the sd value. This can be improved in the future by configuring srsRAN_Project/docker/open5gs/add_users.py to setting the nework slice configuration using the subscriber csv.
 
-**To fix this, you should either:**
-1.  Configure the UE/USIM to use "Null-Scheme" (no encryption) for the SUCI so it sends the IMSI in plain text.
-2.  Add the corresponding Home Network Public Key and Private Key to your Open5GS UDM configuration and subscriber database.
 
-Would you like the specific configuration lines needed to disable SUCI encryption in your Open5GS setup?
----
 
-## 2. Why it is likely failing
-When using a physical Android device, the failure usually stems from one of two "Security Walls":
 
-### A. The "Secret Key" Mismatch (K and OPc)
-* **The Problem:** The **K** and **OPc** keys are never transmitted over the air. They are only stored inside the SIM card's secure hardware and the Open5GS database.
+sub1,001010000000101,0C0A34601D4F07677303652C0462535B,opc,63BFA50EE6523365FF14C1F45F88737B,8000,9,10.45.0.2,internet
+sub2,001010000000102,0C0A34601D4F07677303652C0462535D,opc,63BFA50EE6523365FF14C1F45F88737D,8000,9,10.45.0.3,internet
 
-### B. SQN (Sequence Number) Out of Sync
-* **The Problem:** The SIM and the Core keep a counter of how many times they have authenticated to prevent "replay attacks" (where a hacker records an old handshake and tries to reuse it).
-* **Why it fails:** If the Open5GS database has been resetting or switching between different Cores, the Core's counter might be `1` while the SIM is expecting `100`. This causes a **Sync Failure**.
 
----
 
-## 3. Summary of the Current State
-Logs show that the Open5GS Core is active and the Network Functions (AUSF and UDM) are ready to perform these checks. However, because we are using a commercial Android device, the connection is failing at the "Trust" level.
-
-**To fix this, you must ensure:**
-1.  **Hardware:** we are using **Programmable SIM card** we nweed to know the exact K and OPc.
-2.  **Software:** You must enter those exact values into the Open5GS. 
-3.  **Network:** The Android APN must match the DNN (e.g., `internet`).
