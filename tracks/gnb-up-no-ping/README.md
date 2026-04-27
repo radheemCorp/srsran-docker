@@ -1,1 +1,0 @@
-the srstun is created but cant ping the 8.8.8.8 or google.com
