@@ -1,16 +1,22 @@
-## 1. What is happening?
-When the Android UE tries to connect to the Open5GS AMF, they perform a "Mutual Authentication" dance. The goal is for the UE to prove it is a valid subscriber, and for the Core to prove it is a real network.
+### 1. Why the UE is rejected (The "SUCI" Failure)
+Even if you aligned the slice values, the **Open5GS logs** show the UE is being rejected much earlier in the registration process due to a security identification error:
 
-1.  **The Identity Exchange:** The UE sends its identity (concealed as a SUCI) to the Core.
-2.  **The Challenge:** Open5GS looks up that subscriber in its database. It sees the **K** and **OPc** keys in tracks/successful_uhd_ue_connect/gnb-uhd/project-config/subscriber_db.csv. It then generates a random number ($RAND$) and uses a complex cryptographic algorithm (Milenage or Tuak) to calculate an Authentication Token ($AUTN$) and an expected response ($XRES$).
-3.  **The UE Verification:** The Core sends $RAND$ and $AUTN$ to the phone. The phone passes these to the SIM card.
-4.  **The SIM Math:** The SIM card uses its own internal **K** and **OPc** to "solve" the math. 
-    * If the SIM’s internal $AUTN$ matches the Core’s $AUTN$, the phone trusts the network.
-    * The SIM then sends back its own response ($RES$).
-5.  **The Final Match:** If the UE's $RES$ matches the Core's $XRES$, the phone is "authenticated" and encryption keys are created.
+*   **The Error:** The AMF log reports `ERROR: HNET PKI Value Not Avaiable` and `Expectation supi failed`.
+*   **The Cause:** The UE is attempting to connect using a **SUCI** (Subscription Concealed Identifier), which is an encrypted version of the IMSI. To process this, the Core (specifically the UDM) must have a **Home Network Public Key** to decrypt the SUCI into a **SUPI** (the actual IMSI).
+*   **The Rejection:** Because the Core cannot find the decryption key, it returns a `400 Bad Request` internally, and the AMF sends a **`Registration reject`** to the UE. In 5G NAS protocols, Cause #95 indicates a **"Semantically incorrect message,"** which in this context means the Core could not identify the subscriber from the encrypted payload.
 
+### Summary of the "Drop" Cycle
+1.  **gNB** accepts the RRC connection from the UE.
+2.  **UE** sends a Registration Request with an encrypted **SUCI**.
+3.  **Open5GS** fails to decrypt the SUCI because the **Home Network PKI** is missing from the configuration.
+4.  **Open5GS** rejects the registration with Cause #95.
+5.  **Open5GS** sends a `UEContextReleaseCommand`, and the gNB drops the UE.
 
+**To fix this, you should either:**
+1.  Configure the UE/USIM to use "Null-Scheme" (no encryption) for the SUCI so it sends the IMSI in plain text.
+2.  Add the corresponding Home Network Public Key and Private Key to your Open5GS UDM configuration and subscriber database.
 
+Would you like the specific configuration lines needed to disable SUCI encryption in your Open5GS setup?
 ---
 
 ## 2. Why it is likely failing

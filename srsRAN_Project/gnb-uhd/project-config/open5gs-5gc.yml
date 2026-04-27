@@ -1,6 +1,9 @@
 db_uri: mongodb://${MONGODB_IP}/open5gs
 
 logger:
+  file:
+    path: /var/log/open5gs/mme.log
+    timestamp: true
 
 test:
   serving:
@@ -109,7 +112,7 @@ amf:
         mnc: 01
       s_nssai:
         - sst: 1
-          sd: "111111"
+          sd: 0x111111
   security:
     integrity_order: [NIA2, NIA1, NIA0]
     ciphering_order: [NEA0, NEA1, NEA2]
@@ -134,4 +137,4 @@ upf:
       gateway: ${UE_GATEWAY_IP}
   nssai:
     - sst: 1
-      sd: "111111"
+      sd: 0x111111
