@@ -1,6 +1,11 @@
 # Setup 
 The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srsRAN gNb.
-- Starting 
+- for more info on gnb and open5gs refer [here](srsRAN_Project/README.md)
+- for more info on ORAN RIC refer [here](oran-sc-ric/README.md)
+- to detect UHD device on machine refer [here](docs/FIND_UHD_DEVICE.md)
+- for informatin on subscribers, refer [here](docs/subscribers.md)   
+
+# Recommended 
 
 
 ## Available Docker Compose Files
@@ -11,6 +16,11 @@ The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srs
 | `docker-compose.yml` | `e2-agent`, `ric`, `xApp` | Minimal deployment of O-RAN Software Community (SC) Near-Real-time RIC | oran-sc-ric |
 | `docker-compose.ui.yml` | `telegraf`, `influxdb`, `grafana` | Monitoring and metrics visualization | srsRAN_Project |
 
+# Set PC to performance mode 
+```bash 
+cd srsRAN_Project
+./scripts/srsran_performance
+```
 
 # Deploy oran ric (Optional)
 ```bash 
