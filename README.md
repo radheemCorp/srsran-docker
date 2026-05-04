@@ -3,9 +3,7 @@ The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srs
 - for more info on gnb and open5gs refer [here](srsRAN_Project/README.md)
 - for more info on ORAN RIC refer [here](oran-sc-ric/README.md)
 - to detect UHD device on machine refer [here](docs/FIND_UHD_DEVICE.md)
-- for informatin on subscribers, refer [here](docs/subscribers.md)   
-
-# Recommended 
+- for informatin on subscribers, refer [here](docs/subscribers.md)    
 
 
 ## Available Docker Compose Files
@@ -47,12 +45,13 @@ docker compose -f docker/docker-compose.ui.yml up -d
 Device info:
   - device name: POCO M4 Pro 5G
   - imsi: 001010000000101
+---
 Steps:
 1. Goto [localhost:9999](http://localhost:9999/)
-2. Enter credentials 
-  - username: admin 
-  - password: 1423
-3. Select device 001010000000101
+2. Enter credentials <br> 
+  username: `admin` <br>
+  password: `1423`
+3. Select device `001010000000101`
 4. Click on edit button in the top right corner of the popup 
 5. look for Slice configuration section, click on the SD textbox, enter the configured slice (111111, in our case)
 6. Now unlock phone, goto Setting > SiIM cards & mobile networks section 
@@ -70,11 +69,11 @@ Steps:
 2. Select Home 
 
 # Utilities 
-- to get subscribers from Open5gs 
+- To get subscribers from Open5gs 
 ```
 ./scripts/get_open5gs_subscribers.sh
 ```
-- to get deployed docker services with IPs 
+- To get deployed docker services with IPs 
 ```
 ./scripts/dockstatus.sh
 ```
