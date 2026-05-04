@@ -1,266 +1,60 @@
-# Start gNB Then UEs (External ZMQ Multi-UE)
+# Setup 
+The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srsRAN gNb.
+- Starting 
 
-This guide starts the deployment in the required order:
-1. Open5GS + gNB
-2. ZMQ bridge
-3. UE1 and UE2
 
-It uses these files:
-- `srsRAN_Project/docker/docker-compose.yml`
-- `srsRAN_Project/docker/docker-compose.external-ue-zmq.yml`
-- `srsRAN_Project/configs/gnb_zmq_external_ue.yml`
+## Available Docker Compose Files
 
-The gNB image build in this workflow includes required runtime dependencies for UHD/ZMQ and DPDK-linked binaries.
+| Compose File | Services | Purpose | deploy location |
+|--------------|----------|---------| -------- |
+| `docker-compose.yml` | `5gc`, `gnb` | Complete gNB + Core deployment | srsRAN_Project/gnb-uhd |
+| `docker-compose.yml` | `e2-agent`, `ric`, `xApp` | Minimal deployment of O-RAN Software Community (SC) Near-Real-time RIC | oran-sc-ric |
+| `docker-compose.ui.yml` | `telegraf`, `influxdb`, `grafana` | Monitoring and metrics visualization | srsRAN_Project |
 
-## Image build configuration in this repo
 
-This repo builds two runtime images for this flow:
+# Deploy oran ric (Optional)
+```bash 
+cd oran-sc-ric
+docker compose up -d 
+```
 
-1. gNB image
-- Source Dockerfile: `srsRAN_Project/docker/Dockerfile`
-- Compose service: `gnb` in `srsRAN_Project/docker/docker-compose.yml`
-- Override/build profile: `srsRAN_Project/docker/docker-compose.external-ue-zmq.yml`
+# Deploy gNB
+```bash 
+cd srsRAN_Project/gnb-uhd
+# - if the oran ric deployment was skipped make sure to comment the e2 section in srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml
+# - the gnb runs in host mode to enable optimum performance, if this is disabled please update the e2.bind_addr in srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml
+# - the logs are written to srsRAN_Project/gnb-uhd/gnb-storage/gnb.log 
+docker compose up -d 
+```
 
-Current build intent for external UE + bridge flow:
-- `ENABLE_ZEROMQ=On`
-- `ENABLE_UHD=On`
-- `ENABLE_EXPORT=On`
-- `ENABLE_MKL=False`
-- `ENABLE_DPDK=Off` (override build arg)
-
-Runtime notes:
-- Dockerfile installs runtime libraries needed by this branch (including ZMQ + DPDK-linked dependencies required by the built binary).
-- gNB runs with config `configs/gnb_zmq_external_ue.yml` and uses ZMQ endpoints:
-  - `tx_port=tcp://10.10.3.231:2000`
-  - `rx_port=tcp://10.10.3.236:2001`
-
-2. Open5GS 5GC image
-- Source Dockerfile context: `srsRAN_Project/docker/open5gs`
-- Compose service: `5gc` in `srsRAN_Project/docker/docker-compose.yml`
-
-Published image tags from this repo state:
-- `rptestbed/srsran-gnb:2026.04.13-zmq-uhd-extue`
-- `rptestbed/open5gs-5gc:2026.04.13-open5gs-v2.7.0`
-
-## How to use these images
-
-### Option A: Build locally from repo (default)
-
+# Deploy monitoring stack 
 ```bash
-cd /home/radr/tuilm/srsran-build/srsRAN_Project/docker
-docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml build gnb
-docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml up -d 5gc gnb
+cd srsRAN_Project
+docker compose -f docker/docker-compose.ui.yml up -d 
 ```
 
-### Option B: Use pushed `rptestbed/*` images directly
+# Connnecting UE 
+Device info:
+  - device name: POCO M4 Pro 5G
+  - imsi: 001010000000101
+Steps:
+1. Goto [localhost:9999](http://localhost:9999/)
+2. Enter credentials 
+  - username: admin 
+  - password: 1423
+3. Select device 001010000000101
+4. Click on edit button in the top right corner of the popup 
+5. look for Slice configuration section, click on the SD textbox, enter the configured slice (111111, in our case)
+6. Now unlock phone, goto Setting > SiIM cards & mobile networks section 
+7. You should see SIM 1 as Test Network, click on it.
+8. Click on Mobile networks, click on Automatically select network
+9. You should see a pop up asking if you want to choose network manually, select Next, 
+10. Then it will ask if you want to disconnect from current network, select yes 
+11. Then it will ask if you want to turn off mobile network, selecl yes 
+12. It should now be in searching mode, once done it will list some networks.
+13. If the gNB and SDR device are working you will see srsRAN 5G or Gradient 5G. Select either one.
+14. You should be connected now if not then good luck and happy debugging.    
 
-Pull images:
-
-```bash
-docker pull rptestbed/srsran-gnb:2026.04.13-zmq-uhd-extue
-docker pull rptestbed/open5gs-5gc:2026.04.13-open5gs-v2.7.0
-```
-
-Then set images in compose before `up` (example with env vars):
-
-```bash
-export GNB_IMAGE=rptestbed/srsran-gnb:2026.04.13-zmq-uhd-extue
-export OPEN5GS_IMAGE=rptestbed/open5gs-5gc:2026.04.13-open5gs-v2.7.0
-```
-
-If you want compose to consume these variables directly, add image substitutions in your compose files (recommended for reproducibility):
-- gNB service image: `${GNB_IMAGE:-srsran/gnb}`
-- 5gc service image: `${OPEN5GS_IMAGE:-docker-5gc}`
-
-## Prerequisites
-
-- Docker and Docker Compose plugin installed.
-- Host interface `n3br` exists and is usable for macvlan.
-- External UE folders are present:
-  - `external_ue/host_ue_bridge`
-  - `external_ue/host_ue1`
-  - `external_ue/host_ue2`
-
-## 1) Create/prepare N3 network (one-time)
-
-Run on host:
-- setup n3br first time 
-```bash
-sudo ip link add n3br type bridge
-sudo ip link set n3br up
-sudo ip addr add 10.10.3.254/24 dev n3br
-```
-- bring up existing n3br and configure 
-```bash
-sudo ip link set n3br up
-sudo ip addr del 10.10.3.1/24 dev n3br || true
-sudo ip addr add 10.10.3.254/24 dev n3br
-
-docker network create -d macvlan \
-  --subnet=10.10.3.0/24 \
-  --gateway=10.10.3.254 \
-  -o parent=n3br \
-  n3br
-```
-
-If `n3br` already exists, Docker will report it. That is fine.
-
-Note:
-- `host_ue1` and `host_ue2` are configured to use static IPs on this external network:
-  - UE1 container: `10.10.3.234`
-  - UE2 container: `10.10.3.235`
-- Bridge uses `10.10.3.236` on `n3br`.
-
-## 2) Build and start Core + gNB
-
-```bash
-cd /home/radr/tuilm/srsran-build/srsRAN_Project/docker
-
-docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml build gnb
-
-docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml up -d 5gc gnb
-```
-
-Check logs:
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml logs -f gnb
-```
-
-Expected:
-- gNB starts with ZMQ config (`gnb_zmq_external_ue.yml`).
-- gNB connects to AMF.
-
-## 3) Start ZMQ bridge
-
-```bash
-cd /home/radr/tuilm/srsran-build/external_ue/host_ue_bridge
-docker compose up -d
-```
-
-Check sockets:
-
-```bash
-docker exec srsran_zmq_bridge ss -tnp
-```
-
-Expected:
-- ESTAB between bridge and gNB on ports `2000/2001`.
-
-## 4) Start UE1
-
-```bash
-cd /home/radr/tuilm/srsran-build/external_ue/host_ue1
-docker compose up -d
-docker compose exec -it srsran_ue_host bash
-```
-
-Inside container:
-
-```bash
-UE_ZMQ_MODE=bridge ZMQ_BRIDGE_IP=10.10.3.236 /srsran/config/start_ue.sh 1
-```
-
-## 5) Start UE2
-
-In a second terminal:
-
-```bash
-cd /home/radr/tuilm/srsran-build/external_ue/host_ue2
-docker compose up -d
-docker compose exec -it srsran_ue_host bash
-```
-
-Inside container:
-
-```bash
-UE_ZMQ_MODE=bridge ZMQ_BRIDGE_IP=10.10.3.236 /srsran/config/start_ue.sh 2
-```
-
-## 6) Validate attach and traffic
-
-Check Open5GS and gNB logs for both IMSIs registering and PDU sessions created.
-
-Bridge socket sanity check:
-
-```bash
-docker exec srsran_zmq_bridge ss -tnp
-```
-
-Expected (all should be `ESTAB`):
-- gNB <-> bridge on `2000/2001`
-- bridge <-> UE1 on `2101/2201`
-- bridge <-> UE2 on `2102/2202`
-
-Inside UE1 container:
-
-```bash
-ip netns exec ue1 ip a
-ip netns exec ue1 ip route
-ip netns exec ue1 ping -c3 10.41.0.1
-ip netns exec ue1 ping -c3 8.8.8.8
-```
-
-Inside UE2 container:
-
-```bash
-ip netns exec ue2 ip a
-ip netns exec ue2 ip route
-ip netns exec ue2 ping -c3 10.41.0.1
-ip netns exec ue2 ping -c3 8.8.8.8
-```
-
-## Operational notes
-
-- Keep gNB running while attaching/testing UEs.
-- If gNB is restarted, restart UE processes.
-- If bridge shows many `SYN-SENT` entries to unused UE IDs, set `UE_IDS` in `external_ue/host_ue_bridge/.env` (for example `UE_IDS=1,2`).
-
-Troubleshooting:
-- If UE stays at `Attaching UE...`, first verify bridge sessions with `ss -tnp` as above.
-- If bridge is `ESTAB` but gNB log shows repeated lines like `Completed 0 of 23040 samples`, sample flow is not reaching gNB. Restart order should be:
-  1. gNB/core already up
-  2. restart bridge
-  3. restart UE processes
-- Use Open5GS logs as authoritative attach signal (`Registration complete` / PDU session events), not UE console text alone.
-- UE process exit codes `137/143` usually indicate signal/termination during restarts, not a config parse error.
-
-## Stop all components
-
-```bash
-cd /home/radr/tuilm/srsran-build/external_ue/host_ue1 && docker compose down
-cd /home/radr/tuilm/srsran-build/external_ue/host_ue2 && docker compose down
-cd /home/radr/tuilm/srsran-build/external_ue/host_ue_bridge && docker compose down
-cd /home/radr/tuilm/srsran-build/srsRAN_Project/docker
-
-docker compose -f docker-compose.yml -f docker-compose.external-ue-zmq.yml down
-```
-
-# commands 
-- check logs for connectivity
-```
-docker compose -f docker-compose.open5g.yml -f docker-compose.external-ue-zmq.yml logs 5gc --no-color --tail=500 | grep -Ei "10\.53\.1\.3|10\.10\.3\.231|gnb|srsran|ngap" -n || true
-```
-
-
-```bash
-docker compose logs -f 5gc
-docker compose exec 5gc cat /open5gs/open5gs-5gc.yml
-```
-
-# check if ue is connected 
-```bash
-# Show subscriber file on host and inside container
-cat project-config/subscriber_db.csv
-docker compose exec -T 5gc cat /open5gs/subscriber_db.csv
-
-# Follow core logs and grep for IMSI/registration/attach events
-docker compose logs -f 5gc | grep --line-buffered -i -E '001010000000101|001010000000102|imsi|registration|attach'
-
-# Follow gNB logs
-docker compose logs -f gnb
-
-# check which ue is connected 
-docker logs open5gs_5gc | grep "SUPI"
-
-```
+# Access monitoring 
+1. Go to [http://localhost:3300](http://localhost:3300)
+2. Select Home 
