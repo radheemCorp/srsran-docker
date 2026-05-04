@@ -77,3 +77,7 @@ Steps:
 ```
 ./scripts/dockstatus.sh
 ```
+
+References 
+- https://github.com/srsran/srsran_project
+- https://github.com/srsran/oran-sc-ric
