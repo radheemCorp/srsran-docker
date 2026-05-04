@@ -68,3 +68,13 @@ Steps:
 # Access monitoring 
 1. Go to [http://localhost:3300](http://localhost:3300)
 2. Select Home 
+
+# Utilities 
+- to get subscribers from Open5gs 
+```
+./scripts/get_open5gs_subscribers.sh
+```
+- to get deployed docker services with IPs 
+```
+./scripts/dockstatus.sh
+```
