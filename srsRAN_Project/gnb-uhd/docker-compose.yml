@@ -1,6 +1,6 @@
 services:
   5gc:
-    image: rptestbed/open5gs:v2.7.0-ubuntu22.04-20260417
+    image: docker-5gc:latest      
     container_name: open5gs_5gc
     env_file:
       - ./project-config/open5gs.env
@@ -27,7 +27,7 @@ services:
         ipv4_address: 172.16.1.2
 
   gnb:
-    image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260414
+    image: srsran/gnb:latest 
     container_name: srsran_gnb
     privileged: true
     network_mode: host  # Stays in host mode for USRP/SDR performance
