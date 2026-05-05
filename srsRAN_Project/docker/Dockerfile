@@ -30,6 +30,7 @@
 ARG OS_VERSION=24.04
 ARG UHD_VERSION=4.7.0.0
 ARG DPDK_VERSION=24.11.2
+# [update] Added ENABLE_DPDK arg — srsRAN_Project now supports toggling DPDK at build time via `--build-arg ENABLE_DPDK=On|Off`
 ARG ENABLE_DPDK=On
 ARG MARCH=native
 ARG NUM_JOBS=""
@@ -49,6 +50,7 @@ ADD . /src
 # Install srsRAN build dependencies.
 # ZMQ deps are provided by the "extra" mode and are required for ENABLE_ZEROMQ builds.
 RUN /src/docker/scripts/install_dependencies.sh build && \
+    # [update] ZeroMQ deps via "extra" mode — required for ENABLE_ZEROMQ builds
     /src/docker/scripts/install_dependencies.sh extra && \
     /src/docker/scripts/install_uhd_dependencies.sh build && \
     /src/docker/scripts/install_dpdk_dependencies.sh build && \
@@ -72,6 +74,7 @@ FROM builder-base AS builder
 
 ARG UHD_VERSION
 ARG DPDK_VERSION
+# [update] Pass through ENABLE_DPDK arg so it's available as ARG in builder stage
 ARG ENABLE_DPDK
 ARG MARCH
 ARG NUM_JOBS
@@ -89,6 +92,7 @@ ARG EXTRA_CMAKE_ARGS=""
 ENV ROHC_DIR=/opt/rohc
 ENV UHD_DIR=/opt/uhd/${UHD_VERSION}
 ENV DPDK_DIR=/opt/dpdk/${DPDK_VERSION}
+# [update] Use ${ENABLE_DPDK} variable instead of hardcoded On (was always On)
 RUN if [ -z "$NUM_JOBS" ]; then NUM_JOBS=$(nproc); fi \
     && \
     /src/docker/scripts/builder.sh -c ${COMPILER} -m "-j${NUM_JOBS} srscu srsdu srsdu_split_8 srsdu_split_7_2 gnb gnb_split_8 gnb_split_7_2 ru_emulator" \
@@ -141,6 +145,7 @@ RUN /usr/local/etc/install_srsran_dependencies.sh run && \
     /usr/local/etc/install_rohc_dependencies.sh run && \
     /usr/local/etc/install_uhd_dependencies.sh run && \
     /usr/local/etc/install_dpdk_dependencies.sh run && \
+    # [update] Added libzmq5 (ZeroMQ), libdw1/libdwarf1/libelf1 (ELF/DWARF), libdpdk-dev (DPDK modules) for runtime support
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ntpdate libzmq5 libdw1 libdwarf1 libelf1 libdpdk-dev && \
     apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/*
 
