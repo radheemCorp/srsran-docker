@@ -14,5 +14,5 @@
 - `expose` for SCTP/UDP instead of port publication
 
 ## Subscriber db update
-- added apn field to the subscriber_db.csv file a dn updated srsRAN_Project/docker/open5gs/add_users.py to include the apn field when generating users 
+- added apn field to the subscriber_db.csv file and updated srsRAN_Project/docker/open5gs/add_users.py to include the apn field when generating users 
 
