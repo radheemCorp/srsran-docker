@@ -77,6 +77,8 @@ Files
 cd srsRAN_Project/gnb-uhd
 docker compose up -d 5gc 
 ```
+- Once deployed run `docker compose cp 5gc:/open5gs/open5gs-5gc.yml curr-open5gs.yaml` to get the running open5gs config from the container
+
 
 # Configuring UE in Open5gs  
 Device info:
