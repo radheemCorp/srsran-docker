@@ -114,6 +114,9 @@ cd srsRAN_Project/gnb-uhd
 # - the logs are written to srsRAN_Project/gnb-uhd/gnb-storage/gnb.log 
 docker compose up -d gnb 
 ```
+- check if the gnb is running 
+- if yes, then review the logs at `srsRAN_Project/gnb-uhd/gnb-storage/gnb.log` for gnb runtime errors 
+- if no, then run `docker compose logs gnb` to review the gnb startup logs 
 
 # Connecting UE
 Steps:
