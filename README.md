@@ -10,7 +10,7 @@ The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srs
 
 | Compose File | Services | Purpose | deploy location |
 |--------------|----------|---------| -------- |
-| `docker-compose.yml` | `5gc`, `gnb` | Complete gNB + Core deployment | srsRAN_Project/gnb-uhd |
+| `docker-compose.yml` | `5gc`, `gnb` | Complete gNB + Open5Gs Core deployment | srsRAN_Project/gnb-uhd |
 | `docker-compose.yml` | `e2-agent`, `ric`, `xApp` | Minimal deployment of O-RAN Software Community (SC) Near-Real-time RIC | oran-sc-ric |
 | `docker-compose.ui.yml` | `telegraf`, `influxdb`, `grafana` | Monitoring and metrics visualization | srsRAN_Project |
 
@@ -21,6 +21,17 @@ The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srs
 | `gnb` | Configuring the gNB | srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml |
 | `open5gs` | Configuring the Open5gs | srsRAN_Project/gnb-uhd/project-config/open5gs-5gc.yml.in |
 | `open5gs` | Configuring the Open5gs | srsRAN_Project/gnb-uhd/project-config/open5gs.env |
+
+
+# 1.3 Build open5Gs and gNB images
+1. go to srsRAN_Project/docker
+2. run docker compose build 
+```
+docker compose build
+```
+Note: Alternatively if you have access to rptestbed docker registry you can pull the images 
+  - gnb image: rptestbed/gnb:20260507-dpdk 
+  - open5gs image: rptestbed/open5gs:20260507-dpdk
 
 
 # 2. Set PC to performance mode 
