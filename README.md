@@ -1,4 +1,4 @@
-# Setup 
+# 1. Components  
 The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srsRAN gNb.
 - for more info on gnb and open5gs refer [here](srsRAN_Project/README.md)
 - for more info on ORAN RIC refer [here](oran-sc-ric/README.md)
@@ -6,7 +6,7 @@ The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srs
 - for informatin on subscribers, refer [here](docs/subscribers.md)    
 
 
-## Available Docker Compose Files
+## 1.1 Available Docker Compose Files
 
 | Compose File | Services | Purpose | deploy location |
 |--------------|----------|---------| -------- |
@@ -14,19 +14,62 @@ The setup has 4 components oran-ric, Open5gs stack, monitoring stack and the srs
 | `docker-compose.yml` | `e2-agent`, `ric`, `xApp` | Minimal deployment of O-RAN Software Community (SC) Near-Real-time RIC | oran-sc-ric |
 | `docker-compose.ui.yml` | `telegraf`, `influxdb`, `grafana` | Monitoring and metrics visualization | srsRAN_Project |
 
-# Set PC to performance mode 
+## 1.2 Configuration files 
+
+| Services | Purpose | location |
+|----------|---------| -------- |
+| `gnb` | Configuring the gNB | srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml |
+| `open5gs` | Configuring the Open5gs | srsRAN_Project/gnb-uhd/project-config/open5gs-5gc.yml.in |
+| `open5gs` | Configuring the Open5gs | srsRAN_Project/gnb-uhd/project-config/open5gs.env |
+
+
+# 2. Set PC to performance mode 
 ```bash 
 cd srsRAN_Project
 ./scripts/srsran_performance
 ```
 
-# Deploy oran ric (Optional)
+# 3. Deploy oran ric (Optional)
 ```bash 
 cd oran-sc-ric
 docker compose up -d 
 ```
 
-# Deploy gNB
+# 4. Deploy gNB
+## Configuring gNB
+File [gnb-config.yaml](srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml)
+### Configure the SDR 
+- get sdr spcifications using uhd_find_devices
+```bash 
+testbed@testbed:~/testbed/srsran-docker$ uhd_find_devices 
+[INFO] [UHD] linux; GNU C++ version 11.2.0; Boost_107400; UHD_4.1.0.5-3
+[INFO] [B200] Loading firmware image: /usr/share/uhd/images/usrp_b200_fw.hex...
+--------------------------------------------------
+-- UHD Device 0
+--------------------------------------------------
+Device Address:
+    serial: 30A3DFB
+    name: NI2901
+    product: B210
+    type: b200
+```
+- set the ru_sdr.device_driver to uhd 
+- set the sdr serial number in ru_sdr.device_args set it like `type=b200,serial=<sdr-serial-number>,num_recv_frames=64,num_send_frames=64`
+- To see exactly what bandwidth your specific B210 can handle, run this on your host:
+```bash 
+ uhd_usrp_probe --args "type=b200,serial=30A3DFB"
+```
+- Now look for `Bandwidth range`, in our case it is 20MHz
+- The srate is dependent on the bandwidth selected so select accordingly. 
+|Bandwidth (MHz) | Standard Sampling Rate (Msps)|
+| -------------- | ---------------------------- |
+| 5 MHz | 7.68 |
+| 10 MHz | 15.36 |
+| 15 MHz | 23.04 |
+| 20 MHz | 30.72 |
+- TODO: add refernce to the formula to calulate srate from bandwidth  
+
+- Now deploy the gNB
 ```bash 
 cd srsRAN_Project/gnb-uhd
 # - if the oran ric deployment was skipped make sure to comment the e2 section in srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml
