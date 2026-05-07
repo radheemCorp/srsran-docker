@@ -128,6 +128,22 @@ docker compose -f docker/docker-compose.ui.yml up -d
 1. Go to [http://localhost:3300](http://localhost:3300)
 2. Select Home 
 
+# View metrics using xApp
+1. goto oran-sc-ric
+2. make sure the oran ric is running 
+3. enable_du_e2 and enable_cu_cp_e2 are set to true in the gnb config, these are required by the xApp to collect metrics  
+4. run the xApp 
+- kpm monitoring xApp
+```bash
+docker compose exec python_xapp_runner ./kpm_mon_xapp.py --kpm_report_style=1
+```
+- note: kpm_report_style=5 requires atleast 2 UE devices connected 
+- simple xApp
+```bash
+docker compose exec python_xapp_runner ./simple_mon_xapp.py --metrics=DRB.UEThpDl,DRB.UEThpUl
+```
+
+
 # Utilities 
 - To get subscribers from Open5gs 
 ```
