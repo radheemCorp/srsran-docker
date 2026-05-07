@@ -95,7 +95,19 @@ Therefore:
 - gNB `cell_cfg.channel_bandwidth_MHz: 20` and `common_scs: 15` implies a 20 MHz carrier with 106 usable PRBs.
 - UE `max_nof_prb = 106` and `nof_prb = 106` means the UE is configured to use the full 20 MHz carrier.
 
-## 6. Exact matching values summary
+## 6. How base_srate is derived from bandwidth
+
+srsRAN selects an FFT size that can carry the requested NR bandwidth at the chosen subcarrier spacing. The base sample rate follows:
+
+- `base_srate_hz = fft_size * common_scs * 1000`
+
+For 20 MHz at 15 kHz SCS, srsRAN uses an `fft_size` of `1536` (enough bins to hold 106 PRBs plus guard). So:
+
+- `base_srate_hz = 1536 * 15,000 = 23,040,000`
+
+That is why the config uses `base_srate=23.04e6` and `srate=23.04`.
+
+## 7. Exact matching values summary
 
 | Concept | gNB value | UE value | Why it matters |
 |---|---|---|---|
@@ -107,7 +119,7 @@ Therefore:
 | Bandwidth | `channel_bandwidth_MHz: 20` | `max_nof_prb = 106`, `nof_prb = 106` | Same usable NR carrier bandwidth |
 | Subcarrier spacing | `common_scs: 15` | implicit by PRB count and 15 kHz relationship | Same NR numerology |
 
-## 7. Practical advice
+## 8. Practical advice
 
 - If the gNB log shows ZMQ RX waiting for samples, verify the bridge or UE is publishing to `tcp://10.10.3.236:2001`.
 - Keep `base_srate=23.04e6` and `srate=23.04` aligned exactly.

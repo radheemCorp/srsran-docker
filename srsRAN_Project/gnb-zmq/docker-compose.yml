@@ -1,6 +1,6 @@
 services:
   5gc:
-    image: open5gs:20260507
+    image: open5gs:20260507-dpdk
     build:
       context: ../docker/open5gs
       target: open5gs
@@ -35,7 +35,7 @@ services:
         ipv4_address: 10.53.1.2
       
   gnb:
-    image: gnb:20260507
+    image: gnb:20260507-dpdk
     build:
       context: ..
       dockerfile: docker/Dockerfile
