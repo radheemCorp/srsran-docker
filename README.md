@@ -260,6 +260,44 @@ testbed@testbed:~/testbed/srsran-docker/oran-sc-ric$
 ./scripts/dockstatus.sh
 ```
 
-References 
+# Monitoring metrics collected 
+
+## Metrics collected using telegraf
+### **1. MCS (Modulation and Coding Scheme)**
+
+MCS determines how much data is packed into every radio signal. The gNB chooses an MCS index (usually 0–28) based on the quality of the radio link.
+
+*   **High MCS (e.g., 28):** Like high-speed shorthand. It uses complex modulation (256QAM) to pack many bits into one symbol. It provides **maximum speed** but requires a **perfect signal**.
+*   **Low MCS (e.g., 2):** Like speaking slowly and clearly. It uses simple modulation (QPSK) and adds lots of redundant "error correction" bits. It is **slow** but very **rugged** and works in poor conditions.
+
+### **2. BLER (Block Error Rate)**
+BLER measures the percentage of data "blocks" that arrived corrupted and could not be fixed by the receiver.
+
+*   **Target BLER:** In 5G, the goal is usually **10% (0.1)**. 
+*   **High BLER (> 10%):** The connection is "noisy." You will experience lag and retransmissions. The gNB will see this and "downshift" the MCS to a lower, more stable index.
+*   **Low BLER (< 1%):** The connection is "too easy." The gNB will see this as an opportunity to "upshift" the MCS to a higher index to get more speed.
+
+### **How They Work Together (The Loop)**
+The relationship between them is a constant feedback loop called **Link Adaptation**:
+
+1.  **The Test:** The gNB sends data at a certain **MCS**.
+2.  **The Result:** The receiver calculates the **BLER**.
+3.  **The Feedback:** If BLER is high, the gNB **lowers the MCS** (Stability over Speed). If BLER is low, the gNB **raises the MCS** (Speed over Stability).
+
+| Feature | MCS | BLER |
+| :--- | :--- | :--- |
+| **What it represents** | Transmission Efficiency | Transmission Error Rate |
+| **Controlled by** | The Base Station (gNB) | The Radio Environment |
+| **Goal** | Highest possible value | Stable value (usually ~10%) |
+| **If it's too high...** | The signal will likely crash (High BLER) | Throughput drops because of retransmissions |
+| **If it's too low...** | You are wasting network capacity | You could be going faster (Lowering efficiency) |
+
+## Metrics collected using xApp
+
+- DRB.UEThpDl (Downlink User Equipment Throughput): This measures the amount of data (in bits or kilobits per second) successfully delivered to the UE over the Data Radio Bearers (DRBs) during the measurement interval.
+
+- DRB.UEThpUl (Uplink User Equipment Throughput): This measures the amount of data successfully sent from the UE to the gNB.
+
+# References 
 - https://github.com/srsran/srsran_project
 - https://github.com/srsran/oran-sc-ric
