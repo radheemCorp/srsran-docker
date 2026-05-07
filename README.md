@@ -176,16 +176,79 @@ docker compose -f docker/docker-compose.ui.yml up -d
 2. make sure the oran ric is running 
 3. enable_du_e2 and enable_cu_cp_e2 are set to true in the gnb config, these are required by the xApp to collect metrics  
 4. run the xApp 
-- kpm monitoring xApp
+## KPM monitoring xApp
 ```bash
 docker compose exec python_xapp_runner ./kpm_mon_xapp.py --kpm_report_style=1
-```
-- note: kpm_report_style=5 requires atleast 2 UE devices connected 
-- simple xApp
-```bash
-docker compose exec python_xapp_runner ./simple_mon_xapp.py --metrics=DRB.UEThpDl,DRB.UEThpUl
+
+
+# Expected response 
+testbed@testbed:~/testbed/srsran-docker/oran-sc-ric$ docker compose exec python_xapp_runner ./kpm_mon_xapp.py --kpm_report_style=1
+1778148342900 59/RMR [INFO] ric message routing library on SI95 p=4562 mv=3 flg=00 id=a (f447e29 4.9.4 built: Dec 13 2023)
+Subscribe to E2 node ID: gnbd_001_001_00019b_0, RAN func: e2sm_kpm, Report Style: 1, metrics: ['DRB.UEThpUl', 'DRB.UEThpDl']
+Successfully subscribed with Subscription ID:  3DOLoWdjChuzSpbTq6mend3P1z4
+Received Subscription ID to E2EventInstanceId mapping: 3DOLoWdjChuzSpbTq6mend3P1z4 -> 5
+{'response': 'OK', 'status': 200, 'payload': '{}', 'ctype': 'application/json', 'attachment': None, 'mode': 'plain'}
+10.0.2.13 - - [07/May/2026 10:05:44] "POST /ric/v1/subscriptions/response HTTP/1.1" 200 -
+
+RIC Indication Received from gnbd_001_001_00019b_0 for Subscription ID: 5, KPM Report Style: 1
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2026-05-07 10:05:45
+-Measurements Data:
+-granulPeriod: 1000
+--Metric: DRB.UEThpUl, Value: [0.0]
+--Metric: DRB.UEThpDl, Value: [0.0]
+
+RIC Indication Received from gnbd_001_001_00019b_0 for Subscription ID: 5, KPM Report Style: 1
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2026-05-07 10:05:46
+-Measurements Data:
+-granulPeriod: 1000
+--Metric: DRB.UEThpUl, Value: [0.0]
+--Metric: DRB.UEThpDl, Value: [0.0]
+
+RIC Indication Received from gnbd_001_001_00019b_0 for Subscription ID: 5, KPM Report Style: 1
+E2SM_KPM RIC Indication Content:
+-ColletStartTime:  2026-05-07 10:05:47
+-Measurements Data:
+-granulPeriod: 1000
+--Metric: DRB.UEThpUl, Value: [0.0]
+--Metric: DRB.UEThpDl, Value: [0.0]
 ```
 
+- note: kpm_report_style=5 requires atleast 2 UE devices connected 
+
+## Simple xApp
+```bash
+docker compose exec python_xapp_runner ./simple_mon_xapp.py --metrics=DRB.UEThpDl,DRB.UEThpUl
+
+# Expected response 
+$ docker compose exec python_xapp_runner ./simple_mon_xapp.py --metrics=DRB.UEThpDl,DRB.UEThpUl
+1778148403668 72/RMR [INFO] ric message routing library on SI95 p=4561 mv=3 flg=00 id=a (f447e29 4.9.4 built: Dec 13 2023)
+Subscribe to E2 node ID: gnbd_001_001_00019b_0, RAN func: e2sm_kpm for metrics ['DRB.UEThpDl', 'DRB.UEThpUl']
+Successfully subscribed with Subscription ID:  3DOLw3HDZeTPI3Ui0fM1IYxlGeE
+Received Subscription ID to E2EventInstanceId mapping: 3DOLw3HDZeTPI3Ui0fM1IYxlGeE -> 6
+{'response': 'OK', 'status': 200, 'payload': '{}', 'ctype': 'application/json', 'attachment': None, 'mode': 'plain'}
+10.0.2.13 - - [07/May/2026 10:06:44] "POST /ric/v1/subscriptions/response HTTP/1.1" 200 -
+^CUnsubscribe Subscription ID:  3DOLw3HDZeTPI3Ui0fM1IYxlGeE
+Successfully unsubscribed from Subscription ID:  3DOLw3HDZeTPI3Ui0fM1IYxlGeE
+```
+## Simple_rc_xapp
+```bash
+docker compose exec python_xapp_runner ./simple_rc_xapp.py
+
+# Expected result 
+$ docker compose exec python_xapp_runner ./simple_rc_xapp.py
+1778148571811 85/RMR [INFO] ric message routing library on SI95 p=4560 mv=3 flg=00 id=a (f447e29 4.9.4 built: Dec 13 2023)
+10:09:32 Send RIC Control Request to E2 node ID: gnbd_001_001_00019b_0 for UE ID: 0, PRB_min_ratio: 10, PRB_max_ratio: 30
+Received RIC_CONTROL_FAILURE
+10:09:37 Send RIC Control Request to E2 node ID: gnbd_001_001_00019b_0 for UE ID: 0, PRB_min_ratio: 10, PRB_max_ratio: 50
+Received RIC_CONTROL_FAILURE
+10:09:42 Send RIC Control Request to E2 node ID: gnbd_001_001_00019b_0 for UE ID: 0, PRB_min_ratio: 10, PRB_max_ratio: 70
+Received RIC_CONTROL_FAILURE
+^C10:09:47 Send RIC Control Request to E2 node ID: gnbd_001_001_00019b_0 for UE ID: 0, PRB_min_ratio: 10, PRB_max_ratio: 100
+^Cfree(): double free detected in tcache 2
+testbed@testbed:~/testbed/srsran-docker/oran-sc-ric$ 
+```
 
 # Utilities 
 - To get subscribers from Open5gs 
