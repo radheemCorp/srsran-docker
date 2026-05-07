@@ -82,8 +82,8 @@ Device info:
   - sst: 0x111111
   - sd: 1
 ---
-The following configuration steps are only required because the default value for sst is 0xffffff and the UE requests 0x111111 hence if not configured the ANF does not authoriye the connection
- 
+The following configuration steps are only required because the default value for sd is 0xffffff and the UE requests 0x111111 hence if not configured the ANF does not authorize the connection
+
 Steps:
 1. Goto [localhost:9999](http://localhost:9999/)
 2. Enter credentials <br> 
