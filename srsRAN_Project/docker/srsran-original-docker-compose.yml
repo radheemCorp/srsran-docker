@@ -21,7 +21,6 @@
 services:
   5gc:
     container_name: open5gs_5gc
-    image: open5gs:20260507-dpdk
     build:
       context: open5gs
       target: open5gs
@@ -49,20 +48,18 @@ services:
   gnb:
     container_name: srsran_gnb
     # Build info
-    image: gnb:20260507-dpdk
+    image: srsran/gnb
     build:
       context: ..
       dockerfile: docker/Dockerfile
       args:
         OS_VERSION: "24.04"
-        EXTRA_CMAKE_ARGS: "-DENABLE_ZEROMQ=On -DENABLE_UHD=On -DENABLE_EXPORT=On -DENABLE_MKL=False -DENABLE_DPDK=On"
     # privileged mode is requred only for accessing usb devices
     privileged: true
     # Extra capabilities always required
     cap_add:
       - SYS_NICE
       - CAP_SYS_PTRACE
-      - NET_ADMIN
     volumes:
       # Access USB to use some SDRs
       - /dev/bus/usb/:/dev/bus/usb/

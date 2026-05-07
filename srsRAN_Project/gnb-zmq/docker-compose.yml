@@ -1,6 +1,6 @@
 services:
   5gc:
-    image: rptestbed/open5gs:v2.7.0-ubuntu22.04-20260417
+    image: open5gs:20260507
     build:
       context: ../docker/open5gs
       target: open5gs
@@ -14,6 +14,8 @@ services:
     privileged: true
     ports:
       - "9999:9999/tcp"
+      - "38412:38412/sctp"
+      - "2152:2152/udp"
     command: 5gc -c open5gs-5gc.yml
     healthcheck:
       test: [ "CMD-SHELL", "nc -z 127.0.0.20 7777" ]
@@ -33,7 +35,7 @@ services:
         ipv4_address: 10.53.1.2
       
   gnb:
-    image: rptestbed/srsran-gnb:ubuntu24.04-uhd-zeromq-20260414
+    image: gnb:20260507
     build:
       context: ..
       dockerfile: docker/Dockerfile

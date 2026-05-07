@@ -6,7 +6,7 @@ set -euo pipefail
 # by exporting environment variables before running this script.
 
 # Host physical interface used as macvlan parent
-PARENT_IF=${PARENT_IF:-eth3}
+PARENT_IF=${PARENT_IF:-eth1}
 
 # Network names and subnets (can be overridden)
 N2_NAME=${N2_NAME:-n2}
