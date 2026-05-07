@@ -47,6 +47,31 @@ docker compose up -d
 ```
 
 # 4. Deploy Open5gs 
+Files 
+- [open5gc-config.yaml](srsRAN_Project/gnb-uhd/project-config/open5gs-5gc.yml.in)
+- [open5gc.env](srsRAN_Project/gnb-uhd/project-config/open5gs.env)
+
+- Make sure the open5gs and the gnb configuration are in sync, the params to focus on:
+
+| Parameter | Description | gNB Location (gnb.yaml) | Core Location (amf.yaml / upf.yaml) | Database Location (WebUI) | 
+| --------- | ----------- | ----------------------- | ----------------------------------- | ------------------------- | 
+| MCC | "Mobile Country Code (e.g. |  001)" | cell_cfg.plmn | amf.guami.plmn_id.mcc | Subscriber IMSI (first 3 digits) | 
+| MNC | "Mobile Network Code (e.g. |  01)" | cell_cfg.plmn | amf.guami.plmn_id.mnc | Subscriber IMSI (digits 4-5/6) | 
+| TAC | Tracking Area Code | cell_cfg.tac | amf.tai.tac | N/A (Must match gNB/AMF) | 
+| SST | Slice Service Type | tai_slice_support_list.sst | amf.plmn_support.s_nssai.sst | Subscriber Slice SST | 
+| SD | Slice Differentiator | tai_slice_support_list.sd | amf.plmn_support.s_nssai.sd | Subscriber Slice SD | 
+| AMF IP | Control Plane Target | cu_cp.amf.addr | amf.ngap.server.address | N/A | 
+| UPF IP | User Plane Target | amf.addr (within gNB context) | upf.gtpu.server.address | N/A | 
+
+- protocols to compare 
+
+| Parameter | Critical Note | Requirement | 
+| --------- | ------------- | ----------- | 
+| SD Format | Decimal vs Hex | Open5GS uses Hex (0x111111) in YAML/Logs. srsRAN YAML requires the Decimal version (1118481) | 
+| SCTP Port | 38412 | NGAP communication happens over SCTP. Ensure your firewall allows SCTP on 38412 | 
+| GTP-U Port | 2152 | The User Plane data travels via UDP on port 2152 | 
+| Integrity/Ciphering | Security Algorithms | "The security order in amf.yaml must be supported by the UE/gNB (e.g., NIA2, NEA2)." | 
+
 - Now deploy the open5gs
 ```bash 
 cd srsRAN_Project/gnb-uhd
@@ -72,7 +97,8 @@ Steps:
 5. look for Slice configuration section, click on the SD textbox, enter the configured slice (111111, in our case)
 6. Now proced to deploy gnb 
 
-# deploy gNB
+# Deploy gNB
+
 ## Configuring gNB
 File [gnb-config.yaml](srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml)
 ### Configure the SDR 
