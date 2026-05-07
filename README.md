@@ -47,6 +47,32 @@ docker compose up -d
 ```
 
 # 4. Deploy Open5gs 
+- Now deploy the open5gs
+```bash 
+cd srsRAN_Project/gnb-uhd
+docker compose up -d 5gc 
+```
+
+# Configuring UE in Open5gs  
+Device info:
+  - device name: POCO M4 Pro 5G
+  - imsi: 001010000000101
+  - sst: 0x111111
+  - sd: 1
+---
+The following configuration steps are only required because the default value for sd is 0xffffff and the UE requests 0x111111 hence if not configured the ANF does not authorize the connection
+
+Steps:
+1. Goto [localhost:9999](http://localhost:9999/)
+2. Enter credentials <br> 
+  username: `admin` <br>
+  password: `1423`
+3. Select device `001010000000101`
+4. Click on edit button in the top right corner of the popup 
+5. look for Slice configuration section, click on the SD textbox, enter the configured slice (111111, in our case)
+6. Now proced to deploy gnb 
+
+# deploy gNB
 ## Configuring gNB
 File [gnb-config.yaml](srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml)
 ### Configure the SDR 
@@ -79,33 +105,8 @@ Device Address:
 | 15 MHz | 23.04 |
 | 20 MHz | 30.72 |
 - TODO: add refernce to the formula to calulate srate from bandwidth  
-
-- Now deploy the gNB
-```bash 
-cd srsRAN_Project/gnb-uhd
-docker compose up -d 5gc 
-```
-
-# Configuring UE in Open5gs  
-Device info:
-  - device name: POCO M4 Pro 5G
-  - imsi: 001010000000101
-  - sst: 0x111111
-  - sd: 1
----
-The following configuration steps are only required because the default value for sd is 0xffffff and the UE requests 0x111111 hence if not configured the ANF does not authorize the connection
-
-Steps:
-1. Goto [localhost:9999](http://localhost:9999/)
-2. Enter credentials <br> 
-  username: `admin` <br>
-  password: `1423`
-3. Select device `001010000000101`
-4. Click on edit button in the top right corner of the popup 
-5. look for Slice configuration section, click on the SD textbox, enter the configured slice (111111, in our case)
-6. Now proced to deploy gnb 
-
-# deploy gNB
+- If oran ric was deployed enable e2 section in the [gnb-config.yaml](srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml)
+  - the enable_du_e2 and enable_cu_cp_e2 should be set to true for the xApps to connect and collect metrics from cu and du
 - Now deploy the gNB
 ```bash 
 cd srsRAN_Project/gnb-uhd
