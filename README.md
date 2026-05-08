@@ -41,6 +41,7 @@ cd srsRAN_Project
 ```
 
 # 3. Deploy oran ric (Optional)
+- go to 
 ```bash 
 cd oran-sc-ric
 docker compose up -d 
@@ -124,19 +125,11 @@ Device Address:
 ```bash 
  uhd_usrp_probe --args "type=b200,serial=30A3DFB"
 ```
-- Now look for `Bandwidth range`, in our case it is 20MHz
-- The srate is dependent on the bandwidth selected so select accordingly. 
-
-  |Bandwidth (MHz) | Standard Sampling Rate (Msps)|
-  | -------------- | ---------------------------- |
-  | 5 MHz | 7.68 |
-  | 10 MHz | 15.36 |
-  | 15 MHz | 23.04 |
-  | 20 MHz | 30.72 |
-
+- set the srate to 23.04
 - TODO: add refernce to the formula to calulate srate from bandwidth  
 - If oran ric was deployed enable e2 section in the [gnb-config.yaml](srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml)
   - the enable_du_e2 and enable_cu_cp_e2 should be set to true for the xApps to connect and collect metrics from cu and du
+  - the addr should be the address of the ora ric 
   - the bind_address should the ip address of the gnb (host ip in our deployment)
 - Now deploy the gNB
 ```bash 
@@ -165,7 +158,12 @@ Steps:
 
 
 # Deploy monitoring stack 
-- Go to srsRAN_Project/docker/.env and set the gnb IP, it will be the same as e2.bind_address if you already set it up 
+- Go to srsRAN_Project/docker/.env and set the gnb IP, it will be the same as e2.bind_address if you already set it up
+  - if using network mode host, use `ip a` to get host ip
+  - if not using host,
+    - go to project root
+    - run `bash ./scripts/dockstatus.sh`
+    - You should see the container IP, if you see multiple IPs use the one in the same subnet as the monitioring stack.         
 - Now deploy 
 ```bash
 cd srsRAN_Project
