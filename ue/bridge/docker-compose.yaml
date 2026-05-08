@@ -9,11 +9,11 @@ services:
       - IPC_LOCK
     environment:
       - GNB_IP=10.10.3.231
-      - BRIDGE_IP=10.10.3.236
+      - BRIDGE_IP=10.10.3.237
       - UE_IP_BASE=233
     networks:
       external_n3:
-        ipv4_address: 10.10.3.236
+        ipv4_address: 10.10.3.237
     volumes:
       - ./config:/srsran/config
     command: >
@@ -24,4 +24,4 @@ services:
 networks:
   external_n3:
     external: true
-    name: ue_n3
+    name: n3
