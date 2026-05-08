@@ -165,6 +165,8 @@ Steps:
 
 
 # Deploy monitoring stack 
+- Go to srsRAN_Project/docker/.env and set the gnb IP, it will be the same as e2.bind_address if you already set it up 
+- Now deploy 
 ```bash
 cd srsRAN_Project
 docker compose -f docker/docker-compose.ui.yml up -d 
