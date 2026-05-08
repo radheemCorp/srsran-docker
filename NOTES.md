@@ -34,3 +34,63 @@ To troubleshoot your setup, you can follow the logic the RIC uses:
 4.  **Strategy:** Based on the above, the gNB picks an **MCS** (how fast to talk).
 5.  **Execution:** If the **BLER** stays low, the strategy is working.
 6.  **Result:** The **Throughput** is the final output of this entire process.
+
+
+
+# Enable access to the Internet
+
+- Access into the 5gc core container
+
+- docker exec -it open5gs_5gc bash
+
+- The problem is in IP forwarding and in the intall of NAT device
+
+
+- Check the ogstun
+
+- ip addr show ogstun | grep 10.45.0
+
+or
+
+- ip route show table main | grep 10.45
+
+or
+
+- sudo ip -d link show ogstun
+
+You should see something link: inet 10.45.x.1/24
+
+
+
+- Enable IP forwarding
+
+- sysctl -w net.ipv4.ip_forward=1
+
+or permanently
+
+- echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+
+
+- Add NAT (Masquerading)
+
+- Replace eth0 with your real internet interface
+
+- iptables -t nat -A POSTROUTING -s 10.45.0.0/16 -o eth0 -j MASQUERADE
+
+
+- Allow forwarding rules
+
+- iptables -A FORWARD -i ogstun -o eth0 -j ACCEPT
+
+- iptables -A FORWARD -i eth0 -o ogstun -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+
+- Verify route on UPF
+
+- ip route
+
+You should see default route via eth0
+
+
+- Test again from phone
+
