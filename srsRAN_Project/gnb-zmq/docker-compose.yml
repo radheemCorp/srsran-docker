@@ -33,6 +33,7 @@ services:
     networks:
       n2:
         ipv4_address: 10.53.1.2
+      default:
       
   gnb:
     image: gnb:20260507-dpdk
