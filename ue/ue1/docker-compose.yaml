@@ -1,0 +1,29 @@
+services:
+  srsran_ue_host:
+    image: ghcr.io/sulaimanalmani/srsranzmq/srsue:v1.1
+    container_name: ue1
+    privileged: true
+    # Use host networking so it can use the route: 10.10.3.0/24 via VM_IP
+    network_mode: "host" 
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+      - IPC_LOCK
+    volumes:
+      - ./config:/srsran/config
+    environment:
+      - DEBUG_MODE=false
+      # These IPs are now reachable via the route we added to the host
+      - GNB_IP=10.10.3.231
+      - ZMQ_BRIDGE_IP=10.10.3.236
+      - UE_ZMQ_MODE=bridge
+      - UE_DNS1=1.1.1.1
+      - UE_DNS2=8.8.8.8
+    command: >
+      /bin/bash -c "
+      chmod +x /srsran/config/*.sh &&
+      /srsran/config/wrapper.sh"
+
+  ue_metrics_agent:
+    image: prom/node-exporter:latest
+    network_mode: "host"

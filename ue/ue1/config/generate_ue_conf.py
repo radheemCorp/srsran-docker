@@ -1,7 +1,7 @@
 import argparse
 import os
 
-def generate_ue_config(ue_number, output_directory):
+def generate_ue_config(ue_number, output_directory, mode, gnb_ip, ue_bind_ip, bridge_ip):
     # Template for the configuration
     config_template = """
 [rf]
@@ -60,11 +60,17 @@ enable = false
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
+    if mode == "bridge":
+        tx_port = f"tcp://{ue_bind_ip}:{2100 + ue_number}"
+        rx_port = f"tcp://{bridge_ip}:{2200 + ue_number}"
+    else:
+        tx_port = f"tcp://{ue_bind_ip}:2001"
+        rx_port = f"tcp://{gnb_ip}:2000"
+
     # Formatting the configuration with dynamic values
-    # Use UE local macvlan IP and per-UE ports so srsUE binds locally
     config = config_template.format(
-        tx_port=f"tcp://10.10.3.232:{2100 + ue_number}",
-        rx_port=f"tcp://10.10.3.232:{2200 + ue_number}",
+        tx_port=tx_port,
+        rx_port=rx_port,
         log_file=os.path.join(output_directory, f"ue{ue_number}.log"),
         imsi=f"0010100000000{ue_number:02d}",
         netns=f"ue{ue_number}"
@@ -80,6 +86,37 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate a UE configuration file.')
     parser.add_argument('ue_number', type=int, help='User Equipment (UE) number')
     parser.add_argument('output_directory', type=str, help='Directory to save the UE configuration file')
+    parser.add_argument(
+        '--mode',
+        choices=['direct', 'bridge'],
+        default=os.environ.get('UE_ZMQ_MODE', 'direct'),
+        help='ZMQ mode: direct (UE<->gNB) or bridge (UE<->bridge<->gNB)'
+    )
+    parser.add_argument(
+        '--gnb-ip',
+        type=str,
+        default=os.environ.get('GNB_IP', '10.10.3.231'),
+        help='gNB N3 IP address used by ZMQ endpoints (default: env GNB_IP or 10.10.3.231)'
+    )
+    parser.add_argument(
+        '--bridge-ip',
+        type=str,
+        default=os.environ.get('ZMQ_BRIDGE_IP', '10.10.3.236'),
+        help='Bridge IP for bridge mode (default: env ZMQ_BRIDGE_IP or 10.10.3.236)'
+    )
+    parser.add_argument(
+        '--ue-bind-ip',
+        type=str,
+        default=os.environ.get('UE_BIND_IP', '*'),
+        help='Local UE IP to bind ZMQ tx socket (default: env UE_BIND_IP or *)'
+    )
     args = parser.parse_args()
 
-    generate_ue_config(args.ue_number, args.output_directory)
+    generate_ue_config(
+        args.ue_number,
+        args.output_directory,
+        args.mode,
+        args.gnb_ip,
+        args.ue_bind_ip,
+        args.bridge_ip,
+    )
