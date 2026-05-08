@@ -25,6 +25,7 @@ services:
     networks:
       srs_network:
         ipv4_address: 172.16.1.2
+      default:
 
   gnb:
     image: gnb:20260507-dpdk

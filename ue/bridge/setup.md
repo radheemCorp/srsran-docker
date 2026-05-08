@@ -45,8 +45,8 @@ docker compose up -d
 1. Bridge sockets:
 
 ```bash
-docker exec srsran_zmq_bridge ss -ltnp
-docker exec srsran_zmq_bridge ss -tnp
+docker exec zmq_bridge ss -ltnp
+docker exec zmq_bridge ss -tnp
 ```
 
 Expected:

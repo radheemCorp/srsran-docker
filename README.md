@@ -55,8 +55,8 @@ Files
 
 | Parameter | Description | gNB Location (gnb.yaml) | Core Location (amf.yaml / upf.yaml) | Database Location (WebUI) | 
 | --------- | ----------- | ----------------------- | ----------------------------------- | ------------------------- | 
-| MCC | "Mobile Country Code (e.g. |  001)" | cell_cfg.plmn | amf.guami.plmn_id.mcc | Subscriber IMSI (first 3 digits) | 
-| MNC | "Mobile Network Code (e.g. |  01)" | cell_cfg.plmn | amf.guami.plmn_id.mnc | Subscriber IMSI (digits 4-5/6) | 
+| MCC | "Mobile Country Code (e.g. 001)" | cell_cfg.plmn | amf.guami.plmn_id.mcc | Subscriber IMSI (first 3 digits) | 
+| MNC | "Mobile Network Code (e.g. 01)" | cell_cfg.plmn | amf.guami.plmn_id.mnc | Subscriber IMSI (digits 4-5/6) | 
 | TAC | Tracking Area Code | cell_cfg.tac | amf.tai.tac | N/A (Must match gNB/AMF) | 
 | SST | Slice Service Type | tai_slice_support_list.sst | amf.plmn_support.s_nssai.sst | Subscriber Slice SST | 
 | SD | Slice Differentiator | tai_slice_support_list.sd | amf.plmn_support.s_nssai.sd | Subscriber Slice SD | 
@@ -126,15 +126,18 @@ Device Address:
 ```
 - Now look for `Bandwidth range`, in our case it is 20MHz
 - The srate is dependent on the bandwidth selected so select accordingly. 
-|Bandwidth (MHz) | Standard Sampling Rate (Msps)|
-| -------------- | ---------------------------- |
-| 5 MHz | 7.68 |
-| 10 MHz | 15.36 |
-| 15 MHz | 23.04 |
-| 20 MHz | 30.72 |
+
+  |Bandwidth (MHz) | Standard Sampling Rate (Msps)|
+  | -------------- | ---------------------------- |
+  | 5 MHz | 7.68 |
+  | 10 MHz | 15.36 |
+  | 15 MHz | 23.04 |
+  | 20 MHz | 30.72 |
+
 - TODO: add refernce to the formula to calulate srate from bandwidth  
 - If oran ric was deployed enable e2 section in the [gnb-config.yaml](srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml)
   - the enable_du_e2 and enable_cu_cp_e2 should be set to true for the xApps to connect and collect metrics from cu and du
+  - the bind_address should the ip address of the gnb (host ip in our deployment)
 - Now deploy the gNB
 ```bash 
 cd srsRAN_Project/gnb-uhd
