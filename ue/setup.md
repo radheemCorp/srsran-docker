@@ -82,9 +82,4 @@ ip netns exec ue2 ping -c3 google.com
 - Avoid restarting gNB during UE attach tests.
 - If gNB is restarted, restart UE processes afterward.
 
-## Detailed runbooks
 
-- `host_ue/host_ue1/setup.md`
-- `host_ue/host_ue2/setup.md`
-- `host_ue/host_ue_bridge/setup.md`
-- `host_ue/multi_ue_containers_plan.md`
