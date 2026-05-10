@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# Enable IP forwarding for UE NAT
+sysctl -w net.ipv4.ip_forward=1 2>/dev/null || true
+
 export UE_GATEWAY_IP="${UE_IP_BASE}.1"
 export UE_IP_RANGE="${UE_IP_BASE}.0/24"
 

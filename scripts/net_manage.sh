@@ -155,19 +155,85 @@ remove_host_macvlan() {
   fi
 }
 
+# ============================================
+# IP Forwarding + NAT Masquerade for UE subnets
+# ============================================
+
+# Internet-facing external interface (auto-detected if not set)
+OUT_IF=${OUT_IF:-$(ip route get 8.8.8.8 2>/dev/null | awk '/dev/ {for(i=1;i<=NF;i++){if($i=="dev"){print $(i+1); exit}}}')}
+if [ -z "$OUT_IF" ]; then
+  OUT_IF=${OUT_IF:-eth0}
+fi
+
+# UE IP range for NAT masquerading
+UE_SUBNET=${UE_SUBNET:-10.45.0.0/16}
+
+# TUN interface name used by open5gs
+OGSTUN_IF=${OGSTUN_IF:-ogstun}
+
+# --- Apply NAT forwarding ---
+enable_nat_forwarding() {
+  echo "=== Enabling IP forwarding and NAT for UE subnets ==="
+
+  # 1. Enable IPv4 forwarding
+  echo "Enabling IP forwarding..."
+  sysctl -w net.ipv4.ip_forward=1 >/dev/null
+  # Also persist it for reboots
+  mkdir -p /etc/sysctl.d
+  echo 'net.ipv4.ip_forward=1' > /etc/sysctl.d/99-srsran-nat.conf
+
+  # 2. NAT masquerade for the UE subnet
+  echo "Setting up MASQUERADE for ${UE_SUBNET} via ${OUT_IF}..."
+  if ! iptables -t nat -C POSTROUTING -s "${UE_SUBNET}" -o "${OUT_IF}" -j MASQUERADE 2>/dev/null; then
+    iptables -t nat -A POSTROUTING -s "${UE_SUBNET}" -o "${OUT_IF}" -j MASQUERADE
+  fi
+
+  # 3. Allow forwarding rules
+  if ! iptables -C FORWARD -i "${OGSTUN_IF}" -o "${OUT_IF}" -j ACCEPT 2>/dev/null; then
+    iptables -A FORWARD -i "${OGSTUN_IF}" -o "${OUT_IF}" -j ACCEPT
+  fi
+
+  if ! iptables -C FORWARD -i "${OUT_IF}" -o "${OGSTUN_IF}" -m state --state RELATED,ESTABLISHED -j ACCEPT 2>/dev/null; then
+    iptables -A FORWARD -i "${OUT_IF}" -o "${OGSTUN_IF}" -m state --state RELATED,ESTABLISHED -j ACCEPT
+  fi
+
+  echo "NAT forwarding enabled."
+}
+
+# --- Remove NAT forwarding ---
+disable_nat_forwarding() {
+  echo "=== Removing NAT and rules ==="
+
+  # Reverse iptables rules
+  iptables -t nat -D POSTROUTING -s "${UE_SUBNET}" -o "${OUT_IF}" -j MASQUERADE 2>/dev/null || true
+  iptables -D FORWARD -i "${OGSTUN_IF}" -o "${OUT_IF}" -j ACCEPT 2>/dev/null || true
+  iptables -D FORWARD -i "${OUT_IF}" -o "${OGSTUN_IF}" -m state --state RELATED,ESTABLISHED -j ACCEPT 2>/dev/null || true
+
+  echo "NAT forwarding disabled (sysctl.d file preserved for next use)."
+}
+
 usage() {
   cat <<EOF
 Usage: $0 <command>
 
 Commands:
-  create    Create all macvlan networks (default)
-  remove    Remove all macvlan networks
-  help      Show this help
+  create         Create all macvlan networks and enable NAT (default)
+  remove         Remove all macvlan networks and disable NAT
+  nat-enable     Enable IP forwarding and NAT masquerade only
+  nat-disable    Disable NAT and forwarding rules only
+  nat-status     Show current NAT/forwarding status
+  help           Show this help
 
 Environment overrides:
   PARENT_IF, N2_NAME, N2_SUBNET, N2_GW, N3_NAME, N3_SUBNET, N3_GW,
   N6_NAME, N6_SUBNET, N6_GW, METRICS_NAME, METRICS_SUBNET, METRICS_GW,
-  RIC_NAME, RIC_DOCKER_NAME, ric_network
+  RIC_NAME, RIC_DOCKER_NAME, ric_network,
+  OUT_IF, UE_SUBNET, OGSTUN_IF
+
+Examples:
+  $0                    # Create networks + enable NAT
+  $0 nat-status         # Show NAT status
+  OUT_IF=ens33 UE_SUBNET=10.46.0.0/16 \$0 nat-enable  # Custom subnet/interface
 EOF
 }
 
@@ -187,6 +253,7 @@ case "$action" in
     create_bridge_network "$METRICS_NAME" "$METRICS_SUBNET" "$METRICS_GW"
     create_ric_network
     create_host_macvlan
+    enable_nat_forwarding
     echo "Done. Networks created (or already existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME"
     ;;
   remove)
@@ -196,7 +263,22 @@ case "$action" in
     remove_macvlan_network "$N2_NAME"
     remove_bridge_network "$METRICS_NAME"
     remove_ric_network
+    disable_nat_forwarding
     echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME"
+    ;;
+  nat-enable)
+    enable_nat_forwarding
+    ;;
+  nat-disable)
+    disable_nat_forwarding
+    ;;
+  nat-status)
+    echo "--- IP Forwarding:"
+    cat /proc/sys/net/ipv4/ip_forward
+    echo "--- NAT/MASQUERADE rules:"
+    iptables -t nat -L POSTROUTING -v -n --line-numbers
+    echo "--- FORWARD rules:"
+    iptables -L FORWARD -v -n --line-numbers
     ;;
   help|-h|--help)
     usage

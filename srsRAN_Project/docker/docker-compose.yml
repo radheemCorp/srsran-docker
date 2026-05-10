@@ -21,7 +21,7 @@
 services:
   5gc:
     container_name: open5gs_5gc
-    image: open5gs:20260507-dpdk
+    image: open5gs:20260510-dpdk
     build:
       context: open5gs
       target: open5gs
@@ -49,7 +49,7 @@ services:
   gnb:
     container_name: srsran_gnb
     # Build info
-    image: gnb:20260507-dpdk
+    image: gnb:20260510-dpdk
     build:
       context: ..
       dockerfile: docker/Dockerfile

@@ -53,6 +53,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     cmake \
     && rm -rf /var/lib/apt/lists/*
 
+RUN echo 'net.ipv4.ip_forward=1' > /etc/sysctl.d/99-open5gs.conf
+
 ARG MONGO_MAJOR_VERSION=6
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends wget gnupg \
     && wget -qO - https://www.mongodb.org/static/pgp/server-${MONGO_MAJOR_VERSION}.0.asc | apt-key add \
