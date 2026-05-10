@@ -27,6 +27,12 @@ METRICS_NAME=${METRICS_NAME:-metrics}
 METRICS_SUBNET=${METRICS_SUBNET:-172.19.1.0/24}
 METRICS_GW=${METRICS_GW:-172.19.1.1}
 
+# RIC network (bridge)
+RIC_NAME=${RIC_NAME:-ric_network}
+RIC_DOCKER_NAME=${RIC_DOCKER_NAME:-oran-sc-ric}
+RIC_SUBNET=${RIC_SUBNET:-${RIC_NETWORK_SUBNET:-10.0.2.0/24}}
+RIC_GW=${RIC_GW:-10.0.2.1}
+
 # Host-side helper macvlan (so host can reach macvlan networks)
 HOST_MACVLAN_IF=${HOST_MACVLAN_IF:-macvlan_ran}
 HOST_MACVLAN_IP=${HOST_MACVLAN_IP:-10.53.1.254/24}
@@ -82,6 +88,26 @@ create_bridge_network() {
 remove_bridge_network() {
   local name=$1
   remove_macvlan_network "$name"
+}
+
+create_ric_network() {
+  local name=${RIC_NAME} subnet=${RIC_SUBNET} gateway=${RIC_GW}
+  local docker_name="${RIC_DOCKER_NAME:-oran-sc-ric}"
+  if docker network inspect "$docker_name" >/dev/null 2>&1; then
+    echo "Docker network '$docker_name' ($name) already exists — skipping"
+    return 0
+  fi
+
+  echo "Creating bridge network '$name' (docker_name=$docker_name subnet=$subnet gateway=$gateway)"
+  docker network create --driver bridge \
+    --subnet="$subnet" \
+    --gateway="$gateway" \
+    "$docker_name"
+}
+
+remove_ric_network() {
+  local docker_name="${RIC_DOCKER_NAME:-oran-sc-ric}"
+  remove_macvlan_network "$docker_name"
 }
 
 create_host_macvlan() {
@@ -140,7 +166,8 @@ Commands:
 
 Environment overrides:
   PARENT_IF, N2_NAME, N2_SUBNET, N2_GW, N3_NAME, N3_SUBNET, N3_GW,
-  N6_NAME, N6_SUBNET, N6_GW, METRICS_NAME, METRICS_SUBNET, METRICS_GW
+  N6_NAME, N6_SUBNET, N6_GW, METRICS_NAME, METRICS_SUBNET, METRICS_GW,
+  RIC_NAME, RIC_DOCKER_NAME, ric_network
 EOF
 }
 
@@ -158,8 +185,9 @@ case "$action" in
     create_macvlan_network "$N3_NAME" "$N3_SUBNET" "$N3_GW"
     create_macvlan_network "$N6_NAME" "$N6_SUBNET" "$N6_GW"
     create_bridge_network "$METRICS_NAME" "$METRICS_SUBNET" "$METRICS_GW"
+    create_ric_network
     create_host_macvlan
-    echo "Done. Networks created (or already existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME"
+    echo "Done. Networks created (or already existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME"
     ;;
   remove)
     remove_host_macvlan
@@ -167,7 +195,8 @@ case "$action" in
     remove_macvlan_network "$N3_NAME"
     remove_macvlan_network "$N2_NAME"
     remove_bridge_network "$METRICS_NAME"
-    echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME"
+    remove_ric_network
+    echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME"
     ;;
   help|-h|--help)
     usage

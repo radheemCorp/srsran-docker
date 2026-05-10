@@ -190,9 +190,4 @@ services:
 networks:
   ric_network:
     name: oran-sc-ric
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet:
-            ${RIC_NETWORK_SUBNET:-10.0.2.0/24}
+    external: true
