@@ -155,61 +155,37 @@ remove_host_macvlan() {
   fi
 }
 
-# ============================================
-# IP Forwarding + NAT Masquerade for UE subnets
-# ============================================
 
-# Internet-facing external interface (auto-detected if not set)
-OUT_IF=${OUT_IF:-$(ip route get 8.8.8.8 2>/dev/null | awk '/dev/ {for(i=1;i<=NF;i++){if($i=="dev"){print $(i+1); exit}}}')}
-if [ -z "$OUT_IF" ]; then
-  OUT_IF=${OUT_IF:-eth0}
-fi
-
-# UE IP range for NAT masquerading
-UE_SUBNET=${UE_SUBNET:-10.45.0.0/16}
-
-# TUN interface name used by open5gs
-OGSTUN_IF=${OGSTUN_IF:-ogstun}
-
-# --- Apply NAT forwarding ---
-enable_nat_forwarding() {
-  echo "=== Enabling IP forwarding and NAT for UE subnets ==="
-
-  # 1. Enable IPv4 forwarding
-  echo "Enabling IP forwarding..."
-  sysctl -w net.ipv4.ip_forward=1 >/dev/null
-  # Also persist it for reboots
-  mkdir -p /etc/sysctl.d
-  echo 'net.ipv4.ip_forward=1' > /etc/sysctl.d/99-srsran-nat.conf
-
-  # 2. NAT masquerade for the UE subnet
-  echo "Setting up MASQUERADE for ${UE_SUBNET} via ${OUT_IF}..."
-  if ! iptables -t nat -C POSTROUTING -s "${UE_SUBNET}" -o "${OUT_IF}" -j MASQUERADE 2>/dev/null; then
-    iptables -t nat -A POSTROUTING -s "${UE_SUBNET}" -o "${OUT_IF}" -j MASQUERADE
+# List all Docker networks with their subnets
+dnet() {
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "docker: command not found" >&2
+    return 1
   fi
 
-  # 3. Allow forwarding rules
-  if ! iptables -C FORWARD -i "${OGSTUN_IF}" -o "${OUT_IF}" -j ACCEPT 2>/dev/null; then
-    iptables -A FORWARD -i "${OGSTUN_IF}" -o "${OUT_IF}" -j ACCEPT
-  fi
+  printf "%-30s %-30s %-40s\n" "NETWORK" "IPv4 SUBNETS" "IPv6 SUBNETS"
+  printf "%-30s %-30s %-40s\n" "-------" "------------" "------------"
 
-  if ! iptables -C FORWARD -i "${OUT_IF}" -o "${OGSTUN_IF}" -m state --state RELATED,ESTABLISHED -j ACCEPT 2>/dev/null; then
-    iptables -A FORWARD -i "${OUT_IF}" -o "${OGSTUN_IF}" -m state --state RELATED,ESTABLISHED -j ACCEPT
-  fi
+  docker network ls --format '{{.Name}}' | while IFS= read -r name; do
+    subnets=$(docker network inspect --format '{{range .IPAM.Config}}{{.Subnet}}|{{end}}' "$name" 2>/dev/null || echo "")
+    IFS='|' read -r -a parts <<< "$subnets"
 
-  echo "NAT forwarding enabled."
-}
+    ipv4=""
+    ipv6=""
+    for p in "${parts[@]}"; do
+      [ -z "$p" ] && continue
+      if [[ "$p" == *:* ]]; then
+        ipv6+="$p "
+      else
+        ipv4+="$p "
+      fi
+    done
 
-# --- Remove NAT forwarding ---
-disable_nat_forwarding() {
-  echo "=== Removing NAT and rules ==="
+    [ -z "$ipv4" ] && ipv4="-"
+    [ -z "$ipv6" ] && ipv6="-"
 
-  # Reverse iptables rules
-  iptables -t nat -D POSTROUTING -s "${UE_SUBNET}" -o "${OUT_IF}" -j MASQUERADE 2>/dev/null || true
-  iptables -D FORWARD -i "${OGSTUN_IF}" -o "${OUT_IF}" -j ACCEPT 2>/dev/null || true
-  iptables -D FORWARD -i "${OUT_IF}" -o "${OGSTUN_IF}" -m state --state RELATED,ESTABLISHED -j ACCEPT 2>/dev/null || true
-
-  echo "NAT forwarding disabled (sysctl.d file preserved for next use)."
+    printf "%-30s %-30s %-40s\n" "$name" "$ipv4" "$ipv6"
+  done
 }
 
 usage() {
@@ -219,9 +195,9 @@ Usage: $0 <command>
 Commands:
   create         Create all macvlan networks and enable NAT (default)
   remove         Remove all macvlan networks and disable NAT
-  nat-enable     Enable IP forwarding and NAT masquerade only
-  nat-disable    Disable NAT and forwarding rules only
-  nat-status     Show current NAT/forwarding status
+  
+  dnet           List all Docker networks with their subnets
+  
   help           Show this help
 
 Environment overrides:
@@ -266,19 +242,8 @@ case "$action" in
     disable_nat_forwarding
     echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME"
     ;;
-  nat-enable)
-    enable_nat_forwarding
-    ;;
-  nat-disable)
-    disable_nat_forwarding
-    ;;
-  nat-status)
-    echo "--- IP Forwarding:"
-    cat /proc/sys/net/ipv4/ip_forward
-    echo "--- NAT/MASQUERADE rules:"
-    iptables -t nat -L POSTROUTING -v -n --line-numbers
-    echo "--- FORWARD rules:"
-    iptables -L FORWARD -v -n --line-numbers
+  dnet)
+    dnet
     ;;
   help|-h|--help)
     usage
