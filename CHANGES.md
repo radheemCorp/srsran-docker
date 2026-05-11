@@ -28,6 +28,46 @@
 ## Subscriber db update
 - added apn field to the subscriber_db.csv file and updated srsRAN_Project/docker/open5gs/add_users.py to include the apn field when generating users 
 
+## enable rlc metrics for e2 agent
+- reference : oran-sc-ric/e2-agents/srsRAN/gnb_zmq.yaml
+- add the following to the pcap section of the srsRAN_Project/gnb-zmq/project-config/gnb/gnb_zmq.yaml file to enable RLC metrics for the E2 agent
+```
+pcap:
+  mac_enable: false                 # Set to true to enable MAC-layer PCAPs.
+  mac_filename: /tmp/gnb_mac.pcap   # Path where the MAC PCAP is stored.
+  ngap_enable: false                # Set to true to enable NGAP PCAPs.
+  ngap_filename: /tmp/gnb_ngap.pcap # Path where the NGAP PCAP is stored.
+  e2ap_enable: true                 # Set to true to enable E2AP PCAPs.
+  e2ap_du_filename: /tmp/gnb_du_e2ap.pcap       # Path where the DU E2AP PCAP is stored.
+  e2ap_cu_cp_filename: /tmp/gnb_cu_cp_e2ap.pcap # Path where the CU-CP E2AP PCAP is stored.
+  e2ap_cu_up_filename: /tmp/gnb_cu_up_e2ap.pcap # Path where the CU-UP E2AP PCAP is stored.
+```
+
+- add the following to the metrics section of the srsRAN_Project/gnb-zmq/project-config/gnb/gnb_compose_config.yml file to enable RLC metrics for the E2 agent
+```
+metrics:
+  autostart_stdout_metrics: true
+  enable_json: true
+  layers:
+    enable_rlc: true
+    enable_mac: true
+    enable_sched: true
+  periodicity:
+    du_report_period: 1000
+    cu_up_report_period: 1000
+    cu_cp_report_period: 1000
+  
+  layers:
+    enable_ru: false
+    enable_sched: true
+    enable_rlc: true
+    enable_mac: true
+    enable_pdcp: false
+    enable_du_low: false
+```
+
+
+
 # Notes
 - The original srsRAN porject dockerfile is available at [srsRAN_Project/docker/Dockerfile.srsran-original](srsRAN_Project/docker/Dockerfile.srsran-original)
 - The original srsRAN porject docker-compose is available at [srsRAN_Project/docker/srsran-original-docker-compose.yml](srsRAN_Project/docker/srsran-original-docker-compose.yml)
