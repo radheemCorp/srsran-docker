@@ -1,16 +1,15 @@
-'''
-for all commands ensure the desired ue netns is used.
-'''
+### Notes 
+
+- for all commands ensure the desired ue netns is used.
+
 
 ---
-
-
-# connecting to a public iperf server 
+# Connecting to a public iperf server 
 ```
 ip netns exec ue1 iperf3 -c paris.bbr.iperf.bytel.fr -p 9200 -t 3600
 ```
 
-# testing locally 
+# Testing locally 
 - start iperf server in the open5gs server 
 ```
 iperf3 -s 
