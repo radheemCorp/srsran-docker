@@ -1,0 +1,13 @@
+services:
+  iperf-server:
+    image: networkstatic/iperf3
+    container_name: iperf_server
+    networks:
+      n3:
+        ipv4_address: 10.10.3.100
+    command: ["-s"]
+    restart: always
+
+networks:
+  n3:
+    external: true

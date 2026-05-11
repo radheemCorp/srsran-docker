@@ -15,11 +15,14 @@ Same as the UHD setup — build from the same Dockerfile:
 cd srsRAN_Project/docker
 docker compose build
 ```
+Once built, make sure the image name in the srsRAN_Project/gnb-zmq/docker-compose.yml matches the image that was just built.
 
 Alternatively, pull pre-built images from the registry:
 - gNB image: `rptestbed/gnb:20260507-dpdk`
 - open5gs image: `rptestbed/open5gs:20260507-dpdk`
 - UE/bridge image: `ghcr.io/sulaimanalmani/srsranzmq/srsue:v1.1`
+
+
 
 ## 1.1 Available Docker Compose Files
 
@@ -135,6 +138,18 @@ Expected output:
 - `ogstun` interface: `10.45.0.1/24`
 - MASQUERADE rule: source `10.45.0.0/24` → out `eth0`
 - FORWARD: ACCEPT for both directions between `ogstun` and `eth0`
+
+
+### 2.4 Start gNB 
+```bash 
+cd srsRAN_Project/gnb-zmq
+docker compose up -d gnb 
+```
+- review startup at logs 
+```bash 
+docker compose logs gnb
+```
+- review gnb logs avaiable at `srsRAN_Project/gnb-zmq/gnb-storage/gnb.log`
 
 ---
 

@@ -1,6 +1,6 @@
 services:
   5gc:
-    image: open5gs:20260507-dpdk
+    image: open5gs:20260510-dpdk
     container_name: open5gs_5gc
     env_file:
       - ./project-config/open5gs.env
@@ -27,7 +27,7 @@ services:
         ipv4_address: 172.16.1.2
 
   gnb:
-    image: gnb:20260507-dpdk
+    image: gnb:20260510-dpdk
     container_name: srsran_gnb
     privileged: true
     network_mode: host  # Stays in host mode for USRP/SDR performance
