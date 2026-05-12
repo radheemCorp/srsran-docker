@@ -33,6 +33,14 @@ RIC_DOCKER_NAME=${RIC_DOCKER_NAME:-oran-sc-ric}
 RIC_SUBNET=${RIC_SUBNET:-${RIC_NETWORK_SUBNET:-10.0.2.0/24}}
 RIC_GW=${RIC_GW:-10.0.2.1}
 
+# N3 bridge macvlan (parent for UE macvlan networks)
+N3BR_NAME=${N3BR_NAME:-n3br}
+N3BR_SUBNET=${N3BR_SUBNET:-10.10.3.0/24}
+N3BR_GW=${N3BR_GW:-10.10.3.254}
+
+# UE macvlan (children of n3br)
+UE_N3_NAME=${UE_N3_NAME:-ue_n3}
+
 # Host-side helper macvlan (so host can reach macvlan networks)
 HOST_MACVLAN_IF=${HOST_MACVLAN_IF:-macvlan_ran}
 HOST_MACVLAN_IP=${HOST_MACVLAN_IP:-10.53.1.254/24}
@@ -108,6 +116,28 @@ create_ric_network() {
 remove_ric_network() {
   local docker_name="${RIC_DOCKER_NAME:-oran-sc-ric}"
   remove_macvlan_network "$docker_name"
+}
+
+# Create a child macvlan network under the n3br bridge parent
+create_macvlan_child_network() {
+  local name=${UE_N3_NAME} subnet=${N3BR_SUBNET} gateway=${N3BR_GW} parent=${N3BR_NAME}
+  if docker network inspect "$name" >/dev/null 2>&1; then
+    echo "Docker network '$name' already exists — skipping"
+    return 0
+  fi
+
+  echo "Creating macvlan child network '$name' (subnet=$subnet gateway=$gateway parent=$parent)"
+  docker network create -d macvlan \
+    --subnet="$subnet" \
+    --gateway="$gateway" \
+    -o parent="$parent" \
+    -o macvlan_mode=bridge \
+    "$name"
+}
+
+remove_macvlan_child_network() {
+  local name=${UE_N3_NAME}
+  remove_macvlan_network "$name"
 }
 
 create_host_macvlan() {
@@ -193,23 +223,33 @@ usage() {
 Usage: $0 <command>
 
 Commands:
-  create         Create all macvlan networks and enable NAT (default)
-  remove         Remove all macvlan networks and disable NAT
-  
+  init           Create ALL required Docker and host networks (recommended default)
+  create         Same as init — creates all macvlan networks and enables NAT
+  remove         Remove ALL networks and disable NAT
   dnet           List all Docker networks with their subnets
-  
   help           Show this help
+
+Networks created by init:
+  $N2_NAME ($N2_SUBNET)              N2 — macvlan (5GC/gNB control plane)
+  $N3_NAME ($N3_SUBNET)              N3 — macvlan (5GC/gNB user plane)
+  $N6_NAME ($N6_SUBNET)              N6 — macvlan (5GC internet-facing)
+  $METRICS_NAME ($METRICS_SUBNET)    metrics — bridge Telegraf/InfluxDB/Grafana
+  $RIC_NAME / $RIC_DOCKER_NAME       RIC bridge — ORAN-SC Near-RT RIC
+  $N3BR_NAME ($N3BR_SUBNET)          n3br — macvlan parent for UE bridge
+  $UE_N3_NAME                        ue_n3 — macvlan child of n3br for external UEs
 
 Environment overrides:
   PARENT_IF, N2_NAME, N2_SUBNET, N2_GW, N3_NAME, N3_SUBNET, N3_GW,
   N6_NAME, N6_SUBNET, N6_GW, METRICS_NAME, METRICS_SUBNET, METRICS_GW,
-  RIC_NAME, RIC_DOCKER_NAME, ric_network,
-  OUT_IF, UE_SUBNET, OGSTUN_IF
+  RIC_NAME, RIC_DOCKER_NAME, RIC_SUBNET, RIC_GW,
+  N3BR_NAME, N3BR_SUBNET, N3BR_GW, UE_N3_NAME
 
 Examples:
-  $0                    # Create networks + enable NAT
-  $0 nat-status         # Show NAT status
-  OUT_IF=ens33 UE_SUBNET=10.46.0.0/16 \$0 nat-enable  # Custom subnet/interface
+  $0               List networks (shortcut for dnet) — actually: init
+  $0 init          Create all required networks
+  $0 dnet          List all Docker networks
+  $0 remove        Remove all networks
+  $0 help          Show this help
 EOF
 }
 
@@ -222,7 +262,7 @@ fi
 action=${1:-create}
 
 case "$action" in
-  create)
+  init|create)
     create_macvlan_network "$N2_NAME" "$N2_SUBNET" "$N2_GW"
     create_macvlan_network "$N3_NAME" "$N3_SUBNET" "$N3_GW"
     create_macvlan_network "$N6_NAME" "$N6_SUBNET" "$N6_GW"
@@ -230,17 +270,22 @@ case "$action" in
     create_ric_network
     create_host_macvlan
     enable_nat_forwarding
-    echo "Done. Networks created (or already existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME"
+    # UE bridge macvlan network (child of n3br, used by ZMQ external UE setups)
+    create_macvlan_child_network
+    echo "Done. Networks initialized: $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME $N3BR_NAME $UE_N3_NAME"
     ;;
   remove)
+    remove_macvlan_child_network
+    # remove n3br last because other networks may depend on it
     remove_host_macvlan
     remove_macvlan_network "$N6_NAME"
     remove_macvlan_network "$N3_NAME"
     remove_macvlan_network "$N2_NAME"
+    remove_bridge_network "$N3BR_NAME"
     remove_bridge_network "$METRICS_NAME"
     remove_ric_network
     disable_nat_forwarding
-    echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME"
+    echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME $N3BR_NAME $UE_N3_NAME"
     ;;
   dnet)
     dnet
