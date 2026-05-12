@@ -326,11 +326,10 @@ cd ue/ue1
 docker compose up -d
 ```
 
-Then enter the container and start the UE instance:
+Then start the UE instance:
 
 ```bash
-docker compose exec srsran_ue_host bash
-root@<hash>:/# /srsran/config/start_ue.sh 1
+docker compose exec -it srsran_ue_host /srsran/config/start_ue.sh 1
 ```
 
 This will:
@@ -347,8 +346,7 @@ Repeat the same steps in the other UE container:
 ```bash
 cd ue/ue2
 docker compose up -d
-docker compose exec srsran_ue_host bash
-root@<hash>:/# /srsran/config/start_ue.sh 2
+docker compose exec -it srsran_ue_host /srsran/config/start_ue.sh 2
 ```
 
 ---
