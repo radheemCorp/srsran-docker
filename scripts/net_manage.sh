@@ -6,7 +6,7 @@ set -euo pipefail
 # by exporting environment variables before running this script.
 
 # Host physical interface used as macvlan parent
-PARENT_IF=${PARENT_IF:-eth1}
+PARENT_IF=${PARENT_IF:-enp2s0}
 
 # Network names and subnets (can be overridden)
 N2_NAME=${N2_NAME:-n2}
@@ -268,8 +268,7 @@ case "$action" in
     create_macvlan_network "$N6_NAME" "$N6_SUBNET" "$N6_GW"
     create_bridge_network "$METRICS_NAME" "$METRICS_SUBNET" "$METRICS_GW"
     create_ric_network
-    create_host_macvlan
-    enable_nat_forwarding
+    create_host_macvla
     # UE bridge macvlan network (child of n3br, used by ZMQ external UE setups)
     create_macvlan_child_network
     echo "Done. Networks initialized: $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME $N3BR_NAME $UE_N3_NAME"
