@@ -236,7 +236,18 @@ Steps:
 
 ### 6.1 Configure gNB
 File [gnb-config.yaml](srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml)
-### Configure the SDR 
+
+### 6.2 Set host to performance mode 
+```bash
+cd srsRAN_Project
+# if you are running the gNB in a VM run this in the VM and the next one on Host
+./scripts/vm_srsran_performance
+
+# if you are running the gNB on host, run this on host and skip the previous step
+./scripts/srsran_performance
+``` 
+
+### 6.3 Configure the SDR 
 - get sdr spcifications using uhd_find_devices
 ```bash 
 testbed@testbed:~/testbed/srsran-docker$ uhd_find_devices 
