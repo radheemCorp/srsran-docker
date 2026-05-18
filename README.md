@@ -162,3 +162,9 @@ The RIC adds an E2 interface to the gNB, enabling real-time O-RAN workflows:
 - srsRAN Project components: subject to [srsRAN licensing](srsRAN_Project/)
 - ORAN-SC RIC components: ORAN SC [LICENSE](oran-sc-ric/LICENSE)
 - This repository's Docker glue code and docs: MIT
+
+
+# REFERENCE
+- [srsran gnb config sample](https://docs.srsran.com/projects/project/en/latest/user_manuals/source/config_ref.html)
+- [srsran gnb with ue tutorial](https://docs.srsran.com/projects/project/en/latest/tutorials/source/srsUE/source/index.html)
+-   
