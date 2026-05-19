@@ -1,5 +1,7 @@
 # UHD gNB configuration.
 
+
+
 cu_cp:
   amf:
     addr: 172.16.1.2
@@ -18,7 +20,7 @@ ru_sdr:
   # Use UHD with the connected B210 SDR. Set device serial to your device's serial.
   device_driver: uhd
   # Correct UHD device args: use serial= without extra 'addr=' wrapper
-  device_args: type=b200,serial=310C56E,num_recv_frames=64,num_send_frames=64
+  device_args: type=b200,serial=30A3DFB,num_recv_frames=64,num_send_frames=64
   srate: 23.04
   tx_gain: 70
   rx_gain: 40

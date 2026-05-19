@@ -1,0 +1,122 @@
+[
+  {
+    imsi: '001010000000101',
+    slice: [
+      {
+        sst: 1,
+        default_indicator: true,
+        session: [
+          {
+            name: 'internet',
+            type: 3,
+            pcc_rule: [],
+            ambr: {
+              uplink: {
+                value: 1,
+                unit: 3
+              },
+              downlink: {
+                value: 1,
+                unit: 3
+              }
+            },
+            qos: {
+              index: 9,
+              arp: {
+                priority_level: 8,
+                pre_emption_capability: 1,
+                pre_emption_vulnerability: 1
+              }
+            },
+            ue: {
+              ipv4: '10.46.0.2'
+            }
+          },
+          {
+            name: 'ims',
+            type: 3,
+            pcc_rule: [],
+            ambr: {
+              uplink: {
+                value: 1,
+                unit: 3
+              },
+              downlink: {
+                value: 1,
+                unit: 3
+              }
+            },
+            qos: {
+              index: 5,
+              arp: {
+                priority_level: 8,
+                pre_emption_capability: 1,
+                pre_emption_vulnerability: 1
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    imsi: '001010000000102',
+    slice: [
+      {
+        sst: 1,
+        default_indicator: true,
+        session: [
+          {
+            name: 'internet',
+            type: 3,
+            pcc_rule: [],
+            ambr: {
+              uplink: {
+                value: 1,
+                unit: 3
+              },
+              downlink: {
+                value: 1,
+                unit: 3
+              }
+            },
+            qos: {
+              index: 9,
+              arp: {
+                priority_level: 8,
+                pre_emption_capability: 1,
+                pre_emption_vulnerability: 1
+              }
+            },
+            ue: {
+              ipv4: '10.46.0.3'
+            }
+          },
+          {
+            name: 'ims',
+            type: 3,
+            pcc_rule: [],
+            ambr: {
+              uplink: {
+                value: 1,
+                unit: 3
+              },
+              downlink: {
+                value: 1,
+                unit: 3
+              }
+            },
+            qos: {
+              index: 5,
+              arp: {
+                priority_level: 8,
+                pre_emption_capability: 1,
+                pre_emption_vulnerability: 1
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
