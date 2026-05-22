@@ -86,3 +86,6 @@ When you run these tests, look at the following in your output:
 * **Jitter (ms):** For VoIP, you want this **< 30ms**.
 * **Lost/Total Datagrams:** For video/voice, anything over **1% loss** will result in noticeable clipping or artifacts.
 * **Retransmits (TCP only):** High retransmits indicate congestion or a noisy physical line.
+
+# Reference 
+- [public iperf3 servers](https://iperf.fr/iperf-servers.php)
