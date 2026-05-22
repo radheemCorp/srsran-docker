@@ -167,4 +167,4 @@ The RIC adds an E2 interface to the gNB, enabling real-time O-RAN workflows:
 # REFERENCE
 - [srsran gnb config sample](https://docs.srsran.com/projects/project/en/latest/user_manuals/source/config_ref.html)
 - [srsran gnb with ue tutorial](https://docs.srsran.com/projects/project/en/latest/tutorials/source/srsUE/source/index.html)
--   
+- [ue image project](https://github.com/sulaimanalmani/k8s_srsran_open5gs)
