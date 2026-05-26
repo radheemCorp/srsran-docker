@@ -1,5 +1,6 @@
 
-# 1. SRSUE segmentation fault 
+# Issue1: SRSUE segmentation fault 
+
 The srsUE experienced a **Segmentation Fault (Signal 11)** followed by a **Double Free or Corruption** error, which effectively caused the program to "panic" and crash.
 
 ### 1.1. The Trigger: RLC Layer Logic Error
@@ -132,3 +133,10 @@ srsRAN crashed. Please send this backtrace to the developers ...
 ---  exiting  ---
 
 ```
+
+
+# Issue2: The Connection between gNB and UE (android device) keeps droping 
+
+# Issue3: SRSUE long running sessions fail 
+- same as issue1 the gnb drops the connection with the ue
+- In this case we have a additional problem the zmq, the zmq statet does not update it still shows port already in use when the ie tries to reconnect.  
