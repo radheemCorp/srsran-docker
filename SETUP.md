@@ -26,7 +26,7 @@ docker images | grep -E "srsran|open5gs"
 ```
 If you used custom tags, update the `image:` values in the deploy compose files.
 
-Optional: pull prebuilt images
+Optional: pull prebuilt images, if registry acess is available
 - gNB: `rptestbed/gnb:20260507-dpdk`
 - open5gs: `rptestbed/open5gs:20260507-dpdk`
 
@@ -63,7 +63,7 @@ docker compose up -d 5gc
 ```
 
 ### 5.3 (ZMQ only) Subscriber IP subnet sync
-Ensure `open5gs.env` UE subnet matches `subscriber_db.csv` IPs.
+Ensure `srsRAN_Project/gnb-zmq/project-config/open5gs.env` UE subnet matches `srsRAN_Project/gnb-zmq/project-config/subscriber_db.csv` IPs.
 
 ## 6. ORAN-SC RIC (Optional)
 Deploy RIC:
@@ -112,6 +112,8 @@ e2:
 ### 7.3 UHD gNB config
 File: [srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml](srsRAN_Project/gnb-uhd/project-config/gnb/gnb_uhd.yml)
 
+- before starting the gnb follow Section 9.2 below
+
 UHD notes:
 - `ru_sdr.device_driver: uhd`
 - `ru_sdr.device_args: type=b200,serial=<serial>,num_recv_frames=64,num_send_frames=64`
@@ -125,6 +127,22 @@ Probe device:
 ```bash
 uhd_usrp_probe --args "type=b200,serial=<serial>"
 ```
+Enable Performance mode for the machine
+```bash
+cd srsRAN_Project
+```
+- if running on host machine 
+```
+./scripts/srsran_performance
+```
+
+- if running in VM, then execute the script above on the host and the following script in the vm
+```
+./scripts/vm_srsran_performance
+```
+
+
+- if host pc run
 ### 7.3 ZMQ gNB config
 File: [srsRAN_Project/gnb-zmq/project-config/gnb/gnb_zmq.yml](srsRAN_Project/gnb-zmq/project-config/gnb/gnb_zmq.yml)
 
@@ -177,7 +195,26 @@ docker exec ue2 ip netns exec ue2 ip addr show tun_srsue
 ```
 
 ### 9.2 UHD UE (phone)
-Use your phone to select the test network after gNB is running. Confirm UE registers.
+
+#### Configure UE in Open5GS
+Sample Device info:
+  - device name: POCO M4 Pro 5G
+  - imsi: 001010000000101
+  - sst: 0x111111
+  - sd: 1
+---
+The following configuration steps are only required because the default value for sd is 0xffffff and the UE requests 0x111111 hence if not configured the ANF does not authorize the connection
+
+Steps:
+1. Goto [localhost:9999](http://localhost:9999/)
+2. Enter credentials <br> 
+  username: `admin` <br>
+  password: `1423`
+3. Select device `001010000000101`
+4. Click on edit button in the top right corner of the popup 
+5. look for Slice configuration section, click on the SD textbox, enter the configured slice (111111, in our case)
+6. Now proced to deploy gnb 
+7. Use your phone to select the test network after gNB is running. Confirm UE registers.
 
 ## 10. Monitoring Stack
 Set `GNB_IP` in `srsRAN_Project/docker/.env` (same as `e2.bind_addr`).
