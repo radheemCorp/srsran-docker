@@ -49,11 +49,10 @@ For step-by-step instructions, see the setup guides below.
 
 | What you want to do | Go here |
 |---------------------|---------|
-| **Set up a ZMQ-based virtual-RF lab** | [`SETUP_GNB_ZMQ.md`](SETUP_GNB_ZMQ.md) |
-| **Set up a UHD-based SDR lab** | [`SETUP_GNB_UHD.md`](SETUP_GNB_UHD.md) |
+| **SETUP guide** | [`SETUP.md`](SETUP.md) |
 | **Understand the ORAN-SC RIC** | [`oran-sc-ric/README.md`](oran-sc-ric/README.md) |
 | **Configure your UE (phone) in Open5GS WebUI** | [Set up section in either guide] |
-| **Run xApps (monitoring, rate control, handover)** | `SETUP_GNB_ZMQ.md` §12 / `SETUP_GNB_UHD.md` §10 |
+| **Run xApps (monitoring, rate control, handover)** | [`SETUP.md`](SETUP.md) |
 | **Troubleshoot (common issues, KNOWN_ISSUES)** | [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) |
 
 ## Project Structure
@@ -61,8 +60,7 @@ For step-by-step instructions, see the setup guides below.
 ```
 .
 ├── README.md                 ← You are here
-├── SETUP_GNB_ZMQ.md          ← Full ZMQ (virtual RF) deployment guide
-├── SETUP_GNB_UHD.md          ← Full UHD (physical SDR) deployment guide
+├── SETUP.md                  ← Full deployment guide
 ├── TESTING.md                ← iperf and throughput testing procedures
 ├── KNOWN_ISSUES.md           ← Documented problems and workarounds
 ├── CHANGELOG.md              ← Build and Docker Compose changelog
