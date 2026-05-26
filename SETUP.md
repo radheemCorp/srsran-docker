@@ -242,14 +242,18 @@ docker compose exec python_xapp_runner ./simple_rc_xapp.py
 
 ## 12. Troubleshooting (Quick)
 - RIC not deployed: disable E2 in gNB config.
-- Grafana no data: verify `GNB_IP`, ping from Telegraf, check logs.
+- Grafana no data: verify `WS_URL` ip in `srsRAN_Project/docker/.env`, then try to ping from Telegraf container, check logs.
 - UE attach stuck: verify IMSI/subscriber DB, N2 connection, 5GC logs.
 - UE no internet: verify ogstun, NAT, IP forwarding in 5GC container.
+- for more details refer to [troubleshooting.md](./Troubleshooting.md)
 
 ## 13. Utilities
-- Subscribers: `./scripts/get_open5gs_subscribers.sh`
+- Subscribers: 
+  - add subscriber: `./scripts/open5gs_add_ue.sh`
+  - get subscriber: `./scripts/get_open5gs_subscribers.sh` 
 - Container status: `./scripts/dockstatus.sh`
-- Network status: `./scripts/net_manage.sh dnet`
+- Network status: `./scripts/net_manage.sh`
+- deployment: `./scripts/manage.sh`
 
 ## 14. References
 - https://github.com/srsran/srsran_project
