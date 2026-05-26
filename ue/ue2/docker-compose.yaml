@@ -5,7 +5,7 @@ services:
     privileged: true
     networks:
       ue_n3:
-        ipv4_address: 10.10.3.235
+        ipv4_address: 10.10.4.235
     cap_add:
       - NET_ADMIN
       - SYS_NICE
@@ -16,8 +16,8 @@ services:
       - DEBUG_MODE=false
       # These IPs are now reachable via the route we added to the host
       - GNB_IP=10.10.3.231
-      - ZMQ_BRIDGE_IP=10.10.3.237
-      - UE_BIND_IP=10.10.3.235
+      - ZMQ_BRIDGE_IP=10.10.4.237
+      - UE_BIND_IP=10.10.4.235
       - UE_ZMQ_MODE=bridge
       - UE_DNS1=1.1.1.1
       - UE_DNS2=8.8.8.8
@@ -33,4 +33,4 @@ services:
 networks:
   ue_n3:
     external: true
-    name: n3
+    name: ue_n3

@@ -24,7 +24,7 @@ ru_sdr:
   device_driver: zmq
   # gNB TX -> external_ue bridge RX, and gNB RX <- bridge TX.
   # Route gNB ZMQ RF streams to the bridge defaults (gNB side ports 2000/2001).
-  device_args: tx_port=tcp://10.10.3.231:2000,rx_port=tcp://10.10.3.237:2001,base_srate=23.04e6
+  device_args: tx_port=tcp://10.10.3.231:2000,rx_port=tcp://10.10.4.237:2001,base_srate=23.04e6
   srate: 23.04
   tx_gain: 80
   rx_gain: 40

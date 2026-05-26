@@ -1,7 +1,7 @@
 # ZMQ gNB configuration for external UE bridge deployment.
 # Matches external_ue bridge defaults:
-#   gNB N3 IP     : 10.10.3.231
-#   bridge IP     : 10.10.3.236
+#   gNB N3 IP     : 10.10.4.231
+#   bridge IP     : 10.10.4.236
 #   gNB tx/rx port: 2000/2001
 
 cu_cp:

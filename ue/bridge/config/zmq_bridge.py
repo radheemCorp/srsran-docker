@@ -10,7 +10,14 @@ from gnuradio import zeromq
 
 
 class ZmqUeBridge(gr.top_block):
-    def __init__(self, ue_ids, gnb_ip: str, bridge_ip: str, ue_ip_base: int):
+    def __init__(
+        self,
+        ue_ids,
+        gnb_ip: str,
+        bridge_ip: str,
+        ue_ip_base: int,
+        ue_subnet_prefix: str,
+    ):
         super().__init__("srsRAN_ZMQ_UE_Bridge")
 
         zmq_timeout = 100
@@ -50,7 +57,7 @@ class ZmqUeBridge(gr.top_block):
         for input_idx, i in enumerate(ue_ids):
             ul_port = 2100 + i
             dl_port = 2200 + i
-            ue_ip = f"10.10.3.{ue_ip_base + i}"
+            ue_ip = f"{ue_subnet_prefix}.{ue_ip_base + i}"
 
             ue_ul = zeromq.req_source(
                 gr.sizeof_gr_complex,
@@ -92,6 +99,11 @@ def main():
         default=233,
         help="Last-octet base for UE IP allocation (UE1=base+1, UE2=base+2)",
     )
+    parser.add_argument(
+        "--ue-subnet-prefix",
+        default="10.10.3",
+        help="UE subnet prefix (first three octets, e.g. 10.10.4)",
+    )
     args = parser.parse_args()
 
     if args.ue_ids.strip():
@@ -102,7 +114,13 @@ def main():
     if not ue_ids:
         raise ValueError("No UE IDs provided to bridge")
 
-    tb = ZmqUeBridge(ue_ids, args.gnb_ip, args.bridge_ip, args.ue_ip_base)
+    tb = ZmqUeBridge(
+        ue_ids,
+        args.gnb_ip,
+        args.bridge_ip,
+        args.ue_ip_base,
+        args.ue_subnet_prefix,
+    )
 
     def sig_handler(sig=None, frame=None):
         tb.stop()

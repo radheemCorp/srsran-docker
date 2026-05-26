@@ -150,10 +150,10 @@ _do_ue() {
 
 _do_monitoring() {
     local action="$1"
-    local compose_file="$MONITOR_DIR/docker-compose.external-influxdb.yml"
+    local compose_file="$MONITOR_DIR/docker-compose.ui.yml"
 
     if [[ ! -f "$compose_file" ]]; then
-        err "No docker-compose.external-influxdb.yml found in $MONITOR_DIR"
+        err "No docker-compose.ui.yml found in $MONITOR_DIR"
         return 1
     fi
 
