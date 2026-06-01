@@ -16,7 +16,7 @@ services:
       - DEBUG_MODE=false
       # These IPs are now reachable via the route we added to the host
       - GNB_IP=10.10.3.231
-      - ZMQ_BRIDGE_IP=10.10.4.237
+      - ZMQ_BRIDGE_IP=10.10.4.234
       - UE_BIND_IP=10.10.4.234
       - UE_ZMQ_MODE=bridge
       - UE_DNS1=1.1.1.1

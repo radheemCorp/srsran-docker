@@ -10,61 +10,115 @@
 
 from gnuradio import blocks
 from gnuradio import gr
-import sys
-import signal
-from argparse import ArgumentParser
 from gnuradio import zeromq
+from argparse import ArgumentParser
+import signal
+import sys
+import threading
+import time
 
 
 class multi_ue_scenario(gr.top_block):
-    def __init__(self, num_ues):
+    def __init__(
+        self,
+        gnb_ip,
+        bridge_ip,
+        gnb_dl_port1,
+        gnb_dl_port2,
+        gnb_ul_port1,
+        gnb_ul_port2,
+        ue_tx_port,
+        ue_rx_port,
+        sweep_seconds,
+    ):
         gr.top_block.__init__(self, "srsRAN_multi_UE")
 
-        ##################################################
-        # Variables
-        ##################################################
         zmq_timeout = 100
         zmq_hwm = -1
         samp_rate = 23040000
-        slow_down_ratio = 1
 
-        ##################################################
-        # Base Blocks (Always included)
-        ##################################################
-        self.zeromq_req_source_0 = zeromq.req_source(gr.sizeof_gr_complex, 1, 'tcp://10.10.3.231:2000', zmq_timeout, False, zmq_hwm)
-        self.zeromq_rep_sink_0_1 = zeromq.rep_sink(gr.sizeof_gr_complex, 1, 'tcp://10.10.3.232:2001', zmq_timeout, False, zmq_hwm)
+        # Downlink: gNB cell1 + cell2 -> per-cell gain -> sum -> UE RX
+        self.dl_cell1 = zeromq.req_source(
+            gr.sizeof_gr_complex, 1, f"tcp://{gnb_ip}:{gnb_dl_port1}", zmq_timeout, False, zmq_hwm
+        )
+        self.dl_cell2 = zeromq.req_source(
+            gr.sizeof_gr_complex, 1, f"tcp://{gnb_ip}:{gnb_dl_port2}", zmq_timeout, False, zmq_hwm
+        )
+        self.dl_gain1 = blocks.multiply_const_cc(1.0)
+        self.dl_gain2 = blocks.multiply_const_cc(0.0)
+        self.dl_adder = blocks.add_vcc(1)
+        self.dl_throttle = blocks.throttle(gr.sizeof_gr_complex, samp_rate, True)
+        self.ue_rx_sink = zeromq.rep_sink(
+            gr.sizeof_gr_complex, 1, f"tcp://{bridge_ip}:{ue_rx_port}", zmq_timeout, False, zmq_hwm
+        )
 
-        ##################################################
-        # UE-specific Blocks
-        ##################################################
-        self.zeromq_req_sources = []
-        self.zeromq_rep_sinks = []
-        self.blocks_throttle = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate / slow_down_ratio, True)
-        self.blocks_add_xx = blocks.add_vcc(1)
+        # Uplink: UE TX -> split -> per-cell gain -> gNB RX (cell1/cell2)
+        self.ue_tx_src = zeromq.req_source(
+            gr.sizeof_gr_complex, 1, f"tcp://{bridge_ip}:{ue_tx_port}", zmq_timeout, False, zmq_hwm
+        )
+        self.ul_gain1 = blocks.multiply_const_cc(1.0)
+        self.ul_gain2 = blocks.multiply_const_cc(1.0)
+        self.ul_cell1_sink = zeromq.rep_sink(
+            gr.sizeof_gr_complex, 1, f"tcp://{bridge_ip}:{gnb_ul_port1}", zmq_timeout, False, zmq_hwm
+        )
+        self.ul_cell2_sink = zeromq.rep_sink(
+            gr.sizeof_gr_complex, 1, f"tcp://{bridge_ip}:{gnb_ul_port2}", zmq_timeout, False, zmq_hwm
+        )
 
-        # Create zeromq blocks dynamically for each UE
-        for i in range(num_ues):
-            req_port = 2101 + i
-            rep_port = 2201 + i
-            req_source = zeromq.req_source(gr.sizeof_gr_complex, 1, f'tcp://10.10.3.232:{req_port}', zmq_timeout, False, zmq_hwm)
-            rep_sink = zeromq.rep_sink(gr.sizeof_gr_complex, 1, f'tcp://10.10.3.232:{rep_port}', zmq_timeout, False, zmq_hwm)
-            self.zeromq_req_sources.append(req_source)
-            self.zeromq_rep_sinks.append(rep_sink)
-            # Connect req source to add block
-            self.connect((req_source, 0), (self.blocks_add_xx, i))
-            # Connect throttle to rep sink
-            self.connect((self.blocks_throttle, 0), (rep_sink, 0))
+        # Connect DL path
+        self.connect((self.dl_cell1, 0), (self.dl_gain1, 0))
+        self.connect((self.dl_cell2, 0), (self.dl_gain2, 0))
+        self.connect((self.dl_gain1, 0), (self.dl_adder, 0))
+        self.connect((self.dl_gain2, 0), (self.dl_adder, 1))
+        self.connect((self.dl_adder, 0), (self.dl_throttle, 0))
+        self.connect((self.dl_throttle, 0), (self.ue_rx_sink, 0))
 
-        # Connections for base blocks
-        self.connect((self.blocks_add_xx, 0), (self.zeromq_rep_sink_0_1, 0))
-        self.connect((self.zeromq_req_source_0, 0), (self.blocks_throttle, 0))
+        # Connect UL path
+        self.connect((self.ue_tx_src, 0), (self.ul_gain1, 0))
+        self.connect((self.ue_tx_src, 0), (self.ul_gain2, 0))
+        self.connect((self.ul_gain1, 0), (self.ul_cell1_sink, 0))
+        self.connect((self.ul_gain2, 0), (self.ul_cell2_sink, 0))
+
+        # Start sweep thread to simulate movement between the two cells.
+        self._sweep_seconds = max(1, int(sweep_seconds))
+        self._sweep_thread = threading.Thread(target=self._sweep_loop, daemon=True)
+        self._sweep_thread.start()
+
+    def _sweep_loop(self):
+        start = time.time()
+        while True:
+            elapsed = time.time() - start
+            ratio = min(1.0, elapsed / float(self._sweep_seconds))
+            gain1 = 1.0 - ratio
+            gain2 = ratio
+            self.dl_gain1.set_k(gain1)
+            self.dl_gain2.set_k(gain2)
+            time.sleep(0.1)
 
 def main():
-    parser = ArgumentParser(description='srsRAN_multi_UE setup')
-    parser.add_argument('-n', '--num-ues', type=int, required=True, help='Number of UEs')
+    parser = ArgumentParser(description='srsRAN dual-cell ZMQ channel emulator')
+    parser.add_argument('--gnb-ip', type=str, default='10.10.3.231', help='gNB N3 IP for ZMQ DL ports')
+    parser.add_argument('--bridge-ip', type=str, default='0.0.0.0', help='Emulator bind IP for ZMQ UL/DL ports')
+    parser.add_argument('--gnb-dl-port1', type=int, default=2100, help='gNB DL port for cell 1')
+    parser.add_argument('--gnb-dl-port2', type=int, default=2200, help='gNB DL port for cell 2')
+    parser.add_argument('--gnb-ul-port1', type=int, default=2101, help='gNB UL port for cell 1')
+    parser.add_argument('--gnb-ul-port2', type=int, default=2201, help='gNB UL port for cell 2')
+    parser.add_argument('--ue-tx-port', type=int, default=2301, help='UE TX port (emulator connects)')
+    parser.add_argument('--ue-rx-port', type=int, default=2300, help='UE RX port (emulator binds)')
+    parser.add_argument('--sweep-seconds', type=int, default=60, help='Gain sweep duration in seconds')
     args = parser.parse_args()
 
-    tb = multi_ue_scenario(args.num_ues)
+    tb = multi_ue_scenario(
+        args.gnb_ip,
+        args.bridge_ip,
+        args.gnb_dl_port1,
+        args.gnb_dl_port2,
+        args.gnb_ul_port1,
+        args.gnb_ul_port2,
+        args.ue_tx_port,
+        args.ue_rx_port,
+        args.sweep_seconds,
+    )
 
     def sig_handler(sig=None, frame=None):
         tb.stop()

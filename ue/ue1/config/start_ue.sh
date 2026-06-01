@@ -20,6 +20,7 @@ ZMQ_BRIDGE_IP=${ZMQ_BRIDGE_IP:-10.10.3.236}
 UE_DNS1=${UE_DNS1:-1.1.1.1}
 UE_DNS2=${UE_DNS2:-8.8.8.8}
 ROUTE_WAIT_SECONDS=${ROUTE_WAIT_SECONDS:-120}
+UE_CONF_PATH=${UE_CONF_PATH:-/srsran/config/ue.conf}
 
 # Clean up stale netns mountpoints (they can be left behind if the UE process crashes)
 if [ -e "${NSFILE}" ]; then
@@ -58,9 +59,14 @@ EOF
 ROUTE_HELPER_PID=$!
 trap 'kill "${ROUTE_HELPER_PID}" 2>/dev/null || true' EXIT
 
-# Generate the UE config file
-python3 /srsran/config/generate_ue_conf.py "${UE}" /tmp/ --mode "${UE_ZMQ_MODE}" --gnb-ip "${GNB_IP}" --bridge-ip "${ZMQ_BRIDGE_IP}" --ue-bind-ip "${UE_BIND_IP}"
+# Generate the UE config file if a fixed config is not provided.
+if [ -f "${UE_CONF_PATH}" ]; then
+  UE_CONF_FILE="${UE_CONF_PATH}"
+else
+  python3 /srsran/config/generate_ue_conf.py "${UE}" /tmp/ --mode "${UE_ZMQ_MODE}" --gnb-ip "${GNB_IP}" --bridge-ip "${ZMQ_BRIDGE_IP}" --ue-bind-ip "${UE_BIND_IP}"
+  UE_CONF_FILE="/tmp/ue_${UE}.conf"
+fi
 
 # Start srsUE in the container network namespace (so it can bind to the container IP).
 # srsUE will create the tun_srsue interface inside ${NS} after a successful attach.
-/opt/srsRAN_4G/build/srsue/src/srsue /tmp/ue_${UE}.conf
+/opt/srsRAN_4G/build/srsue/src/srsue "${UE_CONF_FILE}"

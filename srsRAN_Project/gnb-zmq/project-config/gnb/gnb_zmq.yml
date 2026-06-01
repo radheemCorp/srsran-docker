@@ -1,10 +1,11 @@
 # ZMQ gNB configuration for external UE bridge deployment.
 # This file is the ZMQ-RF variant; keep `gnb_zmq_external_ue.yml` for UHD-RF.
 #
-# Matches external_ue bridge defaults:
+# Matches emulator defaults:
 #   gNB N3 IP     : 10.10.3.231
-#   bridge IP     : 10.10.3.236
-#   gNB tx/rx port: 2000/2001
+#   emulator IP   : 10.10.4.234
+#   cell1 tx/rx   : 2100/2101
+#   cell2 tx/rx   : 2200/2201
 
 cu_cp:
   amf:
@@ -23,8 +24,8 @@ ru_sdr:
   # Use ZMQ RF frontend.
   device_driver: zmq
   # gNB TX -> external_ue bridge RX, and gNB RX <- bridge TX.
-  # Route gNB ZMQ RF streams to the bridge defaults (gNB side ports 2000/2001).
-  device_args: tx_port=tcp://10.10.3.231:2000,rx_port=tcp://10.10.4.237:2001,base_srate=23.04e6
+  # Each cell maps to a different RF stream (cell order matches cells[] below).
+  device_args: tx_port=tcp://10.10.3.231:2100,tx_port=tcp://10.10.3.231:2200,rx_port=tcp://10.10.4.234:2101,rx_port=tcp://10.10.4.234:2201,base_srate=23.04e6
   srate: 23.04
   tx_gain: 80
   rx_gain: 40
@@ -50,6 +51,11 @@ cell_cfg:
     mcs_table: qam64
   pusch:
     mcs_table: qam64
+
+# Two cells on the same carrier; per-cell fields override the base cell_cfg.
+cells:
+  - pci: 1
+  - pci: 2
 
 log:
   filename: /tmp/gnb.log
