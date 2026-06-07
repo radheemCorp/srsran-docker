@@ -10,7 +10,7 @@ from misc.db.python.Open5GS import Open5GS
 
 
 def add_user(imsi, key="00112233445566778899aabbccddeeff", op=None,
-             opc="63bfa50ee6523365ff14c1f45f88737d", amf="9001", apn="internet", qci="9", ip_alloc=""):
+             opc="63bfa50ee6523365ff14c1f45f88737d", amf="9001", apn="internet", qci="9", ip_alloc="", sst=1):
     '''Add UE data to Open5GS mongodb'''
 
     if op is not None:
@@ -18,7 +18,7 @@ def add_user(imsi, key="00112233445566778899aabbccddeeff", op=None,
 
     slice_data = [
         {
-            "sst": 1,
+            "sst": int(sst),
             "default_indicator": True,
             "session": [
                 {
@@ -79,12 +79,13 @@ def read_from_db(db_file):
             pass
         else:
             fields = line.rstrip("\n").split(',')
-            if len(fields) not in (8, 9):
-                print(f"Error reading subscriber_db.csv: expected 8 or 9 fields, got {len(fields)}")
+            if len(fields) not in (8, 9, 10):
+                print(f"Error reading subscriber_db.csv: expected 8-10 fields, got {len(fields)}")
                 return None
 
             name, imsi, key, op_type, op_c, amf, qci, ip_alloc = fields[:8]
-            apn = fields[8] if len(fields) == 9 else "internet"
+            apn = fields[8] if len(fields) >= 9 else "internet"
+            sst = fields[9] if len(fields) == 10 else 1
 
             opc = op_c
             op = None
@@ -93,7 +94,8 @@ def read_from_db(db_file):
                 opc = None
 
             subscriber_db.append({"imsi": imsi, "key": key, "op": op,
-                                  "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip(), "apn": apn})
+                                  "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip(),
+                                  "apn": apn.strip(), "sst": str(sst).strip()})
 
     return subscriber_db
 
@@ -107,12 +109,13 @@ def read_from_string(sub_data):
     subscriber_db = []
 
     fields = sub_data.split(',')
-    if len(fields) not in (7, 8):
-        print(f"Error reading subscriber string: expected 7 or 8 fields, got {len(fields)}")
+    if len(fields) not in (7, 8, 9):
+        print(f"Error reading subscriber string: expected 7-9 fields, got {len(fields)}")
         return None
 
     imsi, key, op_type, op_c, amf, qci, ip_alloc = fields[:7]
-    apn = fields[7] if len(fields) == 8 else "internet"
+    apn = fields[7] if len(fields) >= 8 else "internet"
+    sst = fields[8] if len(fields) == 9 else 1
 
     opc = op_c
     op = None
@@ -121,7 +124,8 @@ def read_from_string(sub_data):
         opc = None
 
     subscriber_db.append({"imsi": imsi, "key": key, "op": op,
-                          "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip(), "apn": apn})
+                          "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip(),
+                          "apn": apn.strip(), "sst": str(sst).strip()})
 
     return subscriber_db
 

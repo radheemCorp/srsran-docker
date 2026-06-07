@@ -182,6 +182,7 @@ amf:
         mnc: 01
       s_nssai:
         - sst: 1
+        - sst: 2
   security:
     integrity_order: [NIA2, NIA1, NIA0]
     ciphering_order: [NEA0, NEA1, NEA2]
@@ -308,6 +309,9 @@ nssf:
         - uri: http://127.0.0.10:7777
           s_nssai:
             sst: 1
+        - uri: http://127.0.0.10:7777
+          s_nssai:
+            sst: 2
 bsf:
   sbi:
     server:

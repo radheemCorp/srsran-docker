@@ -29,6 +29,10 @@ N="${1:-${NUM_UES:-2}}"
 GNB_IP="${GNB_IP:-10.10.3.231}"
 UE_HOST_IP="${UE_HOST_IP:-10.10.4.237}"
 START_STAGGER="${START_STAGGER:-3}"
+# NOTE: do NOT attach UEs sequentially (waiting for each before the next). The
+# bridge sums every UE's uplink, so its add block only produces once ALL UE ZMQ
+# sources have a peer — i.e. every srsUE must be running. A long gap between UE
+# starts stalls the summed uplink and nobody attaches. Keep the stagger short.
 SUPERVISE_INTERVAL="${SUPERVISE_INTERVAL:-5}"
 RESTART_UES="${RESTART_UES:-true}"
 MAX_UE_RESTARTS="${MAX_UE_RESTARTS:-3}"

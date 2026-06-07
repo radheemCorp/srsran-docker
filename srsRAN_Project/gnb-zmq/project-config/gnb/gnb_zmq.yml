@@ -17,6 +17,7 @@ cu_cp:
           - plmn: "00101"
             tai_slice_support_list:
               - sst: 1
+              - sst: 2
   inactivity_timer: 7200
     
 ru_sdr:
@@ -32,10 +33,15 @@ ru_sdr:
 cell_cfg:
   dl_arfcn: 368500
   band: 3      # must match rat.nr.band in ue config
-  channel_bandwidth_MHz: 20   
+  channel_bandwidth_MHz: 20
   common_scs: 15   #  106 x 12 x 15kHz
   plmn: "00101"
   tac: 7
+  # Single cell offers BOTH slices; UEs are put on a slice via their
+  # subscription S-NSSAI in the 5GC (see subscriber provisioning).
+  slicing:
+    - sst: 1
+    - sst: 2
   pdcch:
     dedicated:
       ss2_type: common

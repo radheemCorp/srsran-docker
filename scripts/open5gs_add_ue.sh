@@ -144,6 +144,15 @@ if ! docker container inspect "${CONTAINER_NAME}" >/dev/null 2>&1; then
   exit 1
 fi
 
+# Sync the repo's add_users.py into the container before provisioning. This is
+# how we ship updates (e.g. per-subscriber S-NSSAI/slice support) WITHOUT
+# rebuilding the open5gs image. The CSV may carry an optional 10th field = sst.
+ADD_USERS_SRC="${ROOT_DIR}/../srsRAN_Project/docker/open5gs/add_users.py"
+if [[ -f "$ADD_USERS_SRC" ]]; then
+  echo "Syncing add_users.py into ${CONTAINER_NAME} (no image rebuild)..."
+  docker cp "$ADD_USERS_SRC" "${CONTAINER_NAME}:/open5gs/add_users.py"
+fi
+
 # ── CSV mode: copy file into container and run ────────────────────────────────
 if [[ -n "$CSV_FILE" ]]; then
   # Resolve path relative to current dir if not absolute

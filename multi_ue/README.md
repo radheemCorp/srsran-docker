@@ -35,6 +35,18 @@ config change is required** as long as `UE_HOST_IP` stays `10.10.4.237`.
 `NUM_UES` is capped by the open5gs `subscriber_db.csv` — currently **4 IMSIs**
 (`001010000000001`–`004`). Add subscribers there to run more.
 
+**Multi-UE attach constraint (sum-bridge).** The co-located bridge *sums* every
+UE's uplink, so its add block only produces once **all** UE ZMQ sources have a
+peer — i.e. every srsUE must be running. Two consequences:
+- Don't space UE starts far apart (no "attach one fully, then start the next") —
+  a long gap stalls the summed uplink and **nobody** attaches. The short
+  `START_STAGGER` is deliberate.
+- Several UEs attaching at once on one cell contend on PRACH; in practice **~2
+  UEs/cell** attach reliably here. More needs per-cell bridges (multi-cell work).
+
+**Slicing.** UEs are placed on a slice by their 5GC **subscription** S-NSSAI, not
+by anything in this container. See `SETUP.md` §9.4 for two slices on one cell.
+
 ## Usage
 
 Prereqs: gNB + 5GC, the `ue_n3` and `metrics` networks, and the monitoring stack

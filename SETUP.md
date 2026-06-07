@@ -283,6 +283,40 @@ loss and retransmits.
 docker compose -f multi_ue/docker-compose.yaml down
 ```
 
+### 9.4 Network slicing (two slices on one cell)
+
+Run two S-NSSAIs (`sst:1`, `sst:2`) on the existing single cell and place UEs on
+a slice via their **subscription** — no second cell needed. Provisioning is done
+at runtime (no image rebuild).
+
+**Config (already applied in this repo):**
+- `gnb_zmq.yml`: `cell_cfg.slicing: [{sst:1},{sst:2}]` and
+  `cu_cp …tai_slice_support_list: [{sst:1},{sst:2}]` (gNB advertises both).
+- `open5gs-5gc.yml.in`: AMF `plmn_support.s_nssai += sst:2`, NSSF `nsi += sst:2`.
+- `add_users.py`: optional 10th CSV field = `sst`; `open5gs_add_ue.sh` `docker cp`s
+  this updated script into the container before provisioning (no rebuild).
+
+**Provision per-UE slices (after gNB/5GC is up, before starting UEs):**
+```bash
+# Boot provisions every subscriber as sst:1 from subscriber_db.csv.
+# Re-provision the slice-2 UE(s) — e.g. UE2 -> sst:2:
+./scripts/open5gs_add_ue.sh --csv srsRAN_Project/gnb-zmq/project-config/subscriber_db_slice2.csv
+```
+(The 5GC mongo is in-container and ephemeral, so re-run this after any `gnb` cycle.)
+
+**Verify the two slices (single cell):**
+```bash
+docker logs open5gs_5gc 2>&1 | grep -aE "S_NSSAI" | tail
+# UE1 -> S_NSSAI[SST:1 ...], UE2 -> S_NSSAI[SST:2 ...]
+```
+
+> **Note — UEs per cell.** The `multi_ue` co-located bridge **sums** all UE
+> uplinks, so (a) every srsUE must be running for the summed uplink to flow
+> (don't space UE starts far apart), and (b) more than ~2 UEs attaching on one
+> cell contend on PRACH and may not all attach. Validating *two slices* needs
+> only one UE per slice. Scaling to *2 UEs per slice* (4 on one cell) needs the
+> harder multi-cell / per-cell-bridge work (Approach A) and is not yet done.
+
 ## 10. Monitoring Stack
 Set `GNB_IP` in `srsRAN_Project/docker/.env` (same as `e2.bind_addr`).
 
