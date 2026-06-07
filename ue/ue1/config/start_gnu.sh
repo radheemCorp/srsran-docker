@@ -1,1 +1,0 @@
-python3 ./srsran/config/multi_ue_scenario.py -n $1

@@ -89,7 +89,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--mode',
         choices=['direct', 'bridge'],
-        default=os.environ.get('UE_ZMQ_MODE', 'direct'),
+        default=os.environ.get('UE_ZMQ_MODE', 'bridge'),
         help='ZMQ mode: direct (UE<->gNB) or bridge (UE<->bridge<->gNB)'
     )
     parser.add_argument(
@@ -101,8 +101,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--bridge-ip',
         type=str,
-        default=os.environ.get('ZMQ_BRIDGE_IP', '10.10.3.236'),
-        help='Bridge IP for bridge mode (default: env ZMQ_BRIDGE_IP or 10.10.3.236)'
+        default=os.environ.get('ZMQ_BRIDGE_IP', '10.10.4.237'),
+        help='Bridge IP for bridge mode (default: env ZMQ_BRIDGE_IP or 10.10.4.237)'
     )
     parser.add_argument(
         '--ue-bind-ip',

@@ -169,6 +169,12 @@ services:
       - RMR_SEED_RT=/opt/ric/config/uta-rtg.rt
       - RMR_SRC_ID=${XAPP_PY_RUNNER_IP}
       - RMR_RTG_SVC # leave empty, so RMR works correctly with RT Manager Simulator
+      # InfluxDB 3 push target for xApp metrics (matches srsRAN docker .env).
+      - INFLUX_ENABLE=${INFLUX_ENABLE:-1}
+      - INFLUX_URL=${INFLUX_URL:-http://influxdb:8081}
+      - INFLUX_BUCKET=${INFLUX_BUCKET:-srsran}
+      - INFLUX_ORG=${INFLUX_ORG:-}
+      - INFLUX_TOKEN=${INFLUX_TOKEN:-}
     stdin_open: true
     tty: true
     entrypoint: [/bin/bash]
@@ -186,8 +192,15 @@ services:
     networks:
       ric_network:
         ipv4_address: ${XAPP_PY_RUNNER_IP:-10.0.2.20}
+      # Attach to the srsRAN 'metrics' network so the xApp can push KPM
+      # values directly into InfluxDB 3 (influxdb:8081) for Grafana.
+      metrics:
+        ipv4_address: ${XAPP_PY_RUNNER_METRICS_IP:-172.19.1.20}
 
 networks:
   ric_network:
     name: oran-sc-ric
+    external: true
+  metrics:
+    name: metrics
     external: true

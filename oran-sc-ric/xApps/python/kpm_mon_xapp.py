@@ -3,11 +3,32 @@
 import argparse
 import signal
 from lib.xAppBase import xAppBase
+from lib.influx_writer import InfluxWriter
 
 
 class MyXapp(xAppBase):
     def __init__(self, config, http_server_port, rmr_port):
         super(MyXapp, self).__init__(config, http_server_port, rmr_port)
+        # Best-effort push of KPM values into InfluxDB 3 so they show up in
+        # Grafana alongside the gNB metrics. Never raises into the callback.
+        self.influx = InfluxWriter(measurement="kpm")
+
+    @staticmethod
+    def _first_value(value):
+        # KPM measurement values arrive as a list (one entry per granularity
+        # sub-period). For 1s granularity that's a single element.
+        if isinstance(value, (list, tuple)):
+            return value[0] if value else None
+        return value
+
+    def _write_metrics(self, meas_dict, tags):
+        fields = {}
+        for metric_name, value in meas_dict.items():
+            v = self._first_value(value)
+            if v is not None:
+                fields[metric_name] = v
+        if fields:
+            self.influx.write(fields, tags=tags)
 
     def my_subscription_callback(self, e2_agent_id, subscription_id, indication_hdr, indication_msg, kpm_report_style, ue_id):
         if kpm_report_style == 2:
@@ -26,9 +47,15 @@ class MyXapp(xAppBase):
         if granulPeriod is not None:
             print("-granulPeriod: {}".format(granulPeriod))
 
+        base_tags = {"e2_node_id": e2_agent_id, "report_style": kpm_report_style}
+
         if kpm_report_style in [1,2]:
             for metric_name, value in meas_data["measData"].items():
                 print("--Metric: {}, Value: {}".format(metric_name, value))
+            # Style 1 = cell-level aggregate (no UE), style 2 = single UE.
+            tags = dict(base_tags)
+            tags["ue_id"] = ue_id if ue_id is not None else "cell"
+            self._write_metrics(meas_data["measData"], tags)
 
         else:
             for ue_id, ue_meas_data in meas_data["ueMeasData"].items():
@@ -39,6 +66,10 @@ class MyXapp(xAppBase):
 
                 for metric_name, value in ue_meas_data["measData"].items():
                     print("---Metric: {}, Value: {}".format(metric_name, value))
+
+                tags = dict(base_tags)
+                tags["ue_id"] = ue_id
+                self._write_metrics(ue_meas_data["measData"], tags)
 
 
     # Mark the function as xApp start function using xAppBase.start_function decorator.
