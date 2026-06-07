@@ -8,11 +8,15 @@ set -euo pipefail
 #   ./scripts/manage.sh start|stop ric        # ORAN RIC
 #   ./scripts/manage.sh start|stop gnb         # gNB + 5GC
 #   ./scripts/manage.sh start|stop ue          # bridge + UE1 + UE2  (ZMQ only)
+#   ./scripts/manage.sh start|stop multi_ue    # one container w/ N UEs (ZMQ only)
 #   ./scripts/manage.sh start|stop monitoring # monitoring stack (telegraf, influxdb, grafana)
 #   ./scripts/manage.sh start|stop all         # everything
 #
 # DEPLOY_TYPE (zmq|uhd) is read from the project root .env (default: zmq).
 # ZMQ uses the bridge + UE containers. UHD runs the gNB on host SDR.
+#
+# NOTE: `ue` and `multi_ue` are mutually exclusive (both claim 10.10.4.237 /
+# the gNB ZMQ rx_port). `all` uses `ue`; start `multi_ue` on its own instead.
 # ---------------------------------------------------------------------------
 
 MANAGE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -23,7 +27,7 @@ if [[ -f "$ROOT_DIR/.env" ]]; then
     set -a; source "$ROOT_DIR/.env"; set +a
 fi
 
-DEPLOY_TYPE="${DEPLOY_TYPE:-uhd}"                       # zmq | uhd
+DEPLOY_TYPE="${DEPLOY_TYPE:-zmq}"                       # zmq | uhd
 RIC_DIR="$ROOT_DIR/oran-sc-ric"
 ZMQ_DIR="$ROOT_DIR/srsRAN_Project/gnb-zmq"
 UHD_DIR="$ROOT_DIR/srsRAN_Project/gnb-uhd"
@@ -32,6 +36,7 @@ MONITOR_WORKDIR="$ROOT_DIR/srsRAN_Project"
 BRIDGE_DIR="$ROOT_DIR/ue/bridge"
 UE1_DIR="$ROOT_DIR/ue/ue1"
 UE2_DIR="$ROOT_DIR/ue/ue2"
+MULTI_UE_DIR="$ROOT_DIR/multi_ue"
 
 # ── colour helpers ───────────────────────────────────────────────────────────
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
@@ -148,6 +153,22 @@ _do_ue() {
     esac
 }
 
+_do_multi_ue() {
+    local action="$1"
+    if [[ "$DEPLOY_TYPE" != "zmq" ]]; then
+        warn "multi_ue is only available for DEPLOY_TYPE=zmq (current=$DEPLOY_TYPE). Skipping."
+        return 0
+    fi
+    case "$action" in
+        up)
+            warn "multi_ue claims 10.10.4.237 / the gNB rx_port; do not run 'ue' at the same time."
+            _up "$MULTI_UE_DIR" "multi_ue (N UEs in one container)"
+            ;;
+        down) _down "$MULTI_UE_DIR" "multi_ue (N UEs in one container)";;
+        *)    err "Unknown action: $action";;
+    esac
+}
+
 _do_monitoring() {
     local action="$1"
     local compose_file="$MONITOR_DIR/docker-compose.ui.yml"
@@ -201,8 +222,10 @@ Components:
   ric     ORAN-SC Near-RT RIC
   gnb     srsRAN gNB (+ 5GC Open5GS)
   ue      ZMQ bridge + UE1 + UE2  (DEPLOY_TYPE=zmq only, does not run the ues just the containers)
+  multi_ue  one container with N UEs + co-located bridge (zmq only; auto-starts UEs).
+            Mutually exclusive with 'ue'. Set NUM_UES in multi_ue/.env.
   monitoring  telegraf, influxdb, grafana
-  all     ric + gnb + ue + monitoring
+  all     ric + gnb + ue + monitoring  (uses 'ue', not 'multi_ue')
 
 DEPLOY_TYPE is set in the project root .env (default: zmq).
 Override by adding DEPLOY_TYPE=<zmq|uhd> to $ROOT_DIR/.env
@@ -225,6 +248,7 @@ case "$COMPONENT" in
     ric) _do_ric       "$_ACTION" ;;
     gnb) _do_gnb       "$_ACTION" ;;
     ue)  _do_ue        "$_ACTION" ;;
+    multi_ue|multiue|mue) _do_multi_ue "$_ACTION" ;;
     monitoring) _do_monitoring "$_ACTION" ;;
     all) _do_all       "$_ACTION" ;;
     *)   err "Unknown component: $COMPONENT"; usage ;;

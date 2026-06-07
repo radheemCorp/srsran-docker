@@ -216,6 +216,73 @@ Steps:
 6. Now proced to deploy gnb 
 7. Use your phone to select the test network after gNB is running. Confirm UE registers.
 
+### 9.3 Multi-UE in one container (ZMQ) + traffic test
+
+`multi_ue/` runs **N srsUEs in a single container** (shared IP, port-multiplexed,
+co-located bridge) and exports per-UE traffic/latency to InfluxDB for Grafana.
+It is **mutually exclusive with §9.1** — both claim `10.10.4.237` / the gNB
+`rx_port`. See [multi_ue/README.md](multi_ue/README.md) for the design.
+
+`NUM_UES` (in `multi_ue/.env`) is capped by the subscriber DB — 4 IMSIs by
+default. Build the Grafana image once so the dashboard is present:
+```bash
+docker compose -f srsRAN_Project/docker/docker-compose.ui.yml build grafana
+```
+
+**1. Bring up the stack (one component per call), in order:**
+```bash
+./scripts/manage.sh start ric         # optional (E2/xApps)
+./scripts/manage.sh start gnb         # wait until gnb.log shows "Waiting for data"
+./scripts/manage.sh start monitoring  # influxdb + grafana + telegraf
+./scripts/manage.sh start multi_ue    # bridge + NUM_UES srsUEs (auto-started)
+```
+
+**2. Confirm both UEs attached (RRC + PDU session, get a 10.45.0.x IP):**
+```bash
+docker exec multi_ue sh -c 'grep -aE "RRC Connected|PDU Session" /tmp/ue1.log | tail -2'
+docker exec multi_ue sh -c 'grep -aE "RRC Connected|PDU Session" /tmp/ue2.log | tail -2'
+docker exec multi_ue ip netns exec ue1 ping -c2 10.45.0.1     # gateway reachable
+```
+If a UE is stuck at `Attaching...` and `gnb.log` shows `Completed 0 of 23040
+samples`, the ZMQ stream is desynced — do the clean restart from
+[multi_ue/README.md](multi_ue/README.md) (`down multi_ue` → `stop/start gnb` →
+`start multi_ue`).
+
+**3. Start iperf3 servers on the UE gateway (one port per UE):**
+```bash
+docker exec -d open5gs_5gc iperf3 -s -p 5201
+docker exec -d open5gs_5gc iperf3 -s -p 5202
+```
+
+**4. Generate traffic on both UEs (bounded UDP — avoid unlimited TCP):**
+```bash
+docker exec multi_ue /srsran/config/run_scenario.sh \
+  --video-client --bitrate 1M --server-ip 10.45.0.1 --port 5201 --ue 1 --duration 20 &
+docker exec multi_ue /srsran/config/run_scenario.sh \
+  --video-client --bitrate 1M --server-ip 10.45.0.1 --port 5202 --ue 2 --duration 20 &
+wait
+```
+Concurrent latency-only across all UEs (no port contention) also works:
+```bash
+docker exec multi_ue /srsran/config/run_all_scenarios.sh --latency --server-ip 10.45.0.1
+```
+
+**5. Verify metrics landed in InfluxDB (per `ue_id`):**
+```bash
+docker exec influxdb sh -c "curl -s -G 'http://localhost:8081/api/v3/query_sql' \
+  --data-urlencode 'db=srsran' \
+  --data-urlencode 'q=SELECT ue_id, count(*) AS samples, round(max(throughput_mbps),3) AS max_mbps FROM ue_traffic GROUP BY ue_id ORDER BY ue_id'"
+```
+
+**6. View in Grafana:** open the **Multi-UE Traffic** dashboard
+(`http://localhost:3300/d/multi-ue-traffic`) — per-UE throughput, RTT, jitter,
+loss and retransmits.
+
+**Tear down:**
+```bash
+docker compose -f multi_ue/docker-compose.yaml down
+```
+
 ## 10. Monitoring Stack
 Set `GNB_IP` in `srsRAN_Project/docker/.env` (same as `e2.bind_addr`).
 
