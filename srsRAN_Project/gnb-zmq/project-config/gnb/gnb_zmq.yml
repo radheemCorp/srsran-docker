@@ -83,7 +83,7 @@ e2:
   enable_cu_up_e2: true
   e2sm_kpm_enabled: true
   e2sm_rc_enabled: true
-  e2sm_ccc_enabled: true
+  e2sm_ccc_enabled: false
   addr: 10.0.2.10
   bind_addr: 10.0.2.25
   port: 36421

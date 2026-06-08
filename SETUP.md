@@ -348,6 +348,24 @@ docker exec srsran_gnb2 sh -c 'grep -ao "rnti=0x46[0-9a-f]*" /tmp/gnb.log | sort
 > after `e2mgr` is up (e2term doesn't exit, so a restart policy can't save it).
 > `./scripts/manage.sh start ric` now self-heals; both gNBs E2-setup cleanly.
 
+> **KPM xApp needs the DU node — and `e2sm_ccc` must be off.** KPM metrics
+> (`DRB.UEThpDl/Ul`) come from the **DU** E2 node (`gnbd_001_001_00000N_0`), not
+> the CU-CP. With `e2sm_ccc_enabled: true` the srsRAN **DU never completes E2
+> setup** (it stops right after adding the CCC RAN function id 4; CU-CP/CU-UP are
+> fine), so no `gnbd_` node appears in the RNIB and KPM subscriptions fall to the
+> CU-CP, which rejects them. Setting `e2sm_ccc_enabled: false` on both gNBs makes
+> the DU register and KPM work. Run the xApp per gNB:
+> ```bash
+> cd oran-sc-ric
+> docker compose exec python_xapp_runner ./kpm_mon_xapp.py \
+>   --e2_node_id gnbd_001_001_000001_0 --kpm_report_style 1 --metrics DRB.UEThpDl,DRB.UEThpUl
+> # gNB2: --e2_node_id gnbd_001_001_000002_0  (use a 2nd instance with distinct
+> #       --http_server_port/--rmr_port; data is tagged by e2_node_id in InfluxDB)
+> ```
+> KPM data refreshes slowly under real-time ZMQ (~every 10–15 s), so indications
+> are sparse. Find the live DU node ids with:
+> `docker exec ric_dbaas redis-cli keys '*RAN:gnbd*'`.
+
 ## 10. Monitoring Stack
 Set `GNB_IP` in `srsRAN_Project/docker/.env` (same as `e2.bind_addr`).
 
