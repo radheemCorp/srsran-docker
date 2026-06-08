@@ -318,6 +318,9 @@ docker logs open5gs_5gc 2>&1 | grep -aE "S_NSSAI" | tail
 
 ### 9.5 Two cells, two slices, two UEs per slice (Approach A)
 
+> Full copy-paste deployment + verification + troubleshooting:
+> **[docs/RUNBOOK_2GNB_2SLICE.md](docs/RUNBOOK_2GNB_2SLICE.md)**.
+
 Run **two single-cell gNBs** sharing one 5GC + RIC: cell 1 (`gnb`, PCI 1, sst1)
 and cell 2 (`gnb2`, PCI 2, sst2). In ZMQ both use the same `dl_arfcn 368500` —
 the cells are separated by **isolated ZMQ wires + PCI + slice**, not frequency.
