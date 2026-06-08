@@ -314,8 +314,35 @@ docker logs open5gs_5gc 2>&1 | grep -aE "S_NSSAI" | tail
 > uplinks, so (a) every srsUE must be running for the summed uplink to flow
 > (don't space UE starts far apart), and (b) more than ~2 UEs attaching on one
 > cell contend on PRACH and may not all attach. Validating *two slices* needs
-> only one UE per slice. Scaling to *2 UEs per slice* (4 on one cell) needs the
-> harder multi-cell / per-cell-bridge work (Approach A) and is not yet done.
+> only one UE per slice; *2 UEs per slice* uses two cells — see §9.5.
+
+### 9.5 Two cells, two slices, two UEs per slice (Approach A)
+
+Run **two single-cell gNBs** sharing one 5GC + RIC: cell 1 (`gnb`, PCI 1, sst1)
+and cell 2 (`gnb2`, PCI 2, sst2). In ZMQ both use the same `dl_arfcn 368500` —
+the cells are separated by **isolated ZMQ wires + PCI + slice**, not frequency.
+`multi_ue` runs **two bridges**: bridge1 (UE1,UE2 → gnb1) and bridge2 (UE3,UE4 →
+gnb2, ports 2010/2011), set by `CELL2_UES`/`GNB2_IP` in `multi_ue/.env`. Two
+UEs per cell also stays under the PRACH-contention limit from §9.4.
+
+```bash
+./scripts/manage.sh start gnb         # starts 5gc + gnb + gnb2
+# (after both gNBs are up) provision the slice-2 UEs:
+./scripts/open5gs_add_ue.sh --csv srsRAN_Project/gnb-zmq/project-config/subscriber_db_slice2.csv
+./scripts/manage.sh start multi_ue    # NUM_UES=4, CELL2_UES=3,4
+```
+Verify (UE1/2 on cell1/SST:1, UE3/4 on cell2/SST:2):
+```bash
+docker logs open5gs_5gc 2>&1 | grep -aE "S_NSSAI" | tail -4
+docker exec srsran_gnb  sh -c 'grep -ao "rnti=0x46[0-9a-f]*" /tmp/gnb.log | sort -u'  # cell1 UEs
+docker exec srsran_gnb2 sh -c 'grep -ao "rnti=0x46[0-9a-f]*" /tmp/gnb.log | sort -u'  # cell2 UEs
+```
+
+> **Known limitation — E2 with two gNBs.** Two gNBs that both open E2 to the
+> same RIC e2term **segfault** the gNB in `send_e2_setup_request`. E2 is
+> therefore **disabled on both** gNBs on this branch (it is KPM monitoring only,
+> not needed for attach/slicing). Re-enabling E2 needs the two-node E2 issue
+> resolved (or one RIC per gNB).
 
 ## 10. Monitoring Stack
 Set `GNB_IP` in `srsRAN_Project/docker/.env` (same as `e2.bind_addr`).

@@ -220,7 +220,7 @@ Usage: $(basename "$0") <start|stop> <component>
 
 Components:
   ric     ORAN-SC Near-RT RIC
-  gnb     srsRAN gNB (+ 5GC Open5GS)
+  gnb     srsRAN gNB(s) + 5GC Open5GS  (two-cell branch: starts gnb + gnb2)
   ue      ZMQ bridge + UE1 + UE2  (DEPLOY_TYPE=zmq only, does not run the ues just the containers)
   multi_ue  one container with N UEs + co-located bridge (zmq only; auto-starts UEs).
             Mutually exclusive with 'ue'. Set NUM_UES in multi_ue/.env.

@@ -1,0 +1,28 @@
+cu_cp:
+  amf:
+    addr: 10.53.1.2
+    bind_addr: 10.53.1.4
+
+metrics:
+  autostart_stdout_metrics: true
+  enable_json: true
+  layers:
+    enable_rlc: true
+    enable_mac: true
+    enable_sched: true
+  periodicity:
+    du_report_period: 1000
+    cu_up_report_period: 1000
+    cu_cp_report_period: 1000
+
+  layers:
+    enable_ru: false
+    enable_sched: true
+    enable_rlc: true
+    enable_mac: true
+    enable_pdcp: false
+    enable_du_low: false
+
+remote_control:
+  bind_addr: 0.0.0.0
+  enabled: true

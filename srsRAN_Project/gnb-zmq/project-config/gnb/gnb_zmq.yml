@@ -5,6 +5,13 @@
 #   gNB N3 IP     : 10.10.3.231
 #   bridge IP     : 10.10.3.236
 #   gNB tx/rx port: 2000/2001
+#
+# Cell 1 of the two-cell slicing setup: PCI 1, offers slice sst=1.
+# Cell 2 is gnb_zmq_cell2.yml (PCI 2, sst=2). Distinct gnb_id per gNB so the
+# AMF sees two Global gNB IDs.
+
+gnb_id: 1
+ran_node_name: gnb01
 
 cu_cp:
   amf:
@@ -17,7 +24,6 @@ cu_cp:
           - plmn: "00101"
             tai_slice_support_list:
               - sst: 1
-              - sst: 2
   inactivity_timer: 7200
     
 ru_sdr:
@@ -31,17 +37,16 @@ ru_sdr:
   rx_gain: 40
 
 cell_cfg:
+  pci: 1
   dl_arfcn: 368500
   band: 3      # must match rat.nr.band in ue config
   channel_bandwidth_MHz: 20
   common_scs: 15   #  106 x 12 x 15kHz
   plmn: "00101"
   tac: 7
-  # Single cell offers BOTH slices; UEs are put on a slice via their
-  # subscription S-NSSAI in the 5GC (see subscriber provisioning).
+  # Cell 1 offers slice sst=1 only (cell 2 offers sst=2).
   slicing:
     - sst: 1
-    - sst: 2
   pdcch:
     dedicated:
       ss2_type: common
@@ -72,10 +77,15 @@ pcap:
   e2ap_cu_up_filename: /tmp/gnb_cu_up_e2ap.pcap # Path where the CU-UP E2AP PCAP is stored.
 
 
+# E2 DISABLED for the two-cell branch. Running two gNBs that both establish E2
+# to the same RIC e2term segfaults the gNB in send_e2_setup_request. E2 is KPM
+# monitoring only and not needed for attach/slicing. FOLLOW-UP: resolve two-node
+# E2 (or dedicate one RIC per gNB), then re-enable. For single-cell use you can
+# set these back to true.
 e2:
-  enable_du_e2: true
-  enable_cu_cp_e2: true
-  enable_cu_up_e2: true
+  enable_du_e2: false
+  enable_cu_cp_e2: false
+  enable_cu_up_e2: false
   e2sm_kpm_enabled: true
   e2sm_rc_enabled: true
   e2sm_ccc_enabled: true

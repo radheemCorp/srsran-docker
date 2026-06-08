@@ -42,7 +42,11 @@ peer — i.e. every srsUE must be running. Two consequences:
   a long gap stalls the summed uplink and **nobody** attaches. The short
   `START_STAGGER` is deliberate.
 - Several UEs attaching at once on one cell contend on PRACH; in practice **~2
-  UEs/cell** attach reliably here. More needs per-cell bridges (multi-cell work).
+  UEs/cell** attach reliably here. For more UEs, split them across cells:
+  `CELL2_UES` (default `3,4`) routes those UEs through a **second bridge** to a
+  second gNB (`GNB2_IP`, ports `GNB2_TX_PORT/RX`). With `NUM_UES=4` +
+  `CELL2_UES=3,4` you get 2 UEs/cell on two cells (two slices) — see SETUP §9.5.
+  Set `CELL2_UES=""` for single-cell mode.
 
 **Slicing.** UEs are placed on a slice by their 5GC **subscription** S-NSSAI, not
 by anything in this container. See `SETUP.md` §9.4 for two slices on one cell.

@@ -69,8 +69,39 @@ services:
       oran-sc-ric:
         ipv4_address: 10.0.2.25
 
+  # Cell 2 (slice sst=2). Single-cell gNB on its own N2/N3/E2 IPs and ZMQ ports;
+  # shares the same 5GC + RIC as gnb. Serves UE3/UE4 via bridge2 in multi_ue.
+  gnb2:
+    image: gnb:20260510-dpdk
+    pull_policy: if_not_present
+    container_name: srsran_gnb2
+    privileged: true
+    cap_add:
+      - SYS_NICE
+      - CAP_SYS_PTRACE
+    volumes:
+      - /dev/bus/usb/:/dev/bus/usb/
+      - /usr/share/uhd/images:/usr/share/uhd/images
+      - ./project-config/gnb/gnb_zmq_cell2.yml:/gnb_config.yml:ro # ZMQ RF, cell 2
+      - ./project-config/gnb/gnb_compose_config_cell2.yml:/gnb_compose_config.yml:ro
+      - ./gnb2-storage:/tmp
+    command: gnb -c /gnb_config.yml -c /gnb_compose_config.yml
+    depends_on:
+      5gc:
+        condition: service_healthy
+    networks:
+      n2:
+        ipv4_address: 10.53.1.4
+      n3:
+        ipv4_address: 10.10.3.232
+      metrics:
+        ipv4_address: 172.19.1.7
+      oran-sc-ric:
+        ipv4_address: 10.0.2.26
+
 volumes:
   gnb-storage: {}
+  gnb2-storage: {}
 
 networks:
   n2:

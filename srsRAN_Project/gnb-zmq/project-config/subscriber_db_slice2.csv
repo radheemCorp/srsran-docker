@@ -1,8 +1,10 @@
-# Slice-2 overrides: re-provision the slice-2 UE(s) onto S-NSSAI sst=2 (10th
+# Slice-2 overrides: re-provision the slice-2 UEs onto S-NSSAI sst=2 (10th
 # field). Apply AFTER boot with:  ./scripts/open5gs_add_ue.sh --csv <this file>
 # add_users.py UpdateSubscriber overwrites their slice. Same DNN/IP pool as
-# slice 1 — validates the slice control plane on the single cell.
+# slice 1 — slices differ by S-NSSAI.
 #
-# 2-UE demo:  UE1 (sub1) stays slice 1; UE2 (sub2) -> slice 2.
+# Two-cell layout: UE1,UE2 (sub1/2) stay slice 1 on cell 1; UE3,UE4 (sub3/4)
+# -> slice 2 on cell 2 (they ride bridge2 -> gnb2 in multi_ue).
 # name,imsi,key,op_type,op_c,amf,qci,ip_alloc,apn,sst
-sub2,001010000000002,465B5CE8B199B49FAA5F0A2EE238A6BC,opc,E8ED289DEBA952E4283B54E88E6183CA,8000,9,10.45.0.3,internet,2
+sub3,001010000000003,465B5CE8B199B49FAA5F0A2EE238A6BC,opc,E8ED289DEBA952E4283B54E88E6183CA,8000,9,10.45.0.5,internet,2
+sub4,001010000000004,465B5CE8B199B49FAA5F0A2EE238A6BC,opc,E8ED289DEBA952E4283B54E88E6183CA,8000,9,10.45.0.6,internet,2

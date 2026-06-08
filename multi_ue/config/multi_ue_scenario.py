@@ -31,7 +31,7 @@ from gnuradio import zeromq
 
 
 class MultiUeBridge(gr.top_block):
-    def __init__(self, ue_ids, gnb_ip, host_ip):
+    def __init__(self, ue_ids, gnb_ip, host_ip, gnb_tx_port=2000, gnb_rx_port=2001):
         super().__init__("srsRAN_multi_UE")
 
         zmq_timeout = 100
@@ -39,11 +39,12 @@ class MultiUeBridge(gr.top_block):
         samp_rate = 23040000
 
         # gNB side (single pair). req_source connects to the gNB tx; rep_sink
-        # binds on the host IP for the gNB to connect its rx to.
+        # binds on the host IP for the gNB to connect its rx to. Ports are
+        # parameterized so a second bridge can serve a second cell/gNB.
         self.gnb_dl_source = zeromq.req_source(
-            gr.sizeof_gr_complex, 1, f"tcp://{gnb_ip}:2000", zmq_timeout, False, zmq_hwm)
+            gr.sizeof_gr_complex, 1, f"tcp://{gnb_ip}:{gnb_tx_port}", zmq_timeout, False, zmq_hwm)
         self.gnb_ul_sink = zeromq.rep_sink(
-            gr.sizeof_gr_complex, 1, f"tcp://{host_ip}:2001", zmq_timeout, False, zmq_hwm)
+            gr.sizeof_gr_complex, 1, f"tcp://{host_ip}:{gnb_rx_port}", zmq_timeout, False, zmq_hwm)
 
         # Aggregate uplink from all UEs; throttle drives the downlink fan-out.
         self.ul_add = blocks.add_vcc(1)
@@ -77,9 +78,11 @@ def main():
                         help="Number of UEs (activates UE ids 1..N)")
     parser.add_argument("--ue-ids", default="",
                         help="Comma-separated UE ids to activate (overrides --num-ues, e.g. 1,2,3)")
-    parser.add_argument("--gnb-ip", default="10.10.3.231", help="gNB N3 IP (ZMQ tx at :2000)")
+    parser.add_argument("--gnb-ip", default="10.10.3.231", help="gNB N3 IP (ZMQ tx)")
     parser.add_argument("--host-ip", default="10.10.4.237",
                         help="This container's ue_n3 IP; all UE + gNB-rx sockets bind here")
+    parser.add_argument("--gnb-tx-port", type=int, default=2000, help="gNB ZMQ tx port")
+    parser.add_argument("--gnb-rx-port", type=int, default=2001, help="gNB ZMQ rx port")
     args = parser.parse_args()
 
     if args.ue_ids.strip():
@@ -89,7 +92,8 @@ def main():
     if not ue_ids:
         raise ValueError("No UE ids to activate")
 
-    tb = MultiUeBridge(ue_ids, args.gnb_ip, args.host_ip)
+    tb = MultiUeBridge(ue_ids, args.gnb_ip, args.host_ip,
+                       gnb_tx_port=args.gnb_tx_port, gnb_rx_port=args.gnb_rx_port)
 
     def sig_handler(sig=None, frame=None):
         tb.stop()
@@ -99,7 +103,8 @@ def main():
     signal.signal(signal.SIGINT, sig_handler)
     signal.signal(signal.SIGTERM, sig_handler)
 
-    print(f"Bridge up: gNB={args.gnb_ip} host={args.host_ip} ues={ue_ids}", file=sys.stderr)
+    print(f"Bridge up: gNB={args.gnb_ip}:{args.gnb_tx_port}/{args.gnb_rx_port} "
+          f"host={args.host_ip} ues={ue_ids}", file=sys.stderr)
     tb.start()
     signal.pause()
 
