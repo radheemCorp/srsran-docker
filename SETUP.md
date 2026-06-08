@@ -338,11 +338,15 @@ docker exec srsran_gnb  sh -c 'grep -ao "rnti=0x46[0-9a-f]*" /tmp/gnb.log | sort
 docker exec srsran_gnb2 sh -c 'grep -ao "rnti=0x46[0-9a-f]*" /tmp/gnb.log | sort -u'  # cell2 UEs
 ```
 
-> **Known limitation — E2 with two gNBs.** Two gNBs that both open E2 to the
-> same RIC e2term **segfault** the gNB in `send_e2_setup_request`. E2 is
-> therefore **disabled on both** gNBs on this branch (it is KPM monitoring only,
-> not needed for attach/slicing). Re-enabling E2 needs the two-node E2 issue
-> resolved (or one RIC per gNB).
+> **E2 with two gNBs — works (was a RIC startup race, now fixed).** Both gNBs
+> run E2 to the same RIC. An earlier segfault in `send_e2_setup_request` was
+> **not** a two-gNB limit: the RIC `e2mgr` loses a startup race with Redis
+> (`dbaas`) — it retries the RNIB connection only 3×/30 ms then **exits**, so
+> `e2term` can't route E2 (`RMR_ERR_NOENDPT`) and the gNB's E2 setup dereferences
+> a null association and crashes. Fixed by `restart: on-failure` on `e2mgr`
+> (oran-sc-ric compose) plus `manage.sh _ric_heal`, which restarts `e2term`
+> after `e2mgr` is up (e2term doesn't exit, so a restart policy can't save it).
+> `./scripts/manage.sh start ric` now self-heals; both gNBs E2-setup cleanly.
 
 ## 10. Monitoring Stack
 Set `GNB_IP` in `srsRAN_Project/docker/.env` (same as `e2.bind_addr`).

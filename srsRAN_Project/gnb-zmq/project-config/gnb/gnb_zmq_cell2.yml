@@ -71,14 +71,10 @@ pcap:
   e2ap_cu_cp_filename: /tmp/gnb_cu_cp_e2ap.pcap
   e2ap_cu_up_filename: /tmp/gnb_cu_up_e2ap.pcap
 
-# E2 DISABLED on gNB2: enabling it segfaults the gNB in send_e2_setup_request
-# when a second E2 node connects to the same RIC e2term (gNB1 already has E2).
-# Slicing/attach do not need E2 (it is KPM monitoring only). Re-enable once the
-# second-E2-node crash is understood. To try again, flip the enables to true.
 e2:
-  enable_du_e2: false
-  enable_cu_cp_e2: false
-  enable_cu_up_e2: false
+  enable_du_e2: true
+  enable_cu_cp_e2: true
+  enable_cu_up_e2: true
   e2sm_kpm_enabled: true
   e2sm_rc_enabled: true
   e2sm_ccc_enabled: true

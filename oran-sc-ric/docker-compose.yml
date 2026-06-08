@@ -129,6 +129,13 @@ services:
     container_name: ric_e2mgr
     hostname: e2mgr
     image: nexus3.o-ran-sc.org:10002/o-ran-sc/ric-plt-e2mgr:${E2MGR_VER}
+    # e2mgr only retries the RNIB/Redis (dbaas) connection 3x at 10ms and then
+    # exits; on a cold start it loses the race with dbaas. Auto-restart so it
+    # reconnects once Redis is up (otherwise e2term can't route E2 and gNB E2
+    # setup segfaults the gNB). See scripts/manage.sh _ric_heal for e2term.
+    depends_on:
+      - dbaas
+    restart: on-failure
     env_file:
       - .env
     environment:

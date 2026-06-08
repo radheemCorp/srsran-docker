@@ -99,10 +99,33 @@ _down() {
 }
 
 # ── component routers ────────────────────────────────────────────────────────
+# Work around the oran-sc-ric startup race: e2mgr exits if Redis (dbaas) isn't
+# ready within its 3x10ms retry budget, and e2term then fails E2_TERM_INIT
+# (RMR_ERR_NOENDPT) — leaving the E2 path dead so gNB E2 setup segfaults the
+# gNB. e2mgr has restart:on-failure (compose), but e2term does NOT exit, so we
+# explicitly restart e2term once e2mgr is up to re-register the E2 route.
+_ric_heal() {
+    log "Settling RIC E2 path (e2mgr/Redis startup race)..."
+    sleep 3
+    docker start ric_e2mgr >/dev/null 2>&1 || true   # no-op if already running
+    local i
+    for i in $(seq 1 20); do
+        docker ps --filter name=ric_e2mgr --format '{{.Status}}' | grep -q Up && break
+        sleep 1
+    done
+    docker restart ric_e2term >/dev/null 2>&1 || true
+    sleep 2
+    if docker ps --filter name=ric_e2mgr --format '{{.Status}}' | grep -q Up; then
+        log "RIC E2 path ready (e2mgr up, e2term re-initialized)."
+    else
+        warn "RIC e2mgr still not up; check 'docker logs ric_e2mgr'."
+    fi
+}
+
 _do_ric() {
     local action="$1"; shift
     case "$action" in
-        up)   _up   "$RIC_DIR" "RIC";;
+        up)   _up "$RIC_DIR" "RIC"; _ric_heal;;
         down) _down "$RIC_DIR" "RIC";;
         *)    err "Unknown action: $action";;
     esac

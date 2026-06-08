@@ -77,15 +77,10 @@ pcap:
   e2ap_cu_up_filename: /tmp/gnb_cu_up_e2ap.pcap # Path where the CU-UP E2AP PCAP is stored.
 
 
-# E2 DISABLED for the two-cell branch. Running two gNBs that both establish E2
-# to the same RIC e2term segfaults the gNB in send_e2_setup_request. E2 is KPM
-# monitoring only and not needed for attach/slicing. FOLLOW-UP: resolve two-node
-# E2 (or dedicate one RIC per gNB), then re-enable. For single-cell use you can
-# set these back to true.
 e2:
-  enable_du_e2: false
-  enable_cu_cp_e2: false
-  enable_cu_up_e2: false
+  enable_du_e2: true
+  enable_cu_cp_e2: true
+  enable_cu_up_e2: true
   e2sm_kpm_enabled: true
   e2sm_rc_enabled: true
   e2sm_ccc_enabled: true
