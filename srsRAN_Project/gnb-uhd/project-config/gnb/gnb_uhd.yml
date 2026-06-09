@@ -33,7 +33,13 @@ cell_cfg:
   plmn: "00101"
   tac: 7
   pci: 1
-  
+  # The cell must declare the SAME slice (SST+SD) it advertises to the AMF in
+  # cu_cp.tai_slice_support_list and that the core provisions (SD_VALUE). Without
+  # this block the cell defaults to sst=1 / no-SD and will not admit a PDU session
+  # on slice sst=1,sd=0x111111 even though NG Setup succeeds.
+  slicing:
+    - sst: 1
+      sd: 1118481   # decimal of 0x111111 (srsRAN reads sd as DECIMAL)
 
 log:
   filename: /tmp/gnb.log
