@@ -355,46 +355,45 @@ if ! ip link show "$PARENT_IF" >/dev/null 2>&1; then
   exit 1
 fi
 
-action=${1:-dnet}
+action=${1:-init}
 
 case "$action" in
   init|create)
+    echo "Initializing network..."
     create_macvlan_network "$N2_NAME" "$N2_SUBNET" "$N2_GW"
     create_macvlan_network "$N3_NAME" "$N3_SUBNET" "$N3_GW"
     create_macvlan_network "$N6_NAME" "$N6_SUBNET" "$N6_GW"
     create_bridge_network "$METRICS_NAME" "$METRICS_SUBNET" "$METRICS_GW"
     create_ric_network
-    create_host_macvlan
     create_n3br_interface
     create_n3_host_interface
     enable_n3_routing
-    # UE bridge macvlan network (child of n3br, used by ZMQ external UE setups)
     create_macvlan_child_network
-    echo "Done. Networks initialized: $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME $N3BR_NAME $UE_N3_NAME"
+    create_host_macvlan
+    echo "Network initialization complete."
     ;;
-  remove)
+  remove|cleanup)
+    echo "Cleaning up network..."
+    remove_host_macvlan
     remove_macvlan_child_network
-    # remove n3br last because other networks may depend on it
     remove_n3_routing
     remove_n3_host_interface
-    remove_host_macvlan
-    remove_macvlan_network "$N6_NAME"
-    # remove_macvlan_network "$N3_NAME"
-    remove_macvlan_network "$N2_NAME"
     remove_n3br_interface
-    remove_bridge_network "$METRICS_NAME"
     remove_ric_network
-    echo "Done. Networks removed (if they existed): $N2_NAME $N3_NAME $N6_NAME $METRICS_NAME $RIC_NAME $N3BR_NAME"
+    remove_bridge_network "$METRICS_NAME"
+    remove_macvlan_network "$N6_NAME"
+    remove_macvlan_network "$N3_NAME"
+    remove_macvlan_network "$N2_NAME"
+    echo "Network cleanup complete."
     ;;
   dnet)
     dnet
     ;;
-  help|-h|--help)
+  help)
     usage
     ;;
   *)
-    echo "Unknown command: $action" >&2
     usage
-    exit 2
+    exit 1
     ;;
 esac

@@ -1,6 +1,6 @@
 services:
   5gc:
-    image: open5gs:20260510-dpdk
+    image: rptestbed/open5gs:20260610-dpdk
     build:
       context: ../docker/open5gs
       target: open5gs
@@ -36,7 +36,7 @@ services:
       default:
       
   gnb:
-    image: gnb:20260510-dpdk
+    image: rptestbed/gnb:20260610-dpdk
     build:
       context: ..
       dockerfile: docker/Dockerfile
