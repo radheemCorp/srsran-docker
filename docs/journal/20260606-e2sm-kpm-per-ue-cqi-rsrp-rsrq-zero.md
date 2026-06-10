@@ -1,6 +1,9 @@
 # 20260606 — E2SM-KPM reports CQI/RSRP/RSRQ = 0 for all UEs except the first
 
-Date: 2026-06-06
+- **Date:** 2026-06-06
+- **Area:** E2 / KPM
+- **Status:** Open (upstream srsRAN bug; workaround = trust thp/PRB/delay/volume metrics)
+- **Components:** srsRAN_Project (E2SM-KPM measurement provider), oran-sc-ric (kpm_mon xApp)
 
 > Paths below are relative to the repo root `/home/radr/pers/srsran-docker/`.
 > Code line numbers refer to the srsRAN source vendored under `srsRAN_Project/`.

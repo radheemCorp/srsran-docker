@@ -1,6 +1,9 @@
 # 20260610 — 2 gNB / 2 slice / 4 UE traffic run: UEs wedge under load (host CPU starvation), + bidirectional traffic support
 
-Date: 2026-06-10
+- **Date:** 2026-06-10
+- **Area:** traffic / stability
+- **Status:** Open (host capacity ceiling; 30-min run paused pending decision)
+- **Components:** multi_ue, srsran_gnb, srsran_gnb2, open5gs_5gc, oran-sc-ric, monitoring
 
 > Paths below are relative to the repo root `/home/radr/pers/srsran-docker/`.
 > Branch: `approach-a-two-cell-slicing`. Procedure followed:
