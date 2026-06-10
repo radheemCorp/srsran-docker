@@ -1,3 +1,5 @@
 srsRAN_Project/gnb-uhd/gnb-storage/gnb.log
 srsRAN_Project/gnb-zmq/gnb-storage/gnb.log
 srsRAN_Project/gnb-zmq/gnb2-storage/
+srsRAN_Project/gnb-zmq-single-cell/gnb-storage/gnb.log
+multi_ue-single-cell/config/__pycache__/

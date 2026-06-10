@@ -16,6 +16,8 @@ Each entry is a self-contained post-mortem; this page is the entrypoint.
 
 | Date | Entry | Area | Status |
 |------|-------|------|--------|
+| 2026-06-10 | [Single summed ZMQ bridge caps at ~2 UEs (PRACH preamble-0 collision)](./20260610-prach-preamble0-collision-2ue-bridge-limit.md) | RAN / ZMQ | Explained |
+| 2026-06-10 | [Single-cell standalone (dir-based, no RIC): low-load bidir still wedges on a CPU-starved host](./20260610-single-cell-dirs-bidir-wedge-cpu.md) | traffic / stability | Open |
 | 2026-06-10 | [2 gNB / 4 UE traffic run — UEs wedge under load (host CPU starvation) + bidirectional traffic support](./20260610-2gnb-4ue-traffic-stability-host-cpu-starvation.md) | traffic / stability | Open |
 | 2026-06-10 | [2 gNB KPM capture — gNB1 uplink-only, gNB2 no traffic, UE3/UE4 unrouted](./20260610-2gnb-kpm-no-downlink-gnb2-no-traffic.md) | E2 / KPM | Explained |
 | 2026-06-06 | [E2SM-KPM reports CQI/RSRP/RSRQ = 0 for all UEs except the first](./20260606-e2sm-kpm-per-ue-cqi-rsrp-rsrq-zero.md) | E2 / KPM | Open |
@@ -46,6 +48,10 @@ Each entry is a self-contained post-mortem; this page is the entrypoint.
 - **Traffic / stability (Jun 2026):** the 2-cell data plane is correct, but sustained
   4-UE traffic wedges UE RLC DRBs — root-caused to host CPU starvation (real-time ZMQ
   needs headroom), not a RAN/config fault. Same real-time-headroom lesson as the SDR work.
+  The single-cell standalone variant confirms it: even low-load **bidirectional** UDP on
+  2 UEs / 1 gNB / no RIC wedges on a CPU-starved host (UDP floods because it never backs
+  off). And the co-located **summed ZMQ bridge caps at ~2 UEs** — all srsUEs send PRACH
+  preamble 0, so 4-way msg3 collisions never resolve; split bridges or add per-UE diversity.
 
 ## See also
 
