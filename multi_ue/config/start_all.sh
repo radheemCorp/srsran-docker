@@ -20,14 +20,11 @@
 #
 # Env knobs:
 #   NUM_UES, GNB_IP, UE_HOST_IP, UE_BIND_IP, ZMQ_BRIDGE_IP
-#   CELL2_UES           comma list of UE ids on cell 2       (default "3,4")
-#   GNB2_IP             cell-2 gNB N3 IP                      (default 10.10.3.232)
-#   GNB2_TX_PORT/RX     cell-2 gNB ZMQ ports                 (default 2010/2011)
 #   START_STAGGER       seconds between UE starts            (default 3)
 #   SUPERVISE_INTERVAL  seconds between health checks        (default 5)
 #   RESTART_UES         restart a UE that exits (true|false) (default true)
 #   MAX_UE_RESTARTS     per-UE restart cap                   (default 3)
-#   LOG_DIR             where bridge*.log / ue<n>.log go     (default /tmp)
+#   LOG_DIR             where bridge.log / ue<n>.log go      (default /tmp)
 #
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -35,10 +32,6 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 N="${1:-${NUM_UES:-2}}"
 GNB_IP="${GNB_IP:-10.10.3.231}"
 UE_HOST_IP="${UE_HOST_IP:-10.10.4.237}"
-CELL2_UES="${CELL2_UES:-3,4}"
-GNB2_IP="${GNB2_IP:-10.10.3.232}"
-GNB2_TX_PORT="${GNB2_TX_PORT:-2010}"
-GNB2_RX_PORT="${GNB2_RX_PORT:-2011}"
 START_STAGGER="${START_STAGGER:-3}"
 # NOTE: do NOT attach UEs sequentially (waiting for each before the next). The
 # bridge sums every UE's uplink, so its add block only produces once ALL UE ZMQ
@@ -65,9 +58,9 @@ declare -A UE_RESTARTS   # n -> restart count
 
 cleanup() {
   trap - EXIT INT TERM
-  echo "Stopping bridges + UEs..."
+  echo "Stopping bridge + UEs..."
   if [ "${#BRIDGE_PID[@]}" -gt 0 ]; then
-    for pid in "${BRIDGE_PID[@]}"; do kill "${pid}" 2>/dev/null || true; done
+    kill "${BRIDGE_PID[bridge]}" 2>/dev/null || true
   fi
   if [ "${#UE_PID[@]}" -gt 0 ]; then
     for pid in "${UE_PID[@]}"; do kill "${pid}" 2>/dev/null || true; done
@@ -82,30 +75,22 @@ start_one_ue() {
 }
 
 start_bridge() {
-  # start_bridge <label> <gnb-ip> <tx-port> <rx-port> <ue-ids-csv>
-  local label="$1" gip="$2" txp="$3" rxp="$4" ids="$5"
-  echo "=== Starting bridge ${label}: gNB=${gip}:${txp}/${rxp} ues=${ids} ==="
+  # start_bridge <gnb-ip> <tx-port> <rx-port> <ue-ids-csv>
+  local gip="$1" txp="$2" rxp="$3" ids="$4"
+  echo "=== Starting bridge: gNB=${gip}:${txp}/${rxp} ues=${ids} ==="
   python3 "${HERE}/multi_ue_scenario.py" --ue-ids "${ids}" \
     --gnb-ip "${gip}" --host-ip "${UE_HOST_IP}" \
     --gnb-tx-port "${txp}" --gnb-rx-port "${rxp}" \
-    >"${LOG_DIR}/bridge_${label}.log" 2>&1 &
-  BRIDGE_PID[$label]=$!
+    >"${LOG_DIR}/bridge.log" 2>&1 &
+  BRIDGE_PID[bridge]=$!
 }
 
-# Partition UE ids 1..N into cell 2 (CELL2_UES) and cell 1 (the rest).
-cell2_ids=""; cell1_ids=""
-for n in $(seq 1 "${N}"); do
-  if [[ ",${CELL2_UES}," == *",${n},"* ]]; then
-    cell2_ids="${cell2_ids:+${cell2_ids},}${n}"
-  else
-    cell1_ids="${cell1_ids:+${cell1_ids},}${n}"
-  fi
-done
+# All UEs 1..N go to the single cell.
+all_ue_ids="$(seq -s, 1 "${N}")"
 
-[ -n "${cell1_ids}" ] && start_bridge cell1 "${GNB_IP}"  2000 2001 "${cell1_ids}"
-[ -n "${cell2_ids}" ] && start_bridge cell2 "${GNB2_IP}" "${GNB2_TX_PORT}" "${GNB2_RX_PORT}" "${cell2_ids}"
+start_bridge "${GNB_IP}" 2000 2001 "${all_ue_ids}"
 
-# Give the bridges a moment to bind their sockets before UEs connect.
+# Give the bridge a moment to bind its sockets before UEs connect.
 sleep 2
 
 for n in $(seq 1 "${N}"); do
@@ -114,7 +99,7 @@ for n in $(seq 1 "${N}"); do
   sleep "${START_STAGGER}"
 done
 
-echo "=== All started. Supervising (interval ${SUPERVISE_INTERVAL}s). Logs: ${LOG_DIR}/bridge_*.log, ue<n>.log. ==="
+echo "=== All started. Supervising (interval ${SUPERVISE_INTERVAL}s). Logs: ${LOG_DIR}/bridge.log, ue<n>.log. ==="
 echo "    Check attach:  ip netns exec ue1 ip addr show tun_srsue"
 echo "    Generate load: ${HERE}/run_all_scenarios.sh --voip-client --server-ip 10.45.0.1"
 
@@ -122,13 +107,11 @@ echo "    Generate load: ${HERE}/run_all_scenarios.sh --voip-client --server-ip 
 while true; do
   sleep "${SUPERVISE_INTERVAL}"
 
-  # Every bridge is critical: its death takes down its cell's RF path.
-  for label in "${!BRIDGE_PID[@]}"; do
-    if ! kill -0 "${BRIDGE_PID[$label]}" 2>/dev/null; then
-      echo "FATAL: bridge ${label} (pid ${BRIDGE_PID[$label]}) exited; tearing down container." >&2
-      exit 1
-    fi
-  done
+  # The bridge is critical: its death takes down the RF path.
+  if ! kill -0 "${BRIDGE_PID[bridge]}" 2>/dev/null; then
+    echo "FATAL: bridge (pid ${BRIDGE_PID[bridge]}) exited; tearing down container." >&2
+    exit 1
+  fi
 
   # UEs are independent: log, and restart up to the cap.
   for n in "${!UE_PID[@]}"; do

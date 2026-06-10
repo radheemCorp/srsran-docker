@@ -12,7 +12,7 @@ deployment), as opposed to the one-container-per-UE setup in `../ue/`.
   (`UE_HOST_IP`, default `10.10.4.237`). Every UE and the bridge bind their ZMQ
   sockets to that IP and are distinguished only by **port**.
 - **Co-located bridge** (`config/multi_ue_scenario.py`, a GNU Radio flow graph):
-  - gNB downlink `tcp://GNB_IP:2000` → summed/fanned → each UE
+  - gNB downlink `tcp://GNB_IP:2000` → fanned out to each UE
   - each UE uplink → summed → gNB `tcp://UE_HOST_IP:2001`
 - **Per-UE ZMQ ports** (n = 1..N): uplink `2100+n`, downlink `2200+n`.
 - **Per-UE netns** `ue<n>`; each srsUE places its `tun_srsue` there and the
@@ -41,12 +41,7 @@ peer — i.e. every srsUE must be running. Two consequences:
 - Don't space UE starts far apart (no "attach one fully, then start the next") —
   a long gap stalls the summed uplink and **nobody** attaches. The short
   `START_STAGGER` is deliberate.
-- Several UEs attaching at once on one cell contend on PRACH; in practice **~2
-  UEs/cell** attach reliably here. For more UEs, split them across cells:
-  `CELL2_UES` (default `3,4`) routes those UEs through a **second bridge** to a
-  second gNB (`GNB2_IP`, ports `GNB2_TX_PORT/RX`). With `NUM_UES=4` +
-  `CELL2_UES=3,4` you get 2 UEs/cell on two cells (two slices) — see SETUP §9.5.
-  Set `CELL2_UES=""` for single-cell mode.
+- Several UEs attaching at once on one cell contend on PRACH.
 
 **Slicing.** UEs are placed on a slice by their 5GC **subscription** S-NSSAI, not
 by anything in this container. See `SETUP.md` §9.4 for two slices on one cell.
