@@ -1,0 +1,130 @@
+[
+  {
+    imsi: '001010000000101',
+    slice: [
+      {
+        _id: ObjectId('6a2961d6926332006ab375ac'),
+        sst: 1,
+        default_indicator: true,
+        session: [
+          {
+            qos: {
+              arp: {
+                priority_level: 8,
+                pre_emption_capability: 1,
+                pre_emption_vulnerability: 1
+              },
+              index: 9
+            },
+            ambr: {
+              downlink: {
+                value: 1,
+                unit: 3
+              },
+              uplink: {
+                value: 1,
+                unit: 3
+              }
+            },
+            _id: ObjectId('6a2961d6926332006ab375ad'),
+            name: 'internet',
+            type: 3,
+            pcc_rule: [],
+            ue: {
+              ipv4: '10.46.0.2'
+            }
+          },
+          {
+            qos: {
+              arp: {
+                priority_level: 8,
+                pre_emption_capability: 1,
+                pre_emption_vulnerability: 1
+              },
+              index: 5
+            },
+            ambr: {
+              downlink: {
+                value: 1,
+                unit: 3
+              },
+              uplink: {
+                value: 1,
+                unit: 3
+              }
+            },
+            _id: ObjectId('6a2961d6926332006ab375ae'),
+            name: 'ims',
+            type: 3,
+            pcc_rule: []
+          }
+        ],
+        sd: '111111'
+      }
+    ]
+  },
+  {
+    imsi: '001010000000102',
+    slice: [
+      {
+        _id: ObjectId('6a2961dc926332006ab375b3'),
+        sst: 1,
+        default_indicator: true,
+        session: [
+          {
+            qos: {
+              arp: {
+                priority_level: 8,
+                pre_emption_capability: 1,
+                pre_emption_vulnerability: 1
+              },
+              index: 9
+            },
+            ambr: {
+              downlink: {
+                value: 1,
+                unit: 3
+              },
+              uplink: {
+                value: 1,
+                unit: 3
+              }
+            },
+            _id: ObjectId('6a2961dc926332006ab375b4'),
+            name: 'internet',
+            type: 3,
+            pcc_rule: [],
+            ue: {
+              ipv4: '10.46.0.3'
+            }
+          },
+          {
+            qos: {
+              arp: {
+                priority_level: 8,
+                pre_emption_capability: 1,
+                pre_emption_vulnerability: 1
+              },
+              index: 5
+            },
+            ambr: {
+              downlink: {
+                value: 1,
+                unit: 3
+              },
+              uplink: {
+                value: 1,
+                unit: 3
+              }
+            },
+            _id: ObjectId('6a2961dc926332006ab375b5'),
+            name: 'ims',
+            type: 3,
+            pcc_rule: []
+          }
+        ],
+        sd: '111111'
+      }
+    ]
+  }
+]

@@ -33,14 +33,7 @@ cell_cfg:
   plmn: "00101"
   tac: 7
   pci: 1
-  # The cell must declare the SAME slice (SST+SD) it advertises to the AMF in
-  # cu_cp.tai_slice_support_list and that the core provisions (SD_VALUE). Without
-  # this block the cell defaults to sst=1 / no-SD and will not admit a PDU session
-  # on slice sst=1,sd=0x111111 even though NG Setup succeeds.
-  slicing:
-    - sst: 1
-      sd: 1118481   # decimal of 0x111111 (srsRAN reads sd as DECIMAL)
-
+  
 log:
   filename: /tmp/gnb.log
   all_level: info
@@ -50,19 +43,19 @@ pcap:
   mac_filename: /tmp/gnb_mac.pcap   # Path where the MAC PCAP is stored.
   ngap_enable: false                # Set to true to enable NGAP PCAPs.
   ngap_filename: /tmp/gnb_ngap.pcap # Path where the NGAP PCAP is stored.
-  e2ap_enable: true                 # Set to true to enable E2AP PCAPs.
-  e2ap_du_filename: /tmp/gnb_du_e2ap.pcap       # Path where the DU E2AP PCAP is stored.
-  e2ap_cu_cp_filename: /tmp/gnb_cu_cp_e2ap.pcap # Path where the CU-CP E2AP PCAP is stored.
-  e2ap_cu_up_filename: /tmp/gnb_cu_up_e2ap.pcap # Path where the CU-UP E2AP PCAP is stored.
+#   e2ap_enable: true                 # Set to true to enable E2AP PCAPs.
+#   e2ap_du_filename: /tmp/gnb_du_e2ap.pcap       # Path where the DU E2AP PCAP is stored.
+#   e2ap_cu_cp_filename: /tmp/gnb_cu_cp_e2ap.pcap # Path where the CU-CP E2AP PCAP is stored.
+#   e2ap_cu_up_filename: /tmp/gnb_cu_up_e2ap.pcap # Path where the CU-UP E2AP PCAP is stored.
 
 
-e2:
-  enable_du_e2: true
-  enable_cu_cp_e2: true
-  enable_cu_up_e2: true
-  e2sm_kpm_enabled: true
-  e2sm_rc_enabled: true
-  e2sm_ccc_enabled: true
-  addr: 10.0.2.10
-  bind_addr: 141.24.211.31
-  port: 36421
+# e2:
+#   enable_du_e2: true
+#   enable_cu_cp_e2: true
+#   enable_cu_up_e2: true
+#   e2sm_kpm_enabled: true
+#   e2sm_rc_enabled: true
+#   e2sm_ccc_enabled: true
+#   addr: 10.0.2.10
+#   bind_addr: 141.24.211.31
+#   port: 36421

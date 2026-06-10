@@ -27,7 +27,7 @@ if [[ -f "$ROOT_DIR/.env" ]]; then
     set -a; source "$ROOT_DIR/.env"; set +a
 fi
 
-DEPLOY_TYPE="${DEPLOY_TYPE:-zmq}"                       # zmq | uhd
+DEPLOY_TYPE="${DEPLOY_TYPE:-uhd}"                       # zmq | uhd
 RIC_DIR="$ROOT_DIR/oran-sc-ric"
 ZMQ_DIR="$ROOT_DIR/srsRAN_Project/gnb-zmq"
 UHD_DIR="$ROOT_DIR/srsRAN_Project/gnb-uhd"
