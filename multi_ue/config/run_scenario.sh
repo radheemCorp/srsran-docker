@@ -77,6 +77,8 @@ while [[ $# -gt 0 ]]; do
     --parallel)  PARALLEL="$2"; shift ;;
     --no-ping)   EXTRA+=("--no-ping") ;;
     --no-export) EXTRA+=("--no-export") ;;
+    --reverse)   EXTRA+=("--reverse") ;;
+    --bidir)     EXTRA+=("--bidir") ;;
     -h|--help)   usage; exit 0 ;;
     *) echo "Unknown flag: $1" >&2; usage; exit 1 ;;
   esac

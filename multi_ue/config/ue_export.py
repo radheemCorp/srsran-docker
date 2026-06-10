@@ -172,6 +172,10 @@ def main():
     p.add_argument("--bitrate", default=None, help="iperf3 -b value, e.g. 100k, 5M")
     p.add_argument("--length", default=None, help="iperf3 -l payload size")
     p.add_argument("--parallel", type=int, default=1, help="iperf3 -P streams")
+    p.add_argument("--reverse", action="store_true",
+                   help="iperf3 -R: server->client (downlink from UE perspective)")
+    p.add_argument("--bidir", action="store_true",
+                   help="iperf3 --bidir: simultaneous uplink + downlink")
     p.add_argument("--no-ping", action="store_true")
     p.add_argument("--latency-only", action="store_true",
                    help="ping only for --duration, no iperf traffic")
@@ -224,6 +228,10 @@ def main():
         argv += ["-l", args.length]
     if args.parallel > 1:
         argv += ["-P", str(args.parallel)]
+    if args.bidir:
+        argv.append("--bidir")
+    elif args.reverse:
+        argv.append("-R")
 
     stop_evt = threading.Event()
     ping_thread = None
